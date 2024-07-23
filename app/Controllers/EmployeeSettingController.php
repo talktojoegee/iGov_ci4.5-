@@ -27,7 +27,7 @@ class EmployeeSettingController extends BaseController
 	public function new_employee()
 	{
 		
-		if($this->request->getMethod() == 'GET'):
+		if($this->request->getMethod() == 'POST'):
 			$this->validator->setRules( [
 				'employee_f_name'=>[
 					'rules'=>'required',
@@ -149,7 +149,7 @@ class EmployeeSettingController extends BaseController
 	public function all_employees()
 	{
 		
-		if($this->request->getMethod() == 'GET'):
+		if($this->request->getMethod() == 'POST'):
 			$this->validator->setRules( [
 				'employee_f_name'=>[
 					'rules'=>'required',

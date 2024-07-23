@@ -233,7 +233,7 @@
 									<div class="row">
 										<div class="col-6">
 											<div class="form-group row mb-3">
-												<label class="col-md-3 col-form-label" for="department"> Department</label>
+												<label class="col-md-3 col-form-label" for="department"> Directorate </label>
 												<div class="col-md-9">
 													<select class="form-control" name="employee_department_id" id="department" onchange="get_positions()" required>
 														<option disabled selected> </option>
