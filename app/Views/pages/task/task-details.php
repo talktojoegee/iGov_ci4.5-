@@ -231,7 +231,7 @@
                           //echo $filename;
                           $size = round(filesize($filename)/(1024 * 1024), 4);
                           echo $attachment['ta_link'] .'<br>';
-                          echo $size."MB";
+                          //echo $size."MB";
                           //											fclose($handle);
 
                           ?></a>
