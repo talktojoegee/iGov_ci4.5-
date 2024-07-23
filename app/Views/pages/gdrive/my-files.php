@@ -31,9 +31,9 @@
                             </div>
                         </form>
                         <div>
-                            <button type="submit" class="btn btn-sm btn-white"><i class="mdi mdi-format-list-bulleted"></i></button>
-                            <button type="submit" class="btn btn-sm btn-white"><i class="mdi mdi-view-grid"></i></button>
-                            <button type="submit" class="btn btn-sm btn-white"><i class="mdi mdi-information-outline"></i></button>
+                            <a href="<?= site_url('/my-files') ?>" class="btn btn-sm btn-white"><i class="mdi mdi-format-list-bulleted"></i></a>
+                            <a href="<?= site_url('/g-drive') ?>" class="btn btn-sm btn-white"><i class="mdi mdi-view-grid"></i></a>
+                            <a href="<?= site_url('shared-with-me') ?>" class="btn btn-sm btn-white"><i class="mdi mdi-information-outline"></i></a>
                         </div>
                     </div>
 
@@ -58,7 +58,7 @@
                         <?php endif; ?>
                         <div class="row mx-n1 no-gutters">
                             <?php foreach($files as $file): ?>
-                                <?php if($file['folder_id'] == 0) :?>
+
                                     <?php if(pathinfo($file['file_name'], PATHINFO_EXTENSION) == 'pdf'): ?>
                                         <div class="col-xl-3 col-lg-6">
                                             <div class="card m-1 shadow-none border">
@@ -881,7 +881,7 @@
                                             </div>
                                         </div>
                                     <?php endif; ?>
-                                <?php endif; ?>
+
                             <?php endforeach; ?>
                         </div>
                     </div>

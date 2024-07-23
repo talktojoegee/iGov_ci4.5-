@@ -48,7 +48,11 @@ class Employee extends Model
         return Employee::findAll();
     }
     public function getAllEmployeeExceptAuthUser($user){
-        return Employee::where('employee_id != '.$user)->findAll();
+      $builder = $this->db->table('employees as e');
+      $builder->join('departments as d','d.dpt_id = e.employee_department_id' );
+      $builder->where('e.employee_id != '.$user);
+      return $builder->get()->getResultArray();
+
     }
 
     public function getUserByDepartmentNEmployeeId($department, $id){

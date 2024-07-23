@@ -19,36 +19,44 @@
     </div>
     <!-- end page title -->
     <div class="row">
+      <div class="row">
+        <div class="col-md-12">
+          <?php if(session()->has('error')): ?>
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+              <?= session()->get('error') ?>
+            </div>
+          <?php endif; ?>
+
+          <?php if(session()->has('success')): ?>
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+              <?= session()->get('success') ?>
+            </div>
+          <?php endif; ?>
+        </div>
+      </div>
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
                     <div class="row">
                         <div class="col-lg-8">
-                            <h4 class="header-title mt-2 mb-4">Add New Training</h4>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <?php if(session()->has('error')): ?>
-                                        <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                            <?= session()->get('error') ?>
-                                        </div>
-                                    <?php endif; ?>
-
-                                    <?php if(session()->has('success')): ?>
-                                        <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                            <?= session()->get('success') ?>
-                                        </div>
-                                    <?php endif; ?>
-                                </div>
-                                </div>
+                          <?php if(session()->has('success')): ?>
+                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                              <?= session()->get('success') ?>
                             </div>
+                          <?php endif; ?>
+                          <h4 class="header-title mt-2 mb-4">Add New Training</h4>
+                        </div>
                         <div class="col-lg-4">
-                            <a href="<?=site_url('/trainings')?>" type="button" class="btn btn-sm btn-primary float-right"> <i class="mdi mdi-arrow-left mr-2"></i>Go Back</a>
+                          <a href="<?=site_url('/trainings')?>" type="button" class="btn btn-sm btn-primary float-right"> <i class="mdi mdi-arrow-left mr-2"></i>Go Back</a>
                         </div>
                     </div>
                     <form id="training-form" class="needs-validation"  action="<?= site_url('/add-new-training') ?>" method="post" novalidate>

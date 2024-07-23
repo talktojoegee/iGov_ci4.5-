@@ -26,26 +26,22 @@
                 <div class="card-body">
 
                     <div class="media mb-3">
-                        <img src="../assets/images/users/user-1.jpg" class="mr-2 rounded-circle" height="42" alt="Brandon Smith">
+                        <img src="../assets/images/users/avatar.png" class="mr-2 rounded-circle" height="42" alt="Brandon Smith">
                         <div class="media-body">
                             <h5 class="mt-0 mb-0 font-15">
                                 <a href="javascript:void(0)" class="text-reset"><?= $emp['employee_f_name'] ?? '' ?> <?= $emp['employee_l_name'] ?? '' ?></a>
                             </h5>
                         </div>
-                        <div>
-                            <a href="javascript: void(0);" class="text-reset font-20">
-                                <i class="mdi mdi-cog-outline"></i>
-                            </a>
-                        </div>
+
                     </div>
 
                     <!-- start search box -->
-                    <form class="search-bar mb-3">
+                   <!-- <form class="search-bar mb-3">
                         <div class="position-relative">
                             <input type="text" class="form-control form-control-light" placeholder="People, groups &amp; messages...">
                             <span class="mdi mdi-magnify"></span>
                         </div>
-                    </form>
+                    </form> -->
 
                     <h6 class="font-13 text-muted text-uppercase mb-2">Contacts </h6>
 
@@ -66,13 +62,13 @@
                                                     <?php foreach($employees as $employee): ?>
                                                     <a href="javascript:void(0);"  data-name="<?= $employee['employee_f_name'] ?? '' ?> <?= $employee['employee_l_name'] ?>" data-emp="<?= $employee['employee_id'] ?>" class="text-body employee-wrapper">
                                                         <div class="media p-2">
-                                                            <img src="/assets/images/users/user-2.jpg" class="mr-2 rounded-circle" height="42" alt="Brandon Smith">
+                                                            <img src="/assets/images/users/avatar.png" class="mr-2 rounded-circle" height="42" alt="Brandon Smith">
                                                             <div class="media-body">
                                                                 <h5 class="mt-0 mb-0 font-14">
                                                                     <?= $employee['employee_f_name'] ?? '' ?> <?= $employee['employee_l_name'] ?>
                                                                 </h5>
                                                                 <p class="mt-1 mb-0 text-muted font-14">
-                                                                    <span class="w-75"><?= $employee['employee_level'] ?? '' ?></span>
+                                                                    <span class="w-75"><?= $employee['dpt_name'] ?? '' ?></span>
                                                                 </p>
                                                             </div>
                                                         </div>
@@ -103,7 +99,7 @@
             <div class="card">
                 <div class="card-body py-2 px-3 border-bottom border-light">
                     <div class="media py-1">
-                        <img src="/assets/images/users/user-5.jpg" class="mr-2 rounded-circle" height="36" alt="Brandon Smith">
+                        <img src="/assets/images/users/avatar.png" class="mr-2 rounded-circle" height="36" alt="Brandon Smith">
                         <div class="media-body">
                             <h5 class="mt-0 mb-0 font-15">
                                 <a href="javascript:void(0)" class="text-reset selected-user"><?= $emp['employee_f_name'] ?? '' ?> <?= $emp['employee_l_name'] ?? '' ?></a>
@@ -135,7 +131,7 @@
                                         </div>
                                         <div class="col-sm-auto">
                                             <div class="btn-group">
-                                                <a href="#" class="btn btn-light"><i class="fe-paperclip"></i></a>
+
                                                 <button type="submit" class="btn btn-success chat-send btn-block"><i class="fe-send"></i></button>
                                             </div>
                                         </div>

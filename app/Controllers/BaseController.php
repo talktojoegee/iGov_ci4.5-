@@ -81,6 +81,14 @@ class BaseController extends ResourceController
 
 		return $this->email->send(false);
 	}
+	protected function send_cc_mail($to, $cc_list, $subject, $message, $from) {
+		$this->email->setTo($to);
+		$this->email->setFrom($from['email'], $from['name']);
+		$this->email->setSubject($subject);
+		$this->email->setMessage($message);
+    $this->email->setCC($cc_list);
+		$this->email->send(false);
+	}
 
 	protected function send_notification($subject, $body, $recipient, $link, $cta) {
 		$userModel = new UserModel();
@@ -140,6 +148,40 @@ class BaseController extends ResourceController
 			curl_close($curl);
 		}
 	}
+	protected function send_cc_notification($subject, $body, $recipient,$cc_list, $link, $cta) {
+		$userModel = new UserModel();
+		$employeeModel = new Employee();
+		$organizationModel = new Organization();
+		$organization = $organizationModel->first();
+		$user = $userModel->find($recipient);
+		$employee = $employeeModel->find($user['user_employee_id']);
+		$to = $employee['employee_mail'];
+		$phone = $employee['employee_phone'];
+		$phone = '234'.substr($phone, 1, strlen($phone));
+		$from['name'] = 'IGOV by Connexxion Telecom';
+		$from['email'] = 'support@connexxiontelecom.com';
+		$data = [
+			'subject' => $subject,
+			'user' => $user['user_name'],
+			'organization' => $organization['org_name'],
+			'notification' => $body,
+			'link' => $link
+		];
+		$message = view('email/notification', $data);
+
+		$notification_data = [
+			'subject' => $subject,
+			'body' => $body,
+			'recipient' => $recipient,
+			'link' => $link,
+			'cta' => $cta,
+			'notification_status' => 0,
+		];
+		if ($this->notification->save($notification_data)) {
+			$this->send_cc_mail($to,$cc_list, $subject, $message, $from);
+		}
+	}
+
 
 	protected function _get_verification_code($ver_type) {
 		$verification = new Verification();

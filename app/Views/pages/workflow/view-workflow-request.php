@@ -120,7 +120,7 @@
                         <h5>Responsible Persons(s):</h5>
                         <?php foreach($responsible_persons as $person):  ?>
                             <a href="javascript:void(0);" data-toggle="tooltip" data-placement="top" title="" data-original-title="<?= $person['employee_f_name']  ?> <?= $person['employee_l_name'] ?>" class="d-inline-block">
-                                <img src="/assets/images/users/user-6.jpg" class="rounded-circle img-thumbnail avatar-sm" alt="friend">
+                                <img src="/assets/images/users/avatar.png" class="rounded-circle img-thumbnail avatar-sm" alt="friend">
                             </a>
                             <?php if($person['redirected_to_id'] == $auth_user && $person['request_status'] == 0): ?>
                                 <button class="btn btn-sm btn-danger" data-target="#declineRequest" data-toggle="modal">Decline</button>
@@ -194,7 +194,7 @@
                     <?php foreach($comments as $comment): ?>
                     <div class="mt-2">
                         <div class="media">
-                            <img class="mr-2 avatar-sm rounded-circle" src="/assets/images/users/user-3.jpg"
+                            <img class="mr-2 avatar-sm rounded-circle" src="/assets/images/users/avatar.png"
                                  alt="Generic placeholder image">
                             <div class="media-body">
                                 <h5 class="mt-0">

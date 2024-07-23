@@ -71,12 +71,17 @@ class TrainingController extends BaseController
                   'slug'=>substr(sha1(time()),23,40)
                 ];
                 $training_id = $this->training->insert($data);
-                $this->send_notification('New Training Created', 'You created a new training', $this->session->user_id, site_url('/trainings/').$training_id, 'click to view training');
+                //$this->send_notification('New Training Created', 'You created a new training', $this->session->user_id, site_url('/trainings/').$training_id, 'click to view training');
                 $users = $this->user->findAll();
+                $emails = [];
+              $from['name'] = 'IGOV by Connexxion Telecom';
+              $from['email'] = 'support@connexxiontelecom.com';
                 foreach ($users as $user) {
-	                $this->send_notification('New Training Created', 'A new training was created', $user['user_id'], site_url('/trainings/').$training_id, 'click to view training');
+                  array_push($emails, $user['user_email']);
+	                //$this->send_notification('New Training Created', 'A new training was created', $user['user_id'], site_url('/trainings/').$training_id, 'click to view training');
                 }
-	            return redirect()->to(base_url('/add-new-training'))->with("success", "<strong>Training registered successfully.");
+                $this->send_cc_notification('New Training!', 'A new training is scheduled to take place. Find the details of the training in your account.', $this->session->user_id,$emails, site_url('/trainings/').$training_id, 'click to view training');
+	            return redirect()->to(base_url('/trainings'))->with("success", "<strong>Training registered successfully.");
             }else{
                 return redirect()->to(base_url('/add-new-training'))->with("error", "<strong>Whoops!</strong> All fields are required.");
             }

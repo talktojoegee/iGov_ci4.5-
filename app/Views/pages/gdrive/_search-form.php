@@ -6,9 +6,9 @@
             <span class="mdi mdi-magnify"></span>
         </div>
     </form>
-    <div>
-        <button type="submit" class="btn btn-sm btn-white"><i class="mdi mdi-format-list-bulleted"></i></button>
-        <button type="submit" class="btn btn-sm btn-white"><i class="mdi mdi-view-grid"></i></button>
-        <button type="submit" class="btn btn-sm btn-white"><i class="mdi mdi-information-outline"></i></button>
-    </div>
+  <div>
+    <a href="<?= site_url('/my-files') ?>" class="btn btn-sm btn-white"><i class="mdi mdi-format-list-bulleted"></i></a>
+    <a href="<?= site_url('/g-drive') ?>" class="btn btn-sm btn-white"><i class="mdi mdi-view-grid"></i></a>
+    <a href="<?= site_url('shared-with-me') ?>" class="btn btn-sm btn-white"><i class="mdi mdi-information-outline"></i></a>
+  </div>
 </div>

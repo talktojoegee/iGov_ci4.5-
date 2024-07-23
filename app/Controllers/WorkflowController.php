@@ -230,9 +230,10 @@ class WorkflowController extends BaseController
                         $this->publishResponsiblePersons($exception_list['w_flow_ex_to_id'], $request_id);
                         return redirect()->back()->with("success", "<strong>Success!</strong> Your request was submitted successfully.");
                     }elseif(!empty($normal_list)){
-                        $request_id = $this->postRequest();
-                        $this->publishResponsiblePersons($normal_list['w_flow_employee_id'], $request_id);
-                        return redirect()->back()->with("success", "<strong>Success!</strong> Your request was submitted successfully.");
+                        //$request_id = $this->postRequest();
+                      //return dd($request_id);
+                        $this->publishResponsiblePersons($normal_list['w_flow_employee_id'], 1);
+                      return redirect()->to( base_url('/workflow-requests') )->with('success', "<strong>Success!</strong> Your request was submitted successfully.");
                     }else{
                         return redirect()->back()->with("error", "<strong>Whoops!</strong> Something went wrong. Ensure workflow setup is properly done for this request.");
                     }
@@ -285,7 +286,7 @@ class WorkflowController extends BaseController
             'amount'=>$amount
         ];
         $workflow_request_id = $this->workflowrequest->insert($data);
-        $this->send_notification('New Workflow Request', 'You have submitted a new workflow request', $this->session->user_id, site_url('/workflow-requests/view/'.$workflow_request_id), 'click to view workflow request');
+        $this->send_notification('New Workflow Request', 'You submitted a new workflow request', $this->session->user_id, site_url('/workflow-requests/view/'.$workflow_request_id), 'click to view workflow request');
         #Process attachments
         if(!empty($workflow_request_id)){
             if($this->request->getFileMultiple('attachments')){

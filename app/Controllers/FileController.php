@@ -54,7 +54,6 @@ class FileController extends BaseController
         if($this->request->getMethod() == 'POST') {
             helper(['form', 'url']);
             $attachment = $this->request->getFile('attachments');
-            //$data = [];
             if ($attachment->isValid()){
                 $extension = $attachment->guessExtension();
                 $filename = $attachment->getRandomName(); // uniqid() . time() . '.' . $extension;
@@ -130,7 +129,7 @@ class FileController extends BaseController
     }
 
     public function shareFileWith(){
-        if($this->request->getMethod() == 'GET') {
+        if($this->request->getMethod() == 'POST') {
             helper(['form', 'url']);
 
             $data = [
@@ -154,7 +153,7 @@ class FileController extends BaseController
     }
 
     public function searchGDrive() {
-        if($this->request->getMethod() == 'GET') {
+        if($this->request->getMethod() == 'POST') {
             helper(['form', 'url']);
             $search_params = $this->request->getPost('keyword');
             $folders = $this->folder->searchFolders($search_params, $this->session->user_id);
