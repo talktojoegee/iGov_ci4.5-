@@ -24,6 +24,8 @@
           cancelButtonColor: "#d33"
         }).then(confirm => {
           if (confirm.value) {
+            $('#submitMemo').text('Submitting...');
+            $('#submitMemo').attr('disabled', 'true');
             $.ajax({
               url: '<?=site_url('/internal-memo')?>',
               type: 'post',
@@ -34,6 +36,8 @@
                 } else {
                   Swal.fire('Sorry!', response.message, 'error')
                 }
+                $('#submitMemo').text( 'Submit');
+                $('#submitMemo').attr('disabled', 'false');
               },
               cache: false,
               contentType: false,

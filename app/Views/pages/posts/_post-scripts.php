@@ -46,6 +46,8 @@
       formData.append('p_id', postID)
       formData.append('p_signature', eSignature)
       formData.append('ver_code', verCode)
+      $('#save-btn').text('Submitting...');
+      $('#save-btn').attr('disabled', 'true');
       $.ajax({
         url: '<?=site_url('/sign-post')?>',
         type: 'post',
@@ -56,6 +58,9 @@
           } else {
             Swal.fire('Sorry!', response.message, 'error')
           }
+          $('#save-btn').text('Submit');
+          $('#save-btn').attr('disabled', 'false');
+          $('#standard-modal-3').modal('hide');
         },
         cache: false,
         contentType: false,
@@ -72,12 +77,15 @@
       showCancelButton: true,
       confirmButtonText: 'Confirm',
       confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33"
+      cancelButtonColor: "#d33",
     }).then(confirm => {
       if (confirm.value) {
         let formData = new FormData()
-
         formData.append('p_id', postID)
+        jQuery.noConflict()
+        $('#loading-modal').modal('toggle');
+        $('#modalTitle').text('Processing request')
+        $('#modalText').text('Hold on while we take into account your action')
         $.ajax({
           url: '<?=site_url('/decline-post')?>',
           type: 'post',

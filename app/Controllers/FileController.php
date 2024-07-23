@@ -51,7 +51,7 @@ class FileController extends BaseController
     }
 
 	public function processAttachmentUploads(){
-        if($this->request->getMethod() == 'GET') {
+        if($this->request->getMethod() == 'POST') {
             helper(['form', 'url']);
             $attachment = $this->request->getFile('attachments');
             //$data = [];

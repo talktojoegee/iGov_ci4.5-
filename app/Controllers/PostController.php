@@ -185,7 +185,8 @@ class PostController extends BaseController
 			'p_status' => 4,
 		];
 		if ($this->post->save($post_data)) {
-			$this->_create_post_decline_notification($post_request_data);
+			$this->_create_post_decline_notification($post);
+			//$this->_create_post_decline_notification($post_request_data);
 			$response['success'] = true;
 			$response['message'] = 'The document was successfully declined';
 		} else {
@@ -195,7 +196,7 @@ class PostController extends BaseController
 		return $this->response->setJSON($response);
 	}
 
-	protected function _upload_attachments($attachments, $post_id) {
+	public function _upload_attachments($attachments, $post_id) {
 		if (count($attachments) > 0) {
 			foreach ($attachments as $attachment) {
 				$attachment_data = array(

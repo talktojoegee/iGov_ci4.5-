@@ -91,7 +91,7 @@
             <div class="col-6">
               <div class="float-left">
                 <h5 class="font-size-14 mb-0">From:</h5>
-	              <?=$memo['written_by']['user_name'] ?> (<?=$memo['written_by']['position']['pos_name']?>, <?=$memo['written_by']['department']['dpt_name']?>)
+	              <?=$memo['written_by']['user_name'] ?? '' ?> (<?=$memo['written_by']['position']['pos_name'] ?? '' ?>, <?=$memo['written_by']['department']['dpt_name'] ?? '' ?>)
               </div>
             </div>
           </div>
@@ -188,8 +188,8 @@
         <div class="modal-body p-4">
           <div class="text-center">
             <i class="dripicons-information h1 text-info"></i>
-            <h4 class="mt-2">Sending Verification Code</h4>
-            <p class="mt-3">Please wait while we send you your document signing verification code.</p>
+            <h4 class="mt-2" id="modalTitle">Sending Verification Code</h4>
+            <p class="mt-3" id="modalText">Please wait while we send you your document signing verification code.</p>
             <button type="submit" class="btn btn-info" disabled>
               <span class="spinner-border spinner-border-sm mr-1" role="status" aria-hidden="true"></span> Please wait...
             </button>

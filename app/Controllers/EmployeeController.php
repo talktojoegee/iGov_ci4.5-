@@ -163,30 +163,11 @@ class EmployeeController extends BaseController
 
     }else {
       $response['success'] = false;
-      $response['message'] = 'An error occurred while verifying your e-signature.';
+      $response['message'] = 'An error occurred while verifying your e-signature or token not set.';
     }
    // return $this->response->setJSON($response);
 
-/*
-		$verification = $this->verification->where([
-			'ver_user_id' => session()->user_id,
-			'ver_type' => 'e-signature',
-			'ver_code' => $ver_code,
-			'ver_status' => 0
-		])->first();
 
-		if ($verification) {
-			$verification_data = [
-				'ver_id' => $verification['ver_id'],
-				'ver_status' => 1,
-			];
-			$this->verification->save($verification_data);
-			$response['success'] = true;
-			$response['message'] = 'Your E-Signature is successfully verified.';
-		} else {
-			$response['success'] = false;
-			$response['message'] = 'An error occurred while verifying your e-signature.';
-		}*/
     if(empty($token)){
       $verification = $this->verification->where([
         'ver_user_id' => session()->user_id,
@@ -221,11 +202,11 @@ class EmployeeController extends BaseController
 			'ver_type' => 'e-signature',
 			'ver_status' => 1
 		])->first();
-		if (!$employee['employee_signature'] || !$verified) {
+		/*if (!$employee['employee_signature'] || !$verified) {
 			$response['success'] = false;
 			$response['message'] = 'You must create and verify your E-Signature before creating your e-signature Token.';
 			return $this->response->setJSON($response);
-		}
+		}*/
 		$token_data = [
 			'token_symbol' => $post_data['token_symbol'],
 			'token_user_id' => $this->session->user_id,

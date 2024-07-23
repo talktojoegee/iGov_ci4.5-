@@ -110,7 +110,7 @@ class ProjectController extends BaseController
                         'part_project_id'=>$project,
                     ];
                     $this->projectparticipant->save($part);
-		                $user = $this->user->where('user_employee_id', $participant)->find();
+		                $user = $this->user->where('user_employee_id', $participant)->first();
 		                if ($user) {
 			                $this->send_notification('New Project Created', 'You are a participant in a new project', $user['user_id'], site_url('/projects/').$project, 'click to view project');
 		                }

@@ -47,7 +47,7 @@ class MemoController extends PostController
 			'p_ref_no' => $post_data['p_ref_no'],
 			'p_subject' => $post_data['p_subject'],
 			'p_type' => 1,
-			'p_body' => $post_data['p_body'],
+			'p_body' => 'test',// $post_data['p_body'],
 			'p_status' => 0,
 			'p_by' => $this->session->user_id,
 			'p_signed_by' => $post_data['p_signed_by'],
@@ -57,8 +57,9 @@ class MemoController extends PostController
 		];
 		$post_id = $this->post->insert($memo_data);
 		if ($post_id) {
-			if (isset($post_data['m_attachments'])) {
-				$attachments = $post_data['m_attachments'];
+			if (isset($post_data['p_attachment'])) {
+				$attachments = $post_data['p_attachment'];
+				//$this->_uploadFiles($attachments, $post_id);
 				$this->_upload_attachments($attachments, $post_id);
 			}
 			$this->send_notification('New Internal Memo Created', 'You created a new internal memo', $this->session->user_id, site_url('view-memo/').$post_id, 'click to view memo');
@@ -72,6 +73,8 @@ class MemoController extends PostController
 		}
 		return $this->response->setJSON($response);
 	}
+
+
 
 	public function external_memo(){
 		if($this->request->getMethod() == 'GET'):
@@ -110,6 +113,17 @@ class MemoController extends PostController
 		}
 		return $this->response->setJSON($response);
 	}
+  protected function _uploadFiles($attachments, $post_id) {
+    if (count($attachments) > 0) {
+      foreach ($attachments as $attachment) {
+        $attachment_data = array(
+          'pa_post_id' => $post_id,
+          'pa_link' => $attachment
+        );
+        $this->pa->save($attachment_data);
+      }
+    }
+  }
 
 	public function my_memos() {
 		$data['firstTime'] = $this->session->firstTime;

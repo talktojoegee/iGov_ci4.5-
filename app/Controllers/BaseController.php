@@ -78,6 +78,7 @@ class BaseController extends ResourceController
 		$this->email->setFrom($from['email'], $from['name']);
 		$this->email->setSubject($subject);
 		$this->email->setMessage($message);
+
 		return $this->email->send(false);
 	}
 

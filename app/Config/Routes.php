@@ -119,6 +119,8 @@ $routes->match(['get'], 'my-memos', 'MemoController::my_memos', ['filter' => 'au
 $routes->match(['get'], 'view-memo/(:num)', 'MemoController::view_memo/$1', ['filter' => 'auth']);
 $routes->match(['get'], 'edit-memo/(:num)', 'MemoController::edit_memo/$1', ['filter' => 'auth']);
 $routes->match(['post'], 'edit-memo', 'MemoController::edit_memo', ['filter' => 'auth']);
+$routes->match(['post'], 'upload-memo-attachments', 'MemoController::upload_mail_attachments', ['filter' => 'auth']);
+$routes->match(['post', 'get'], 'delete-memo-attachments', 'MemoController::delete_mail_attachments', ['filter' => 'auth']);
 
 // circular routes
 $routes->match(['get'], 'circulars', 'CircularController::circulars', ['filter' => 'auth']);
