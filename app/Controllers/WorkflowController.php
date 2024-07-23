@@ -58,7 +58,8 @@ class WorkflowController extends BaseController
             if(isset($name)){
                 $data = [
                   'workflow_type_name'=>$name,
-                    'added_by'=>$this->session->user_id,
+                    'added_by'=> $this->session->user_employee_id,
+                    //'added_by'=>$this->session->user_id,
                 ];
                 $this->workflowtype->save($data);
                 return redirect()->back()->with("success", "<strong>Success!</strong> Your workflow name was registered successfully.");
@@ -75,7 +76,8 @@ class WorkflowController extends BaseController
             if(isset($name)){
                 $data = [
                   'workflow_type_name'=>$name,
-                    'added_by'=>$this->session->user_id,
+                    'added_by'=> $this->session->user_employee_id,
+                    //'added_by'=>$this->session->user_id,
                 ];
                 $this->workflowtype->update($this->request->getPost('workflow_index'), $data);
                 return redirect()->back()->with("success", "<strong>Success!</strong> Your changes were saved successfully.");
@@ -93,7 +95,8 @@ class WorkflowController extends BaseController
             $employee = $this->request->getPost('employee');
             $type = $this->request->getPost('workflow_type');
             $data = [
-                'w_flow_added_by' => $this->session->user_id,
+                'w_flow_added_by' =>  $this->session->user_employee_id,
+                //'w_flow_added_by' => $this->session->user_id,
                 'w_flow_employee_id'=>$employee,
                 'w_flow_department_id'=>$department,
                 'w_flow_type_id'=>$type
@@ -112,7 +115,8 @@ class WorkflowController extends BaseController
             $employee = $this->request->getPost('employee');
             $type = $this->request->getPost('workflow_type');
             $data = [
-                'w_flow_added_by' => $this->session->user_id,
+                'w_flow_added_by' =>  $this->session->user_employee_id,
+                //'w_flow_added_by' => $this->session->user_id,
                 'w_flow_employee_id'=>$employee,
                 'w_flow_department_id'=>$department,
                 'w_flow_type_id'=>$type
@@ -134,7 +138,8 @@ class WorkflowController extends BaseController
             $to = $this->request->getPost('to');
             $type = $this->request->getPost('workflow_type');
             $data = [
-                'w_flow_ex_added_by' => $this->session->user_id,
+                'w_flow_ex_added_by' =>  $this->session->user_employee_id,
+                //'w_flow_ex_added_by' => $this->session->user_id,
                 'w_flow_ex_employee_id'=>$employee,
                 'w_flow_ex_department_id'=>$department,
                 'w_flow_ex_type_id'=>$type,
@@ -155,7 +160,8 @@ class WorkflowController extends BaseController
             $employee = $this->request->getPost('employee');
             $type = $this->request->getPost('workflow_type');
             $data = [
-                'w_flow_ex_added_by' => $this->session->user_id,
+                'w_flow_ex_added_by' =>  $this->session->user_employee_id,
+                //'w_flow_ex_added_by' => $this->session->user_id,
                 'w_flow_ex_employee_id' => $employee,
                 'w_flow_ex_to_id' => $to,
                 'w_flow_ex_type_id' => $type
@@ -169,7 +175,7 @@ class WorkflowController extends BaseController
 
     public function workflowRequests(){
         $data = [
-          'my_requests'=>$this->workflowrequest->getAuthUserWorkflowRequests($this->session->user_id),
+          'my_requests'=>$this->workflowrequest->getAuthUserWorkflowRequests( $this->session->user_employee_id),
             'firstTime'=>$this->session->firstTime,
             'username'=>$this->session->username,
         ];
@@ -230,9 +236,8 @@ class WorkflowController extends BaseController
                         $this->publishResponsiblePersons($exception_list['w_flow_ex_to_id'], $request_id);
                         return redirect()->back()->with("success", "<strong>Success!</strong> Your request was submitted successfully.");
                     }elseif(!empty($normal_list)){
-                        //$request_id = $this->postRequest();
-                      //return dd($request_id);
-                        $this->publishResponsiblePersons($normal_list['w_flow_employee_id'], 1);
+                        $request_id = $this->postRequest();
+                        $this->publishResponsiblePersons($normal_list['w_flow_employee_id'], $request_id);
                       return redirect()->to( base_url('/workflow-requests') )->with('success', "<strong>Success!</strong> Your request was submitted successfully.");
                     }else{
                         return redirect()->back()->with("error", "<strong>Whoops!</strong> Something went wrong. Ensure workflow setup is properly done for this request.");
@@ -279,14 +284,15 @@ class WorkflowController extends BaseController
         $amount = $this->request->getPost('amount');
         $workflow_type = $this->request->getPost('workflow_type');
         $data = [
-            'requested_by' => $this->session->user_id,
+            'requested_by' =>  $this->session->user_employee_id,
+            //'requested_by' => $this->session->user_id,
             'requested_type_id' => $workflow_type,
             'request_title' => $title,
             'request_description' => $description,
             'amount'=>$amount
         ];
         $workflow_request_id = $this->workflowrequest->insert($data);
-        $this->send_notification('New Workflow Request', 'You submitted a new workflow request', $this->session->user_id, site_url('/workflow-requests/view/'.$workflow_request_id), 'click to view workflow request');
+        $this->send_notification('New Workflow Request', 'You submitted a new workflow request',  $this->session->user_employee_id, site_url('/workflow-requests/view/'.$workflow_request_id), 'click to view workflow request');
         #Process attachments
         if(!empty($workflow_request_id)){
             if($this->request->getFileMultiple('attachments')){
@@ -367,7 +373,7 @@ class WorkflowController extends BaseController
                         if($action == 1){
                             $request = $this->workflowrequest->where('workflow_request_id', $request_id)->first();
                             $this->workflowresponsibleperson->update($workflow_responsible_id, $data);
-	                        $this->send_notification('Workflow Request Approved', 'You have approved a workflow request', $this->session->user_id, site_url('/workflow-requests/view/'.$request_id), 'click to view workflow request');
+	                        $this->send_notification('Workflow Request Approved', 'You have approved a workflow request',  $this->session->user_employee_id, site_url('/workflow-requests/view/'.$request_id), 'click to view workflow request');
 	                        $employee = $this->employee->getEmployeeByUserEmployeeId($request['requested_by']);
 	                        $user = $this->user->where('user_employee_id', $employee['employee_id'])->first();
 	                        if ($user)
@@ -419,7 +425,7 @@ class WorkflowController extends BaseController
                                 'request_status'=>2
                             ];
                             $this->workflowrequest->update($request_id, $update);
-	                        $this->send_notification('Workflow Request Declined', 'You have declined a workflow request', $this->session->user_id, site_url('/workflow-requests/view/'.$request_id), 'click to view workflow request');
+	                        $this->send_notification('Workflow Request Declined', 'You have declined a workflow request',  $this->session->user_employee_id, site_url('/workflow-requests/view/'.$request_id), 'click to view workflow request');
 	                        $request = $this->workflowrequest->where('workflow_request_id', $request_id)->first();
 	                        $employee = $this->employee->getEmployeeByUserEmployeeId($request['requested_by']);
 	                        $user = $this->user->where('user_employee_id', $employee['employee_id'])->first();
@@ -455,7 +461,8 @@ class WorkflowController extends BaseController
                     $data = [
                         'request_id'=>$workflow,
                         'comment'=>$comment,
-                        'commented_by'=>$this->session->user_id
+                        'commented_by'=> $this->session->user_employee_id,
+                        //'commented_by'=>$this->session->user_id
                     ];
                     $this->workflowconversation->save($data);
                     return redirect()->back()->with("success", "<strong>Success!</strong> Comment registered.");

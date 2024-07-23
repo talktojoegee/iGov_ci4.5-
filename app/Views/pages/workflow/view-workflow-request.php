@@ -65,21 +65,7 @@
             <!-- project card -->
             <div class="card d-block">
                 <div class="card-body">
-                    <div class="dropdown float-right">
-                        <a href="#" class="dropdown-toggle arrow-none card-drop" data-toggle="dropdown" aria-expanded="false">
-                            <i class="dripicons-dots-3"></i>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-right">
-                            <!-- item-->
-                            <a href="javascript:void(0);" class="dropdown-item"><i class="mdi mdi-pencil mr-1"></i>Edit</a>
-                            <!-- item-->
-                            <a href="javascript:void(0);" class="dropdown-item"><i class="mdi mdi-delete mr-1"></i>Delete</a>
-                            <!-- item-->
-                            <a href="javascript:void(0);" class="dropdown-item"><i class="mdi mdi-email-outline mr-1"></i>Invite</a>
-                            <!-- item-->
-                            <a href="javascript:void(0);" class="dropdown-item"><i class="mdi mdi-exit-to-app mr-1"></i>Leave</a>
-                        </div>
-                    </div>
+
                     <!-- project title-->
                     <h3 class="mt-0 font-20">
                         <?= $workflow_request->request_title ?? '' ?>

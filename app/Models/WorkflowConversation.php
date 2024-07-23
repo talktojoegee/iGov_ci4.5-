@@ -45,7 +45,9 @@ class WorkflowConversation extends Model
 	 */
     public function getWorkflowConversationByRequestId($id){
         $builder = $this->db->table('workflow_conversations as wc');
+        $builder->join('workflow_requests as wr', 'wr.workflow_request_id = wc.request_id');
         $builder->join('employees as e', 'e.employee_id = wc.commented_by');
+        $builder->where('wc.request_id = '.$id);
         return $builder->get()->getResultArray();
     }
 }
