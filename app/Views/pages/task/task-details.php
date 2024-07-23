@@ -229,7 +229,7 @@
                           //											$handle = fopen($filename, "r");
                           //											$contents = fread($handle, filesize($filename));
                           //echo $filename;
-                          $size = round(filesize($filename)/(1024 * 1024), 4);
+                          $size = 0;//round(filesize($filename)/(1024 * 1024), 4);
                           echo $attachment['ta_link'] .'<br>';
                           //echo $size."MB";
                           //											fclose($handle);
