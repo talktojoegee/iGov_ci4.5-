@@ -43,10 +43,9 @@
 						<tr>
 							<th>S/N</th>
 							<th>Name</th>
-							<th>Position</th>
-							<th>Office</th>
-							<th> Level </th>
-							<th> Step </th>
+              <th>Directorate</th>
+              <th>Unit/Dept.</th>
+
 							<th>E-Mail</th>
 							
 						</tr>
@@ -61,11 +60,10 @@
 							<tr>
 								<td><?=$sn++; ?> </td>
 								<td> <?=$employee['employee_f_name']." ".$employee['employee_l_name']; ?></td>
-								<td> <?=$employee['pos_name']; ?></td>
-								<td> <?=$employee['dpt_name']; ?></td>
-								<td> <?=$employee['employee_level']; ?></td>
-								<td> <?=$employee['employee_step']; ?></td>
-								<td> <?=$employee['employee_mail']; ?></td>
+                <td> <?=$employee['dpt_name'] ?? null ; ?></td>
+                <td> <?=$employee['pos_name'] ?? null ; ?></td>
+
+								<td> <?=$employee['employee_mail'] ?? null ; ?></td>
 							</tr>
 						
 						<?php endforeach; endif; ?>
