@@ -308,7 +308,9 @@ class MemoController extends PostController
 			$recipients = [];
 			if ($recipient_ids) {
         foreach ($recipient_ids as $recipient_id) {
-          $position =  $this->position->find($recipient_id);
+          $employee = $this->employee->where('employee_id', $recipient_id)->first();
+          $position =  $this->position->find($employee['employee_position_id']);
+          //$position =  $this->position->find($recipient_id);
           $position['department'] = $this->department->find($position['pos_dpt_id']);
           array_push($recipients, $position);
         }

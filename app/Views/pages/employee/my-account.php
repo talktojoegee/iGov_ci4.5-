@@ -137,6 +137,7 @@
         </form>
       </div>
     </div>
+
 	  <?php if (!empty($official_stamps)): ?>
       <div class="card-box">
         <h5 class="card-title font-16 mb-3">Official Stamps</h5>
@@ -152,6 +153,63 @@
         <?php endforeach;?>
       </div>
 	  <?php endif; ?>
+    <div class="card-box">
+      <h5 class="card-title font-16 mb-3">Change Password</h5>
+      
+      <?php if(isset($validation)) : ?>
+        <div class="text-danger">
+          <?= $validation->listErrors() ?>
+        </div>
+      <?php endif ?>
+      
+      <?php if(isset($errors)) : ?>
+        <div class="text-danger">
+          <?= $errors ?>
+        </div>
+      <?php endif ?>
+
+      <?php if(isset($error)) : ?>
+        <div class="text-danger">
+          <?= $error ?>
+        </div>
+      <?php endif ?>
+      <?php if(isset($success)) : ?>
+        <div class="text-success">
+          <?= $success ?>
+        </div>
+      <?php endif ?>
+      
+      <form id="manage-token-form" class="needs-validation" method="post" action="<?= site_url('change-password') ?>">
+        <div class="row">
+          <div class="col-12">
+            <div class="form-group">
+              <label for="token-symbol">Current Password </label>
+              <input type="password" placeholder="Current Password"  class="form-control" name="currentPassword"  />
+              <div class="invalid-feedback">
+                Enter your current password
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="token-symbol">New Password </label>
+              <input type="password" placeholder="New Password"  class="form-control" name="newPassword"  />
+              <div class="invalid-feedback">
+                Choose new password
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="token-symbol">Re-type New Password </label>
+              <input type="password" placeholder="Re-type New Password"  class="form-control" name="reTypePassword"  />
+              <div class="invalid-feedback">
+                Choose re-type new password
+              </div>
+            </div>
+          </div>
+          <div class="col-12 mt-0">
+            <button class="btn btn-success waves-effect waves-light btn-sm">Change Password</button>
+          </div>
+      </form>
+    </div>
+  </div>
   </div>
   <!-- Standard modal content -->
   <div id="standard-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="standard-modalLabel" aria-hidden="true">

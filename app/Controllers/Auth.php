@@ -102,6 +102,7 @@ class Auth extends BaseController
 
 				$data['validation'] = $this->validator;
 				$data['url'] = '';
+        $data['errors'] = '';
 				return view('auth/login', $data);
 			endif;
 		endif;

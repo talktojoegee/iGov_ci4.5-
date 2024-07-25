@@ -33,7 +33,6 @@ class EmployeeController extends BaseController
 		$data['username'] = $this->session->user_username;
 		$data['user'] = $this->_get_employee_detail();
 		$data['official_stamps'] = $this->_get_official_stamps();
-    //return dd($data);
 		return view('/pages/employee/my-account', $data);
 	}
 
@@ -134,6 +133,86 @@ class EmployeeController extends BaseController
 		}
 		return $this->response->setJSON($response);
 	}
+
+
+  public function change_password()
+  {
+    helper(['form']);
+
+      $rules = [
+        'currentPassword' => [
+          'rules' => 'required|min_length[6]',
+          'errors' => [
+            'required' => 'Enter current password',
+            'min_length' => 'Password must be at least 6 characters'
+          ]
+        ],
+        'newPassword' => [
+          'rules' => 'required|min_length[6]',
+          'errors' => [
+            'required' => 'Choose new password',
+            'min_length' => 'Password must be at least 6 characters'
+          ]
+        ],
+
+        'reTypePassword' => [
+          'rules' => 'required|matches[newPassword]',
+          'errors' => [
+            'required' => 'Re-type new password',
+            'matches' => 'Password does not match'
+          ]
+        ]
+      ];
+    
+    if($this->validate($rules)){
+        $user_id = $this->session->user_id;
+        $data = $this->user->where('user_id', $user_id)
+          ->first();
+        if ($data) {
+          $currentPassword = $_POST['currentPassword'];
+          $newPassword = $_POST['newPassword'];
+          $pass = $data['user_password'];
+          $verify_password = password_verify($currentPassword, $pass);
+
+          if ($verify_password) {
+            $new_password = password_hash($newPassword, PASSWORD_BCRYPT);
+
+            $this->user->update($user_id, ['user_password' => $new_password]);
+
+            $data['firstTime'] = $this->session->firstTime;
+            $data['username'] = $this->session->user_username;
+            $data['user'] = $this->_get_employee_detail();
+            $data['official_stamps'] = $this->_get_official_stamps();
+            $data['success'] = "Password changed successfully.";
+            return  view('pages/employee/my-account', $data);
+          } else {
+            $data['firstTime'] = $this->session->firstTime;
+            $data['username'] = $this->session->user_username;
+            $data['user'] = $this->_get_employee_detail();
+            $data['official_stamps'] = $this->_get_official_stamps();
+            $data['error'] = "Current password does not match our records";
+            return  view('pages/employee/my-account', $data);
+          }
+
+        }else{
+          $data['firstTime'] = $this->session->firstTime;
+          $data['username'] = $this->session->user_username;
+          $data['user'] = $this->_get_employee_detail();
+          $data['official_stamps'] = $this->_get_official_stamps();
+          $data['error'] = "Whoops! Account does not exist.";
+          $data['url'] = '';
+          return  view('pages/employee/my-account', $data);
+        }
+      }else{
+      $data['firstTime'] = $this->session->firstTime;
+      $data['username'] = $this->session->user_username;
+      $data['user'] = $this->_get_employee_detail();
+      $data['official_stamps'] = $this->_get_official_stamps();
+      $data['validation'] = $this->validator;
+      $data['url'] = '';
+      return  view('pages/employee/my-account', $data);
+    }
+  }
 
 	public function verify_signature() {
 		$post_data = $this->request->getPost();
