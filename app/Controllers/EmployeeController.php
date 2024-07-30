@@ -38,6 +38,7 @@ class EmployeeController extends BaseController
 
 	public function check_signature_exists() {
 		$user = $this->user->find(session()->user_id);
+    
 		$employee = $this->employee->find($user['user_employee_id']);
 		if ($employee['employee_signature']) {
 			$verified = $this->verification->where([

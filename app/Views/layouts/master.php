@@ -176,7 +176,7 @@
                 <li><a href="<?=site_url('memos'); ?>">Memo</a></li>
                 <li><a href="<?=site_url('circulars'); ?>">Circular</a></li>
                 <li><a href="<?=site_url('notices')?>">Notice Board</a></li>
-                <li><a href="<?= route_to('messages-in','INBOX') ?>">Email</a></li>
+
                 <li><a href="<?= route_to('chat') ?>">Chat</a></li>
               </ul>
             </div>
@@ -221,20 +221,7 @@
               </a>
             </li>
           <?php endif;?>
-          <li>
-            <a href="#meeting" data-toggle="collapse">
-              <i data-feather="video"></i>
-              <span> Meetings </span>
-              <span class="menu-arrow"></span>
-            </a>
-            <div class="collapse" id="meeting">
-              <ul class="nav-second-level">
-
-                <li><a href="<?= site_url('/meetings') ?>">Meetings</a></li>
-				 <li><a href="<?= site_url('/new-meeting') ?>">New Meeting</a></li>
-              </ul>
-            </div>
-          </li>
+          
           <li>
             <a href="<?= route_to('reminder') ?>">
               <i data-feather="calendar"></i>

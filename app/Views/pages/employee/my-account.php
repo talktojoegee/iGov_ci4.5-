@@ -180,7 +180,7 @@
       <?php endif ?>
       
       <form id="manage-token-form" class="needs-validation" method="post" action="<?= site_url('change-password') ?>">
-        <div class="row">
+        <div class="r ow">
           <div class="col-12">
             <div class="form-group">
               <label for="token-symbol">Current Password </label>

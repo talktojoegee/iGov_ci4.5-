@@ -49,6 +49,9 @@ class FolderModel extends Model
     public function getAllFolders(){
         return FolderModel::findAll(); //public folders
     }
+    public function getFolderById($id){
+        return FolderModel::where('folder_id', $id)->first(); //public folders
+    }
     public function getAllMyAndPublicFolders($user_id){
         return FolderModel::where('visibility',2)->orWhere('created_by', $user_id)->findAll(); //public folders
     }

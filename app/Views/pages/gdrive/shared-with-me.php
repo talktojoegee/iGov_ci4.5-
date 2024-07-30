@@ -44,7 +44,6 @@
                         <?php endif; ?>
                         <div class="row mx-n1 no-gutters">
                             <?php foreach($files as $file): ?>
-                                <?php if($file['folder_id'] == 0) :?>
                                     <?php if(pathinfo($file['file_name'], PATHINFO_EXTENSION) == 'pdf'): ?>
                                         <div class="col-xl-3 col-lg-6">
                                             <div class="card m-1 shadow-none border">
@@ -867,7 +866,6 @@
                                             </div>
                                         </div>
                                     <?php endif; ?>
-                                <?php endif; ?>
                             <?php endforeach; ?>
                         </div>
                     </div>

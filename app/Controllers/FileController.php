@@ -31,7 +31,8 @@ class FileController extends BaseController
 	    $data = [
 	      'files'=>$this->file->getAllMyFiles($this->session->user_id),
             'my_folders'=>$this->folder->getAllMyAndPublicFolders($this->session->user_id),
-            'folders'=>$this->folder->getAllFolders(),
+            'folders'=>$this->folder->getAllMyAndPublicFolders($this->session->user_id),
+            //'folders'=>$this->folder->getAllFolders(),
             'users'=>$this->user->getAllUsers(),
             'firstTime'=>$this->session->firstTime,
             'username'=>$this->session->username
@@ -99,17 +100,20 @@ class FileController extends BaseController
     }
 
     public function openFolder($id){
+
         $files = $this->file->getFilesByFolderId($id);
         $folders = $this->folder->getAllFolders();
         //$folders = $this->folder->getFolderContentById($id);
         //if(!empty($files) || !empty($folders)){
+      $folder = $this->folder->getFolderById($id);
             $data = [
                 'files'=>$files,
                 'folders'=>$folders,
                 'parent_folder'=>$id,
                 'users'=>$this->user->getAllUsers(),
                 'firstTime'=>$this->session->firstTime,
-                'username'=>$this->session->username
+                'username'=>$this->session->username,
+              'folder'=>$folder ?? [],
             ];
             //return print_r($data);
             return view('pages/gdrive/view', $data);
@@ -143,6 +147,7 @@ class FileController extends BaseController
     }
 
     public function sharedFileWithMe(){
+      //return dd($this->file->sharedWithMe($this->session->user_id));
         $data = [
             'files'=>$this->file->sharedWithMe($this->session->user_id),
             'users'=>$this->user->getAllUsers(),

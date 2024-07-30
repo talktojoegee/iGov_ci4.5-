@@ -203,7 +203,7 @@
       <div class="modal-content">
         <form id="verify-doc-signing-form" class="needs-validation" novalidate>
           <div class="modal-header">
-            <h4 class="modal-title" id="standard-modalLabel">Verify Document Signing</h4>
+            <h4 class="modal-title" id="standard-modalLabel">Token Verification</h4>
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
           </div>
           <div class="modal-body">
@@ -211,12 +211,12 @@
               <div class="col-12">
                 <div class="form-group">
                   <label for="ver-code">Document Signing Verification Code</label>
-                  <input type="text" class="form-control" name="ver_code" id="ver-code" required/>
+                  <input type="password" class="form-control" name="ver_code" id="ver-code" required/>
                   <div class="invalid-feedback">
-                    Please enter a document signing verification code.
+                    Token
                   </div>
                   <span class="help-block">
-                      <small>Please enter the verification code that was sent to you to sign this document.</small>
+                      <small>Verify it's you by entering your registered token.</small>
                     </span>
                 </div>
               </div>
@@ -235,11 +235,46 @@
       </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
   </div><!-- /.modal -->
+
+
+  <div id="tokenModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="standard-modalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <form id="upload-signature-form">
+          <div class="modal-header">
+            <h4 class="modal-title" id="standard-modalLabel">Token Verification </h4>
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+          </div>
+          <div class="modal-body">
+            <h6>Enter your token</h6>
+            <p>Verify it's you by entering your registered token.</p>
+            <div class="row">
+              <div class="col-12">
+                <div class="form-group">
+                  <label for="">Token <sup class="text-danger">*</sup></label>
+                  <input type="password" id="password" name="password" placeholder="Enter your token" class="form-control">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary" onclick="confirmSecurityToken" id="save-btn">Verify</button>
+            <button type="submit" class="btn btn-primary" id="save-btn-loading" hidden disabled>
+              <span class="spinner-border spinner-border-sm mr-1" role="status" aria-hidden="true"></span> Please wait...
+            </button>
+          </div>
+        </form>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+
 </div>
 <?= $this->endSection(); ?>
 <?= $this->section('extra-scripts'); ?>
 <script src="/assets/libs/dropzone/min/dropzone.min.js"></script>
 <script src="/assets/libs/dropify/js/dropify.min.js"></script>
 <?=view('pages/posts/memos/_memo-scripts.php')?>
+<?=view('pages/employee/_employee-scripts.php')?>
 <?= $this->endSection(); ?>
 

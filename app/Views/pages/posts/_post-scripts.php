@@ -122,13 +122,17 @@
           url: '<?=site_url('/check-signature-exists')?>',
           type: 'get',
           success: response => {
+            console.log(response)
             if (response.success) {
               $('#post-id').val(postID)
               $('#e-signature').val(response.message)
               let formData = new FormData()
               formData.append('p_id', postID)
+              $('#standard-modal-3').modal('toggle');
+
+/*
               $.ajax({
-                url: '<?=site_url('/send-doc-signing-verification')?>',
+                url: '<=site_url('/send-doc-signing-verification')?>',
                 type: 'post',
                 data: formData,
                 success: response => {
@@ -148,7 +152,7 @@
                 cache: false,
                 contentType: false,
                 processData: false
-              })
+              })*/
             } else {
               Swal.fire('Sorry!', response.message, 'error').then(() => location.href = '<?=site_url('/my-account')?>')
             }

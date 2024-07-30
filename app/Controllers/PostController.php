@@ -144,7 +144,7 @@ class PostController extends BaseController
 		])->first();
 		if ($verification || $token) {
 			$verification_data = [
-				'ver_id' => $verification['ver_id'],
+				'ver_id' => $verification['ver_id'] ?? null,
 				'ver_status' => 1,
 			];
 			$this->verification->save($verification_data);
@@ -154,7 +154,7 @@ class PostController extends BaseController
 				'p_signature' => $post_request_data['p_signature']
 			];
 			if ($this->post->save($post_data)) {
-				$this->_create_post_sign_notification($post_request_data);
+				$this->_create_post_sign_notification($post);
 				$response['success'] = true;
 				$response['message'] = 'The document was signed successfully';
 			} else {

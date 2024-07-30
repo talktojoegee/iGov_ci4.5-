@@ -110,11 +110,15 @@
         cancelButtonColor: "#d33"
       }).then(confirm => {
         if (confirm.value) {
+          $('#save-btn').hide();
+          $('#save-btn-loading').show();
           $.ajax({
             url: '<?=site_url('/confirm-token')?>',
             type: 'post',
             data: formData,
             success: response => {
+              $('#save-btn').show();
+              $('#save-btn-loading').hide();
               if (response.success) {
                 Swal.fire('Confirmed!', response.message, 'success').then(() => location.href = '<?=site_url('/my-account')?>')
               } else {
