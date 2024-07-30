@@ -111,8 +111,8 @@
             <?php if(!empty($memo['recipients'])):?>
               <?php foreach ($memo['recipients'] as $recipient):?>
               <div class="avatar-sm avatar-group-item">
-                <span class="avatar-title bg-soft-secondary text-secondary font-20 rounded-circle" data-toggle="tooltip" data-placement="top" title="" data-original-title="<?=$recipient['pos_name']?>">
-                  <?=substr($recipient['pos_name'], 0, 1)?>
+                <span class="avatar-title bg-soft-secondary text-secondary font-20 rounded-circle" data-toggle="tooltip" data-placement="top" title="" data-original-title="<?=$recipient['pos_name'] ?? null ?>">
+                  <?=substr($recipient['pos_name'] ?? null , 0, 1)?>
                 </span>
               </div>
               <?php endforeach; ?>

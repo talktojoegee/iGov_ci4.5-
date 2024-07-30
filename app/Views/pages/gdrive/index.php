@@ -24,7 +24,7 @@
                     <?php echo view('pages/gdrive/_search-form') ?>
 
                     <div class="mt-3">
-                        <h5 class="mb-2">Quick Access</h5>
+                        <h5 class="mb-2"><a href="<?= site_url('/g-drive') ?>">Quick Access</a></h5>
                         <?php if(session()->has('error')): ?>
                             <div class="alert alert-warning alert-dismissible fade show" role="alert">
                                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
