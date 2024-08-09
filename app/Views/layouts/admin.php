@@ -601,8 +601,9 @@
 								<li>
 									<a href="<?=site_url('employees'); ?>">All Employees</a>
 								</li>
-							
-							
+								<li>
+									<a href="<?=site_url('permissions'); ?>">User Permissions</a>
+								</li>
 							</ul>
 						</div>
 					</li>
