@@ -12,7 +12,8 @@
           <?php if (empty($organization)):?>
             <h5>Your organization information has not set up on iGov yet</h5>
           <?php else:?>
-            <img src="/uploads/organization/<?=$organization['org_logo'] ?>" height="100" class="mb-3" alt="company logo">
+            <img src="/assets/images/logo-sm.png" height="100" class="mb-3" alt="company logo">
+            <!--<img src="/uploads/organization/</*=$organization['org_logo'] */?>" height="100" class="mb-3" alt="company logo">-->
             <div class="media">
               <div class="media-body">
                 <h5 class="mt-0 mb-2"><?=$organization['org_name'] ?></h5>

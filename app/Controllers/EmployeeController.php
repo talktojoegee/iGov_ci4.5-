@@ -35,6 +35,14 @@ class EmployeeController extends BaseController
 		$data['official_stamps'] = $this->_get_official_stamps();
 		return view('/pages/employee/my-account', $data);
 	}
+	public function view_profile($userId) {
+    //return dd((int)$userId);
+		$data['firstTime'] = $this->session->firstTime;
+		$data['username'] = $this->session->user_username;
+		$data['user'] = $this->_get_employee_detail_by_id($userId);
+		$data['official_stamps'] = $this->_get_official_stamps();
+		return view('/pages/employee/profile', $data);
+	}
 
 	public function check_signature_exists() {
 		$user = $this->user->find(session()->user_id);
@@ -61,6 +69,7 @@ class EmployeeController extends BaseController
 	}
 
 	public function setup_signature() {
+    
 		$user = $this->user->find(session()->user_id);
 		$employee = $this->employee->find($user['user_employee_id']);
 		$phone = $employee['employee_phone'];
@@ -134,12 +143,25 @@ class EmployeeController extends BaseController
 		}
 		return $this->response->setJSON($response);
 	}
+	public function verify_token() {
+
+		$user = $this->user->find(session()->user_id);
+    if(empty($user)){
+      $response['success'] = false;
+      $response['message'] = 'An error occurred while setting up your E-Signature.';
+      return $this->response->setJSON($response);
+    }
+		//$employee = $this->employee->find($user['user_employee_id']);
+
+    $response['success'] = false;
+    $response['message'] = 'An error occurred while setting up your E-Signature.';
+		return $this->response->setJSON($response);
+	}
 
 
   public function change_password()
   {
     helper(['form']);
-
       $rules = [
         'currentPassword' => [
           'rules' => 'required|min_length[6]',
@@ -179,30 +201,14 @@ class EmployeeController extends BaseController
             $new_password = password_hash($newPassword, PASSWORD_BCRYPT);
 
             $this->user->update($user_id, ['user_password' => $new_password]);
-
-            $data['firstTime'] = $this->session->firstTime;
-            $data['username'] = $this->session->user_username;
-            $data['user'] = $this->_get_employee_detail();
-            $data['official_stamps'] = $this->_get_official_stamps();
-            $data['success'] = "Password changed successfully.";
-            return  view('pages/employee/my-account', $data);
+            return redirect()->back()->with("success", "Password changed successfully.");
           } else {
-            $data['firstTime'] = $this->session->firstTime;
-            $data['username'] = $this->session->user_username;
-            $data['user'] = $this->_get_employee_detail();
-            $data['official_stamps'] = $this->_get_official_stamps();
-            $data['error'] = "Current password does not match our records";
-            return  view('pages/employee/my-account', $data);
+            session()->setFlashdata('error', 'Current password does not match our records');
+            return redirect()->to('/profile/'.$data['user_id']);
           }
 
         }else{
-          $data['firstTime'] = $this->session->firstTime;
-          $data['username'] = $this->session->user_username;
-          $data['user'] = $this->_get_employee_detail();
-          $data['official_stamps'] = $this->_get_official_stamps();
-          $data['error'] = "Whoops! Account does not exist.";
-          $data['url'] = '';
-          return  view('pages/employee/my-account', $data);
+          return redirect()->back()->with("error", "<strong>Whoops!</strong> No record found");
         }
       }else{
       $data['firstTime'] = $this->session->firstTime;
@@ -211,7 +217,7 @@ class EmployeeController extends BaseController
       $data['official_stamps'] = $this->_get_official_stamps();
       $data['validation'] = $this->validator;
       $data['url'] = '';
-      return  view('pages/employee/my-account', $data);
+      return  view('pages/employee/profile', $data);
     }
   }
 
@@ -330,6 +336,20 @@ class EmployeeController extends BaseController
 	private function _get_employee_detail() {
 		$user = $this->user->find(session()->user_id);
 		$user['employee'] = $this->employee->find($user['user_employee_id']);
+		$user['department'] = $this->department->find($user['employee']['employee_department_id']);
+		$user['position'] = $this->position->find($user['employee']['employee_position_id']);
+		$user['organization'] = $this->organization->first();
+		$user['token'] = $this->token->where('token_user_id', $this->session->user_id)->first();
+		$user['signature_ver'] = $this->verification->where([
+			'ver_user_id' => session()->user_id,
+			'ver_type' => 'e-signature'
+		])->first();
+		return $user;
+	}
+	private function _get_employee_detail_by_id($id) {
+    //return dd($id);
+		$user = $this->user->where("user_employee_id = ".$id)->first();
+		$user['employee'] = $this->employee->find($id);
 		$user['department'] = $this->department->find($user['employee']['employee_department_id']);
 		$user['position'] = $this->position->find($user['employee']['employee_position_id']);
 		$user['organization'] = $this->organization->first();

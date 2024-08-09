@@ -47,6 +47,9 @@ class Employee extends Model
     public function getAllEmployee(){
         return Employee::findAll();
     }
+    public function getAllHODs(){
+        return Employee::where('employee_hod = 1')->findAll();
+    }
     public function getAllEmployeeExceptAuthUser($user){
       $builder = $this->db->table('employees as e');
       $builder->join('departments as d','d.dpt_id = e.employee_department_id' );

@@ -235,9 +235,9 @@
             </a>
           </li>
         <li>
-            <a href="<?= route_to('manage-projects') ?>">
-                <i data-feather="clipboard"></i>
-                <span>Projects</span>
+            <a href="<?= route_to('manage-programs') ?>">
+                <i data-feather="calendar"></i>
+                <span>Programs & Activities</span>
             </a>
         </li>
         <li>
@@ -248,10 +248,10 @@
             </a>
             <div class="collapse" id="procurementMenu">
                 <ul class="nav-second-level">
-                    <!--<li>
-                      <a href="route_to('manage-vendors') ?>">Manage Vendors</a>
-                    </li>
                     <li>
+                      <a href="<?= route_to('manage-projects') ?>">Projects</a>
+                    </li>
+                    <!--<li>
                       <a href="route_to('manage-products') ?>">Manage Products</a>
                     </li> -->
                     <li>

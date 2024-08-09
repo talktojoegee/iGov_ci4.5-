@@ -56,9 +56,15 @@ body {
   min-height: 80vh;
   margin-top: 70px; }
 
+.border-bottom{
+  border-bottom: 2px solid #07173B !important;
+}
+.border-bottom-white{
+  border-bottom: 2px solid #fff !important;
+}
 .left-side-menu {
   width: 240px;
-  background: #ffffff;
+  background: #07183B;
   bottom: 0;
   padding: 20px 0;
   position: fixed;
@@ -550,7 +556,7 @@ body[data-sidebar-icon="twotones"] #sidebar-menu > ul > li > a svg {
   display: none; }
 
 .navbar-custom {
-  background-color: #008751;
+  background-color: #FFF;
   box-shadow: 0 0 35px 0 rgba(154, 161, 171, 0.15);
   padding: 0 10px 0 0;
   position: fixed;
@@ -563,7 +569,7 @@ body[data-sidebar-icon="twotones"] #sidebar-menu > ul > li > a svg {
     float: left; }
   .navbar-custom .topnav-menu .nav-link {
     padding: 0 15px;
-    color: rgba(255, 255, 255, 0.6);
+    color: #6C757D; /*rgba(255, 255, 255, 0.6);*/
     min-width: 32px;
     display: block;
     line-height: 70px;
@@ -2098,7 +2104,7 @@ body[data-layout-mode="two-column"][data-layout-width="boxed"]:not([data-sidebar
   background-size: cover; }
 
 body.authentication-bg {
-  background-color: #008751;
+  background-color: #07193B;
   background-size: cover;
   background-position: center; }
 
@@ -3415,12 +3421,31 @@ body.authentication-bg-pattern {
   background-color: #eef0f2;
   border-radius: 4px; }
 
+
+.hori-timeline .events .event-list{text-align:center;display:block}
+.hori-timeline .events .event-list .event-down-icon{position:relative}
+.hori-timeline .events .event-list .event-down-icon::before{content:"";position:absolute;width:100%;top:16px;left:0;right:0;border-bottom:3px dashed #f6f6f6}
+.hori-timeline .events .event-list .event-down-icon .down-arrow-icon{position:relative;background-color:#fff;padding:4px}
+.hori-timeline .events .event-list:hover .down-arrow-icon{-webkit-animation:fade-down 1.5s infinite linear;animation:fade-down 1.5s infinite linear}
+.hori-timeline .events .event-list.active .down-arrow-icon{-webkit-animation:fade-down 1.5s infinite linear;animation:fade-down 1.5s infinite linear}
+.hori-timeline .events .event-list.active .down-arrow-icon:before{content:"\ec4c"}.verti-timeline{border-left:3px dashed #f6f6f6;margin:0 10px}
+
+
+
 .calendar {
   float: left;
   margin-bottom: 0; }
 
 .fc-view {
   margin-top: 30px; }
+.modal-header {
+  color: #fff;
+  text-transform: uppercase;
+  border-radius: 0px;
+  /*border-bottom-color: #EEEEEE; */
+  background-color: #07173B;
+  /*border-bottom: 2px solid #2A3140;*/
+}
 
 .none-border .modal-footer {
   border-top: none; }

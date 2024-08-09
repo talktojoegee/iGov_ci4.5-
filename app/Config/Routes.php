@@ -204,6 +204,20 @@ $routes->get('/projects/edit/(:num)','ProjectController::editProject/$1',['filte
 $routes->post('/projects/update','ProjectController::editProject/$1',['filter'=>'auth', 'as'=>'update-project']);
 $routes->post('/projects/submit-project-report','ProjectController::submitReport',['filter'=>'auth', 'as'=>'submit-project-report']);
 
+
+#Program & Activities
+$routes->get('/manage-programs-activities','ProgramActivitiesController::index',['filter'=>'auth', 'as'=>'manage-programs']);
+$routes->get('/programs-activities/create','ProgramActivitiesController::showAddNewProgramForm',['filter'=>'auth', 'as'=>'add-new-program']);
+$routes->get('/programs-activities/(:num)','ProgramActivitiesController::viewProgram/$1',['filter'=>'auth', 'as'=>'view-program']);
+$routes->post('/programs-activities/create','ProgramActivitiesController::setNewProgram',['filter'=>'auth']);
+$routes->post('/leave-program-comment','ProgramActivitiesController::setNewConversation',['filter'=>'auth', 'as'=>'leave-program-comment']);
+$routes->get('/programs-activities/edit/(:num)','ProgramActivitiesController::editProgram/$1',['filter'=>'auth', 'as'=>'edit-program']);
+$routes->post('/programs-activities/update','ProgramActivitiesController::editProgram/$1',['filter'=>'auth', 'as'=>'update-program']);
+$routes->post('/programs-activities/submit-program-report','ProgramActivitiesController::submitReport',['filter'=>'auth', 'as'=>'submit-program-report']);
+
+$routes->post('/request-for-approval','ChainRequestController::requestForApproval',['filter'=>'auth', 'as'=>'request-for-approval']);
+$routes->post('/action-request','ChainRequestController::actionRequest',['filter'=>'auth', 'as'=>'action-request']);
+
 #Reminder
 $routes->get('/reminder', 'ReminderController::index', ['filter'=>'auth', 'as'=>'reminder']);
 $routes->get('/load-calendar', 'ReminderController::loadCalendar', ['filter'=>'auth']);
@@ -248,8 +262,10 @@ $routes->get('/contractor-license-renewal', 'ProcurementController::contractorLi
 
 // employee routes
 $routes->match(['get'], 'my-account', 'EmployeeController::my_account', ['filter' => 'auth']);
+$routes->match(['get'], 'profile/(:any)', 'EmployeeController::view_profile/$1', ['filter' => 'auth', 'as'=>'view-profile']);
 $routes->match(['get'], 'check-signature-exists', 'EmployeeController::check_signature_exists', ['filter' => 'auth']);
-$routes->match(['post'], 'setup-signature', 'EmployeeController::setup_signature', ['filter' => 'auth']);
+$routes->match(['post'], 'setup-signature', 'EmployeeController::setup_signature', ['filter' => 'auth', 'as'=>'setup_signature']);
+//$routes->match(['post'], 'verify-token', 'EmployeeController::verify_token', ['filter' => 'auth', 'as'=>'verify_token']);
 $routes->match(['post'], 'verify-signature', 'EmployeeController::verify_signature', ['filter' => 'auth']);
 $routes->match(['post'], 'submit-token', 'EmployeeController::submit_token', ['filter' => 'auth']);
 $routes->match(['post'], 'confirm-token', 'EmployeeController::confirm_token', ['filter' => 'auth']);
