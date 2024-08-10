@@ -47,7 +47,7 @@
       <div class="card">
         <div class="card-body">
           <div class="text-center">
-            <img src="/assets/images/users/<?= $user['employee_avatar'] ?? 'avatar.png' ?>" class="rounded-circle avatar-lg img-thumbnail"
+            <img src="/assets/images/users/<?= $user['employee']['employee_avatar'] ?? 'avatar.png' ?>" class="rounded-circle avatar-lg img-thumbnail"
                  alt="profile-image">
 
             <h4 class="mb-0"><?=$user['user_name']?></h4>
@@ -79,7 +79,7 @@
       </div> <!-- end card -->
 
     </div> <!-- end col-->
-
+<?php if($_SESSION['user_id'] == $user['user_id']): ?>
     <div class="col-lg-8 col-xl-8">
       <div class="card">
         <div class="card-body">
@@ -110,12 +110,13 @@
               </a>
             </li>
           </ul>
+
           <div class="tab-content">
             <div class="tab-pane active" id="signature" role="tabpanel">
               <div class="row">
                 <div class="col-md-4 col-lg-4 col-sm-4">
                   <div class="form-group">
-                    <h6 class="mt-3" style="color: #ff0000;">Important Notice</h6>
+                    <h6 class="mt-3" style="color: #ff0000;">Important Notice </h6>
                     <p>By using this to create your digital signature, you agree to the following:</p>
                     <ol>
                       <li>Legally Binding: Your digital signature is legally equivalent to your handwritten signature.</li>
@@ -129,7 +130,30 @@
                   </div>
                 </div>
                 <div class="col-md-8 col-lg-8 col-sm-8">
-
+                  <?php if ($user['employee']['employee_signature']): ?>
+                    <div class="card mb-1 shadow-none border" >
+                      <a href="javascript:void(0)" class="text-center" data-toggle="modal" data-target="#standard-modal">
+                        <img src="/uploads/signatures/<?=$user['employee']['employee_signature']?>" alt="image" class="img-fluid rounded p-1" width="200">
+                      </a>
+                    </div>
+                      <?php if ($user['signature_ver'] && $user['signature_ver']['ver_status'] == 0):?>
+                        <div class="alert alert-warning mt-3" role="alert">
+                          <i class="mdi mdi-alert-circle-outline mr-2"></i>
+                          Verify your signature by entering your e-signature token. Click <a href="javascript:void(0)" class="alert-link" data-toggle="modal" data-target="#standard-modal-2">here</a> to enter the code.
+                        </div>
+                      <?php else:?>
+                        <div class="alert alert-success mt-3" role="alert">
+                          <i class="mdi mdi-check-all mr-2"></i>
+                          Your E-Signature is verified.
+                        </div>
+                      <?php endif;?>
+                  <?php else:?>
+                    <div class="card mb-1 shadow-none border">
+                      <a href="javascript:void(0)" class="p-2 text-center" data-toggle="modal" data-target="#standard-modal">
+                        No E-Signature Set Up
+                      </a>
+                    </div>
+                  <?php endif;?>
 
                   <p class="mt-3 ml-4">Kindly use the blank space surrounded by the dotted lines to draw your signature.</p>
 
@@ -233,39 +257,71 @@
               </form>
             </div>
             <div class="tab-pane" id="profileUpdate">
-              <form>
+              <form action="<?= route_to('update-profile') ?>" method="post" enctype="multipart/form-data">
+                <?= csrf_field() ?>
                 <h5 class="mb-4 text-uppercase"><i class="mdi mdi-account-circle me-1"></i> Personal Info</h5>
                 <div class="row">
                   <div class="col-md-6">
                     <div class="mb-3">
                       <label for="firstname" class="form-label">First Name</label>
-                      <input type="text" class="form-control" value="<?= $user['employee']['employee_f_name'] ?? ''  ?>" placeholder="Enter first name">
+                      <input type="text" class="form-control" name="firstName" value="<?= $user['employee']['employee_f_name'] ?? ''  ?>" placeholder="Enter first name">
+                      <?php if ($validation->getError('firstName')): ?>
+                        <div class="text-danger">
+                          <?= $validation->getError('firstName') ?>
+                        </div>
+                      <?php endif; ?>
                     </div>
                   </div>
                   <div class="col-md-6">
                     <div class="mb-3">
                       <label for="lastname" class="form-label">Last Name</label>
-                      <input type="text" class="form-control" value="<?= $user['employee']['employee_l_name'] ?? ''  ?>" placeholder="Enter last name">
+                      <input type="text" class="form-control" name="lastName" value="<?= $user['employee']['employee_l_name'] ?? ''  ?>" placeholder="Enter last name">
+                      <?php if ($validation->getError('lastName')): ?>
+                        <div class="text-danger">
+                          <?= $validation->getError('lastName') ?>
+                        </div>
+                      <?php endif; ?>
                     </div>
                   </div>
                   <div class="col-md-6">
                     <div class="mb-3">
                       <label for="lastname" class="form-label">Other Names</label>
-                      <input type="text" class="form-control" value="<?= $user['employee']['employee_o_name'] ?? ''  ?>" placeholder="Enter other names">
+                      <input type="text" class="form-control" name="otherNames" value="<?= $user['employee']['employee_o_name'] ?? ''  ?>" placeholder="Enter other names">
+                      <?php if ($validation->getError('otherNames')): ?>
+                        <div class="text-danger">
+                          <?= $validation->getError('otherNames') ?>
+                        </div>
+                      <?php endif; ?>
                     </div>
                   </div>
                   <div class="col-md-6">
                     <div class="mb-3">
                       <label for="lastname" class="form-label">Mobile No.</label>
-                      <input type="text" class="form-control" value="<?= $user['employee']['employee_phone'] ?? ''  ?>" placeholder="Enter other names">
+                      <input type="text" class="form-control" name="mobileNo" value="<?= $user['employee']['employee_phone'] ?? ''  ?>" placeholder="Enter other names">
+                      <?php if ($validation->getError('mobileNo')): ?>
+                        <div class="text-danger">
+                          <?= $validation->getError('mobileNo') ?>
+                        </div>
+                      <?php endif; ?>
                     </div>
                   </div>
                   <div class="col-md-6">
                     <div class="mb-3">
-                      <label for="lastname" class="form-label">Date of Birth</label>
-                      <input type="date" class="form-control" value="<?php $date = date_create($user['employee']['employee_dob']);
+                      <label for="dob" class="form-label">Date of Birth</label>
+                      <input type="date" class="form-control" name="dob" value="<?php $date = date_create($user['employee']['employee_dob']);
                       echo date_format($date,"Y-m-d");
                       ?>" placeholder="DOB">
+                      <?php if ($validation->getError('dob')): ?>
+                        <div class="text-danger">
+                          <?= $validation->getError('dob') ?>
+                        </div>
+                      <?php endif; ?>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="mb-3">
+                      <label for="lastname" class="form-label">Profile Picture</label>
+                      <input type="file" class="form-control-file" name="file" accept="image/png, image/gif, image/jpeg">
                     </div>
                   </div>
                 </div>
@@ -274,7 +330,12 @@
                   <div class="col-12">
                     <div class="mb-3">
                       <label for="userbio" class="form-label">Address</label>
-                      <textarea class="form-control" rows="4" placeholder="Type your address here..."><?= $user['employee']['employee_address'] ?? '' ?></textarea>
+                      <textarea name="address" class="form-control" rows="4" placeholder="Type your address here..."><?= $user['employee']['employee_address'] ?? '' ?></textarea>
+                      <?php if ($validation->getError('address')): ?>
+                        <div class="text-danger">
+                          <?= $validation->getError('address') ?>
+                        </div>
+                      <?php endif; ?>
                     </div>
                   </div>
                 </div>
@@ -284,6 +345,7 @@
               </form>
             </div>
           </div>
+          <?php endif; ?>
         </div>
       </div>
     </div>
@@ -471,29 +533,31 @@ Enter Transaction Password" class="form-control">
           cancelButtonColor: "#d33",
         }).then(confirm => {
           if (confirm.value) {
-            alert(confirm.value)
+            //alert(confirm.value)
 
-           /* let formData = new FormData()
-            formData.append('token', postID)
+            let formData = new FormData()
+            formData.append('token', confirm.value)
             jQuery.noConflict()
             $('#loading-modal').modal('toggle');
             $('#modalTitle').text('Processing request')
-            $('#modalText').text('Hold on while we take into account your action')
+            $('#modalText').text('Hold on while we get this done.')
             $.ajax({
-              url: '<?=site_url('/decline-post')?>',
+              url: '<?=site_url('/verify-token')?>',
               type: 'post',
               data: formData,
               success: response => {
                 if (response.success) {
-                  Swal.fire('Confirmed!', response.message, 'success').then(() => location.reload())
-                } else {
+                  //submit e-signature
+                  saveSignature();
+                  //Swal.fire('Confirmed!', response.message, 'success').then(() => location.reload())
+                } /*else {
                   Swal.fire('Sorry!', response.message, 'error')
-                }
+                }*/
               },
               cache: false,
               contentType: false,
               processData: false,
-            })*/
+            })
 
           }
         })
@@ -507,31 +571,6 @@ Enter Transaction Password" class="form-control">
       signaturePad.clear();
     })
 
-    $('#confirmTransactionPassword').on('click',function(){
-     /* let password = $('#transactionPassword').val();
-      if(password === '' || password === null || password === undefined){
-        //alert('Enter your transaction password')
-        Swal.fire('Whoops!', 'Our system thinks someone else is trying to change your e-signature. Proof it wrong by entering your token', 'error')
-      }*/
-      const transUrl = "<?= route_to('verify_token') ?>";
-      //$('#confirmTransactionPassword').text('Submitting...');
-      //$('#confirmTransactionPassword').prop('disabled', true);
-
-      axios.post(transUrl, { password: '123' })
-        .then(response => {
-          alert(response.data.message);
-          //saveSignature();
-        })
-        .catch(error => {
-          alert(error.response.data.message)
-          //$('#transactionPassword').val('');
-        });
-
-      $('#confirmTransactionPassword').text('Submit');
-      $('#confirmTransactionPassword').prop('disabled', false);
-
-    });
-
 
 
     let currentImagePath = "{{url('storage/'.$user->image)}}";
@@ -539,6 +578,8 @@ Enter Transaction Password" class="form-control">
     $("#clientAssignmentToggler").click(function(){
       $("#clientAssignmentWrapper").toggle();
     });
+
+
     $("#avatarPlaceholderHandler").on("change", function(e){
       e.preventDefault();
       let file = this.files[0];
@@ -551,21 +592,31 @@ Enter Transaction Password" class="form-control">
         reader.readAsDataURL(file);
       }
     });
+
+
   });
 
 
   function saveSignature(){
     base64String = signaturePad.toDataURL();
-
-    axios.post(url, { file: base64String })
-      .then(response => {
-        alert(response.data.message)
-        location.reload();
-      })
-      .catch(error => {
-        alert(error.response.data.message);
-        location.reload();
-      });
+    let formData = new FormData()
+    formData.append('file', base64String)
+    $.ajax({
+      url: '<?=site_url('/submit-digitally-signed-signature')?>',
+      type: 'post',
+      data: formData,
+      success: response => {
+        if (response.success) {
+          //submit e-signature
+          Swal.fire('Confirmed!', response.message, 'success').then(() => location.reload())
+        } else {
+                  Swal.fire('Sorry!', response.message, 'error')
+                }
+      },
+      cache: false,
+      contentType: false,
+      processData: false,
+    })
 
   }
 

@@ -36,11 +36,12 @@ class EmployeeController extends BaseController
 		return view('/pages/employee/my-account', $data);
 	}
 	public function view_profile($userId) {
-    //return dd((int)$userId);
+    $data['authId'] = session()->user_id;
 		$data['firstTime'] = $this->session->firstTime;
 		$data['username'] = $this->session->user_username;
 		$data['user'] = $this->_get_employee_detail_by_id($userId);
 		$data['official_stamps'] = $this->_get_official_stamps();
+    //return dd($data);
 		return view('/pages/employee/profile', $data);
 	}
 
@@ -143,6 +144,37 @@ class EmployeeController extends BaseController
 		}
 		return $this->response->setJSON($response);
 	}
+	public function uploadDigitalSignature() {
+    
+		$user = $this->user->find(session()->user_id);
+		$employee = $this->employee->find($user['user_employee_id']);
+    
+		//$file = $this->request->getFile('file');
+
+    $data_uri = $this->request->getPost('file');
+    $encoded_image = explode(",", $data_uri)[1];
+    $decoded_image = base64_decode($encoded_image);
+    $filename = uniqid().'.png';
+    $path = 'uploads/signatures/'.$filename;
+    //$decoded_image->move('uploads/signatures', $filename);
+    file_put_contents($path,$decoded_image);
+
+
+    // Save the image to the specified path
+    //file_put_contents($filePath, $decoded_image);
+
+
+				$employee_data = [
+					'employee_id' => $employee['employee_id'],
+					'employee_signature' => $filename
+				];
+        $this->employee->update($employee['employee_id'],$employee_data);
+			//}
+      $response['success'] = true;
+      $response['message'] = 'Signature uploaded';
+		//}
+		return $this->response->setJSON($response);
+	}
 	public function verify_token() {
 
 		$user = $this->user->find(session()->user_id);
@@ -151,11 +183,25 @@ class EmployeeController extends BaseController
       $response['message'] = 'An error occurred while setting up your E-Signature.';
       return $this->response->setJSON($response);
     }
-		//$employee = $this->employee->find($user['user_employee_id']);
+    $token = $this->request->getPost('token');
+    $tokenExist = $this->token->where('token_user_id', $this->session->user_id)->first();
+    if(empty($tokenExist)){
+      $response['success'] = false;
+      $response['message'] = "You'll have to first setup e-token before carrying out this operation.";
+      return $this->response->setJSON($response);
+    }
+    if($token == $tokenExist['token_symbol']){
+      $response['success'] = true;
+      $response['message'] = "Success! Token verified.";
+      return $this->response->setJSON($response);
+    }else{
+      $response['success'] = false;
+      $response['message'] = 'Whoops! Token mismatch';
+      return $this->response->setJSON($response);
+    }
 
-    $response['success'] = false;
-    $response['message'] = 'An error occurred while setting up your E-Signature.';
-		return $this->response->setJSON($response);
+
+
 	}
 
 
@@ -221,20 +267,104 @@ class EmployeeController extends BaseController
     }
   }
 
+  public function update_profile()
+  {
+    helper(['form']);
+      $rules = [
+        'firstName' => [
+          'rules' => 'required',
+          'errors' => [
+            'required' => 'Enter first name',
+          ]
+        ],
+        'lastName' => [
+          'rules' => 'required',
+          'errors' => [
+            'required' => 'Enter last name',
+          ]
+        ],
+        'address' => [
+          'rules' => 'required',
+          'errors' => [
+            'required' => 'Enter address',
+          ]
+        ],
+        'dob' => [
+          'rules' => 'required',
+          'errors' => [
+            'required' => 'Choose your date of birth',
+          ]
+        ],
+
+        'mobileNo' => [
+          'rules' => 'required',
+          'errors' => [
+            'required' => 'Enter mobile number',
+          ]
+        ]
+      ];
+
+    if($this->validate($rules)) {
+      $user_id = $this->session->user_id;
+      $data = $this->user->where('user_id', $user_id)
+        ->first();
+      if ($data) {
+        $employee = $this->employee->where('employee_id = ' . $data['user_employee_id'])->first();
+        if (!empty($employee)) {
+          $userData = [
+            "employee_f_name" => $this->request->getPost('firstName') ?? null,
+            "employee_l_name" => $this->request->getPost('lastName') ?? null,
+            "employee_o_name" => $this->request->getPost('otherNames') ?? null,
+            "employee_dob" => $this->request->getPost('dob') ?? null,
+            "employee_phone" => $this->request->getPost('mobileNo'),
+            "employee_address" => $this->request->getPost('address'),
+          ];
+          $this->employee->update($data['user_employee_id'], $userData);
+          $avatar = $this->request->getFile('file');
+          if (!empty($avatar)) {
+            if ($avatar->isValid() && !$avatar->hasMoved()) {
+              $file_name = $avatar->getRandomName();
+              $avatar->move('assets/images/users', $file_name);
+              $employee_data = [
+                'employee_id' => $employee['employee_id'],
+                'employee_avatar' => $file_name
+              ];
+              $this->employee->save($employee_data);
+            }
+          }
+          return redirect()->back()->with("success", "Profile updated");
+        } else {
+          return redirect()->back()->with("error", "<strong>Whoops!</strong> No record found");
+        }
+      } else {
+        return redirect()->back()->with("error", "<strong>Whoops!</strong> No record found");
+      }
+    }else {
+      $data['firstTime'] = $this->session->firstTime;
+      $data['username'] = $this->session->user_username;
+      $data['user'] = $this->_get_employee_detail();
+      $data['official_stamps'] = $this->_get_official_stamps();
+      $data['validation'] = $this->validator;
+      $data['url'] = '';
+      return view('pages/employee/profile', $data);
+    }
+
+  }
+
 	public function verify_signature() {
 		$post_data = $this->request->getPost();
 		$ver_code = $post_data['ver_code'];
 
     $token = $this->token->where(['token_user_id'=> $this->session->user_id,
       'token_symbol'=>$ver_code, 'token_status'=>1])->first();
-    if($token){
-      $verification = $this->verification->where([
-        'ver_user_id' => session()->user_id,
-        'ver_type' => 'e-signature',
-        'ver_status' => 0
-      ])->first();
+    $verification = $this->verification->where([
+      'ver_user_id' => $this->session->user_id,
+      'ver_type' => 'e-signature',
+      'ver_status' => 0
+    ])->first();
 
-      if ($verification) {
+
+    if($token || $verification){
         $verification_data = [
           'ver_id' => $verification['ver_id'],
           'ver_status' => 1,
@@ -242,39 +372,12 @@ class EmployeeController extends BaseController
         $this->verification->save($verification_data);
         $response['success'] = true;
         $response['message'] = 'Your E-Signature is successfully verified.';
-      } else {
-        $response['success'] = false;
-        $response['message'] = 'An error occurred while verifying your e-signature.';
-      }
 
     }else {
       $response['success'] = false;
       $response['message'] = 'An error occurred while verifying your e-signature or token not set.';
     }
    // return $this->response->setJSON($response);
-
-
-    if(empty($token)){
-      $verification = $this->verification->where([
-        'ver_user_id' => session()->user_id,
-        'ver_type' => 'e-signature',
-        'ver_code' => $ver_code,
-        'ver_status' => 0
-      ])->first();
-
-      if ($verification) {
-        $verification_data = [
-          'ver_id' => $verification['ver_id'],
-          'ver_status' => 1,
-        ];
-        $this->verification->save($verification_data);
-        $response['success'] = true;
-        $response['message'] = 'Your E-Signature is successfully verified.';
-      } else {
-        $response['success'] = false;
-        $response['message'] = 'An error occurred while verifying your e-signature.';
-      }
-    }
 
 		return $this->response->setJSON($response);
 	}
