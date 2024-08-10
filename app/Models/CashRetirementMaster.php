@@ -46,9 +46,9 @@ class CashRetirementMaster extends Model
     protected $afterDelete    = [];
 
   public function getAllEmployeeRetirements($empId){
-    $builder = $this->db->table('cash_retirements as cr');
+    $builder = $this->db->table('cash_retirement_masters as cr');
     $builder->join('employees as e','e.employee_id = cr.crm_payable_to' );
-    $builder->orderBy('p.program_id', 'DESC');
+    $builder->orderBy('cr.crm_id', 'DESC');
     return $builder->get()->getResultArray();
   }
 

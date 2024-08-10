@@ -4,18 +4,21 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class UserModel extends Model
+class UserPermissions extends Model
 {
-    protected $DBGroup = 'default';
-    protected $table = 'users';
-    protected $primaryKey = 'user_id';
+    protected $table = 'user_permissions';
+    protected $primaryKey = 'id';
     protected $useAutoIncrement = true;
-    protected $insertID = 0;
     protected $returnType = 'array';
     protected $useSoftDeletes = false;
     protected $protectFields = true;
-    protected $allowedFields = ['user_id', 'user_name', 'user_password', 'user_username', 'user_email', 'user_phone', 'user_employee_id',
-        'user_status', 'user_type'];
+    protected $allowedFields = ['permission_id', 'user_id', 'permission'];
+
+    protected bool $allowEmptyInserts = false;
+    protected bool $updateOnlyChanged = true;
+
+    protected array $casts = [];
+    protected array $castHandlers = [];
 
     // Dates
     protected $useTimestamps = false;
@@ -32,7 +35,7 @@ class UserModel extends Model
 
     // Callbacks
     protected $allowCallbacks = true;
-    protected $beforeInsert = ["beforeInsert"];
+    protected $beforeInsert = [];
     protected $afterInsert = [];
     protected $beforeUpdate = [];
     protected $afterUpdate = [];
@@ -41,26 +44,14 @@ class UserModel extends Model
     protected $beforeDelete = [];
     protected $afterDelete = [];
 
-
-    protected function beforeInsert(array $data)
+    public function getPermissionsByUserId($userId): array
     {
-        $data = $this->passwordHash($data);
-        return $data;
+        return UserPermissions::where('user_id', $userId)->findAll();
     }
 
-    protected function passwordHash(array $data)
+    public function viewUserPermissions($userId): array
     {
-        if (isset($data['data']['user_password'])) :
-            $data['data']['user_password'] = password_hash($data['data']['user_password'], PASSWORD_DEFAULT);
-        endif;
-
-        return $data;
+        $permissions = UserPermissions::where('user_id', $userId)->findAll();
+        return array_column($permissions, 'permission');
     }
-
-    public function getAllUsers()
-    {
-        return UserModel::findAll();
-    }
-
-
 }

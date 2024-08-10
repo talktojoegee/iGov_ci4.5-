@@ -1,6 +1,7 @@
 <?php
 
 use CodeIgniter\Router\RouteCollection;
+
 $this->session = session();
 
 /**
@@ -8,9 +9,8 @@ $this->session = session();
  */
 // Load the system's routing file first, so that the app and ENVIRONMENT
 // can override as needed.
-if (file_exists(SYSTEMPATH . 'Config/Routes.php'))
-{
-  require SYSTEMPATH . 'Config/Routes.php';
+if (file_exists(SYSTEMPATH . 'Config/Routes.php')) {
+    require SYSTEMPATH . 'Config/Routes.php';
 }
 
 
@@ -23,18 +23,17 @@ $routes->setDefaultNamespace('App\Controllers');
 $routes->setDefaultController('Home');
 $routes->setDefaultMethod('index');
 $routes->setTranslateURIDashes(false);
-$routes->set404Override(function()
-{
-  if($this->session->type):
-    if($this->session->type == 1 || $this->session->type == 3):
-      return view('office/error_404');
+$routes->set404Override(function () {
+    if ($this->session->type):
+        if ($this->session->type == 1 || $this->session->type == 3):
+            return view('office/error_404');
+        endif;
+        if ($this->session->type == 2):
+            return view('pages/error_404');
+        endif;
+    else:
+        return view('pages/error_404');
     endif;
-    if($this->session->type == 2):
-      return view('pages/error_404');
-    endif;
-  else:
-    return view('pages/error_404');
-  endif;
 
 });
 $routes->setAutoRoute(true);
@@ -80,6 +79,10 @@ $routes->match(['get', 'post'], 'new-employee', 'EmployeeSettingController::new_
 $routes->match(['get', 'post'], 'fetch-positions', 'EmployeeSettingController::fetch_positions', ['filter' => 'auth']);
 $routes->match(['get', 'post'], 'employees', 'EmployeeSettingController::all_employees', ['filter' => 'auth']);
 $routes->match(['post'], 'check-username', 'EmployeeSettingController::check_username', ['filter' => 'auth']);
+
+$routes->get('permissions', 'UserController::user_permissions', ['filter' => 'auth']);
+$routes->post('permissions', 'UserController::modify_user_permissions', ['filter' => 'auth']);
+$routes->get('reset-password', 'UserController::reset_password', ['filter' => 'auth']);
 
 $routes->match(['get', 'post'], 'budget-charts', 'BudgetSettingController::budget_charts', ['filter' => 'auth']);
 $routes->match(['get', 'post'], 'new-budget-chart', 'BudgetSettingController::new_budget_chart', ['filter' => 'auth']);
@@ -132,77 +135,77 @@ $routes->match(['get'], 'my-circulars', 'CircularController::my_circulars', ['fi
 $routes->match(['get'], 'view-circular/(:num)', 'CircularController::view_circular/$1', ['filter' => 'auth']);
 
 #GDrive routes
-$routes->get('/g-drive', 'FileController::index',['filter' => 'auth']);
-$routes->post('/process-upload', 'FileController::processAttachmentUploads',['filter' => 'auth']);
-$routes->post('/create-folder', 'FileController::createFolder',['filter' => 'auth']);
-$routes->get('/open-folder/(:num)', 'FileController::openFolder/$1',['filter' => 'auth']);
-$routes->get('/remove-file/(:num)', 'FileController::removeFile/$1',['filter' => 'auth']);
-$routes->post('share-file-with', 'FileController::shareFileWith',['filter' => 'auth']);
-$routes->get('shared-with-me', 'FileController::sharedFileWithMe',['filter' => 'auth']);
-$routes->get('/my-files', 'FileController::myFiles',['filter' => 'auth']);
-$routes->post('/search-g-drive', 'FileController::searchGDrive',['filter' => 'auth']);
+$routes->get('/g-drive', 'FileController::index', ['filter' => 'auth']);
+$routes->post('/process-upload', 'FileController::processAttachmentUploads', ['filter' => 'auth']);
+$routes->post('/create-folder', 'FileController::createFolder', ['filter' => 'auth']);
+$routes->get('/open-folder/(:num)', 'FileController::openFolder/$1', ['filter' => 'auth']);
+$routes->get('/remove-file/(:num)', 'FileController::removeFile/$1', ['filter' => 'auth']);
+$routes->post('share-file-with', 'FileController::shareFileWith', ['filter' => 'auth']);
+$routes->get('shared-with-me', 'FileController::sharedFileWithMe', ['filter' => 'auth']);
+$routes->get('/my-files', 'FileController::myFiles', ['filter' => 'auth']);
+$routes->post('/search-g-drive', 'FileController::searchGDrive', ['filter' => 'auth']);
 
 #Training routes
-$routes->get('/trainings', 'TrainingController::index', ['filter'=>'auth']);
-$routes->get('/add-new-training', 'TrainingController::showAddNewTrainingForm', ['filter'=>'auth']);
-$routes->get('/edit-training/(:any)', 'TrainingController::showEditTrainingForm/$1', ['filter'=>'auth']);
-$routes->post('/add-new-training', 'TrainingController::storeNewTraining', ['filter'=>'auth']);
-$routes->get('/trainings/(:any)', 'TrainingController::viewTraining/$1', ['filter'=>'auth']);
-$routes->post('/update-training', 'TrainingController::updateTraining', ['filter'=>'auth']);
+$routes->get('/trainings', 'TrainingController::index', ['filter' => 'auth']);
+$routes->get('/add-new-training', 'TrainingController::showAddNewTrainingForm', ['filter' => 'auth']);
+$routes->get('/edit-training/(:any)', 'TrainingController::showEditTrainingForm/$1', ['filter' => 'auth']);
+$routes->post('/add-new-training', 'TrainingController::storeNewTraining', ['filter' => 'auth']);
+$routes->get('/trainings/(:any)', 'TrainingController::viewTraining/$1', ['filter' => 'auth']);
+$routes->post('/update-training', 'TrainingController::updateTraining', ['filter' => 'auth']);
 #Lesson routes
-$routes->post('/add-new-training-lesson', 'TrainingController::addNewTrainingLesson', ['filter'=>'auth']);
-$routes->post('/update-training-lesson', 'TrainingController::updateTrainingLesson', ['filter'=>'auth']);
-$routes->get('/delete-lesson-attachment/(:num)', 'TrainingController::deleteAttachment/$1', ['filter'=>'auth']);
+$routes->post('/add-new-training-lesson', 'TrainingController::addNewTrainingLesson', ['filter' => 'auth']);
+$routes->post('/update-training-lesson', 'TrainingController::updateTrainingLesson', ['filter' => 'auth']);
+$routes->get('/delete-lesson-attachment/(:num)', 'TrainingController::deleteAttachment/$1', ['filter' => 'auth']);
 
 #Workflow routes
-$routes->get('/workflow/settings', 'WorkflowController::settings', ['filter'=>'auth']);
-$routes->post('/workflow/add-new-workflow-type', 'WorkflowController::storeNewWorkflowType', ['filter'=>'auth']);
-$routes->post('/workflow/update-workflow-type', 'WorkflowController::updateWorkflowType', ['filter'=>'auth']);
+$routes->get('/workflow/settings', 'WorkflowController::settings', ['filter' => 'auth']);
+$routes->post('/workflow/add-new-workflow-type', 'WorkflowController::storeNewWorkflowType', ['filter' => 'auth']);
+$routes->post('/workflow/update-workflow-type', 'WorkflowController::updateWorkflowType', ['filter' => 'auth']);
 #Normal process routes
-$routes->post('/workflow/setup-workflow-processor', 'WorkflowController::setupWorkflowProcessor', ['filter'=>'auth']);
-$routes->post('/workflow/update-workflow-processor', 'WorkflowController::updateWorkflowProcessor', ['filter'=>'auth']);
+$routes->post('/workflow/setup-workflow-processor', 'WorkflowController::setupWorkflowProcessor', ['filter' => 'auth']);
+$routes->post('/workflow/update-workflow-processor', 'WorkflowController::updateWorkflowProcessor', ['filter' => 'auth']);
 
 #Exception process routes
-$routes->post('/workflow/setup-exception-workflow-processor', 'WorkflowController::setupExceptionWorkflowProcessor', ['filter'=>'auth']);
-$routes->post('/workflow/update-exception-workflow-processor', 'WorkflowController::updateExceptionWorkflowProcessor', ['filter'=>'auth']);
+$routes->post('/workflow/setup-exception-workflow-processor', 'WorkflowController::setupExceptionWorkflowProcessor', ['filter' => 'auth']);
+$routes->post('/workflow/update-exception-workflow-processor', 'WorkflowController::updateExceptionWorkflowProcessor', ['filter' => 'auth']);
 
 #Workflow request [employee]
-$routes->get('/workflow-requests', 'WorkflowController::workflowRequests', ['filter'=>'auth']);
-$routes->get('/workflow-requests/new-request', 'WorkflowController::createNewWorkflowRequest', ['filter'=>'auth']);
-$routes->post('/workflow-requests/new-request', 'WorkflowController::setNewWorkflowRequest', ['filter'=>'auth']);
-$routes->get('/workflow-requests/view/(:num)', 'WorkflowController::viewWorkflowRequest/$1', ['filter'=>'auth']);
-$routes->post('/workflow-requests/process-request', 'WorkflowController::processWorkflowRequest', ['filter'=>'auth']);
-$routes->post('/workflow-requests/leave-comment', 'WorkflowController::leaveComment', ['filter'=>'auth']);
+$routes->get('/workflow-requests', 'WorkflowController::workflowRequests', ['filter' => 'auth']);
+$routes->get('/workflow-requests/new-request', 'WorkflowController::createNewWorkflowRequest', ['filter' => 'auth']);
+$routes->post('/workflow-requests/new-request', 'WorkflowController::setNewWorkflowRequest', ['filter' => 'auth']);
+$routes->get('/workflow-requests/view/(:num)', 'WorkflowController::viewWorkflowRequest/$1', ['filter' => 'auth']);
+$routes->post('/workflow-requests/process-request', 'WorkflowController::processWorkflowRequest', ['filter' => 'auth']);
+$routes->post('/workflow-requests/leave-comment', 'WorkflowController::leaveComment', ['filter' => 'auth']);
 //$routes->get('notice-board/(:any)', 'MessagingSettingController::notice_board/$1', ['filter' => 'auth']);
 
 
 //$routes->get('/email', 'EmailServiceController::index', ['filter'=>'auth']);
 //$routes->get('/email/(:num)', 'EmailServiceController::index/$1', ['filter'=>'auth']);
 
-$routes->get('/email/folder/(:any)', 'EmailServiceController::getMessagesInFolder/$1',['filter'=>'auth', 'as'=>'messages-in']);
+$routes->get('/email/folder/(:any)', 'EmailServiceController::getMessagesInFolder/$1', ['filter' => 'auth', 'as' => 'messages-in']);
 
 
-$routes->get('/read-mail/(:any)/(:any)', 'EmailServiceController::readMail/$1/$2', ['filter'=>'auth', 'as'=>'read-mail']);
-$routes->get('/compose-email', 'EmailController::composeEmail', ['filter'=>'auth']);
-$routes->post('/compose-email', 'EmailController::processMail', ['filter'=>'auth']);
-$routes->get('/email-settings', 'EmailController::showEmailSettingsForm', ['filter'=>'auth', 'as'=>'email-settings']);
-$routes->post('/email-settings', 'EmailController::processEmailSettings', ['filter'=>'auth']);
+$routes->get('/read-mail/(:any)/(:any)', 'EmailServiceController::readMail/$1/$2', ['filter' => 'auth', 'as' => 'read-mail']);
+$routes->get('/compose-email', 'EmailController::composeEmail', ['filter' => 'auth']);
+$routes->post('/compose-email', 'EmailController::processMail', ['filter' => 'auth']);
+$routes->get('/email-settings', 'EmailController::showEmailSettingsForm', ['filter' => 'auth', 'as' => 'email-settings']);
+$routes->post('/email-settings', 'EmailController::processEmailSettings', ['filter' => 'auth']);
 
 
-$routes->get('/chat', 'ChatController::chat', ['filter'=>'auth']);
-$routes->post('/chat-messages', 'ChatController::getMessages', ['filter'=>'auth']);
-$routes->post('/send-message', 'ChatController::sendMessage', ['filter'=>'auth']);
-$routes->get('/test-chat', 'ChatController::getMessages', ['filter'=>'auth']);
+$routes->get('/chat', 'ChatController::chat', ['filter' => 'auth']);
+$routes->post('/chat-messages', 'ChatController::getMessages', ['filter' => 'auth']);
+$routes->post('/send-message', 'ChatController::sendMessage', ['filter' => 'auth']);
+$routes->get('/test-chat', 'ChatController::getMessages', ['filter' => 'auth']);
 
 #Project routes
-$routes->get('/manage-projects','ProjectController::index',['filter'=>'auth', 'as'=>'manage-projects']);
-$routes->get('/projects/create','ProjectController::showAddNewProjectForm',['filter'=>'auth', 'as'=>'add-new-project']);
-$routes->get('/projects/(:num)','ProjectController::viewProject/$1',['filter'=>'auth', 'as'=>'view-project']);
-$routes->post('/projects/create','ProjectController::setNewProject',['filter'=>'auth']);
-$routes->post('/leave-comment','ProjectController::setNewConversation',['filter'=>'auth', 'as'=>'leave-comment']);
-$routes->get('/projects/edit/(:num)','ProjectController::editProject/$1',['filter'=>'auth', 'as'=>'edit-project']);
-$routes->post('/projects/update','ProjectController::editProject/$1',['filter'=>'auth', 'as'=>'update-project']);
-$routes->post('/projects/submit-project-report','ProjectController::submitReport',['filter'=>'auth', 'as'=>'submit-project-report']);
+$routes->get('/manage-projects', 'ProjectController::index', ['filter' => 'auth', 'as' => 'manage-projects']);
+$routes->get('/projects/create', 'ProjectController::showAddNewProjectForm', ['filter' => 'auth', 'as' => 'add-new-project']);
+$routes->get('/projects/(:num)', 'ProjectController::viewProject/$1', ['filter' => 'auth', 'as' => 'view-project']);
+$routes->post('/projects/create', 'ProjectController::setNewProject', ['filter' => 'auth']);
+$routes->post('/leave-comment', 'ProjectController::setNewConversation', ['filter' => 'auth', 'as' => 'leave-comment']);
+$routes->get('/projects/edit/(:num)', 'ProjectController::editProject/$1', ['filter' => 'auth', 'as' => 'edit-project']);
+$routes->post('/projects/update', 'ProjectController::editProject/$1', ['filter' => 'auth', 'as' => 'update-project']);
+$routes->post('/projects/submit-project-report', 'ProjectController::submitReport', ['filter' => 'auth', 'as' => 'submit-project-report']);
 
 
 #Program & Activities
@@ -219,46 +222,46 @@ $routes->post('/request-for-approval','ChainRequestController::requestForApprova
 $routes->post('/action-request','ChainRequestController::actionRequest',['filter'=>'auth', 'as'=>'action-request']);
 
 #Reminder
-$routes->get('/reminder', 'ReminderController::index', ['filter'=>'auth', 'as'=>'reminder']);
-$routes->get('/load-calendar', 'ReminderController::loadCalendar', ['filter'=>'auth']);
-$routes->post('/reminder/insert', 'ReminderController::insert', ['filter'=>'auth']);
+$routes->get('/reminder', 'ReminderController::index', ['filter' => 'auth', 'as' => 'reminder']);
+$routes->get('/load-calendar', 'ReminderController::loadCalendar', ['filter' => 'auth']);
+$routes->post('/reminder/insert', 'ReminderController::insert', ['filter' => 'auth']);
 
 #Contractor routes
-$routes->get('/manage-contractors', 'ContractorController::manageContractors',['filter'=>'auth', 'as'=>'manage-contractors']);
-$routes->get('/add-new-contractor', 'ContractorController::showNewContractorForm',['filter'=>'auth', 'as'=>'add-new-contractor']);
-$routes->post('/add-new-contractor', 'ContractorController::addNewContractor',['filter'=>'auth']);
-$routes->get('/contractor-details/(:num)', 'ContractorController::contractorDetail/$1',['filter'=>'auth', 'as'=>'contractor-detail']);
-$routes->post('/renew-license', 'ContractorController::renewLicense',['filter'=>'auth', 'as'=>'renew-license']);
-$routes->get('/manage-bids', 'ContractorController::manageBids',['filter'=>'auth','as'=>'manage-bids']);
-$routes->get('/view-bid/(:num)', 'ContractorController::viewBid/$1',['filter'=>'auth','as'=>'view-bid']);
-$routes->post('/update-bid-status', 'ContractorController::updateBidStatus', ['filter'=>'auth', 'as'=>'update-bid-status']);
+$routes->get('/manage-contractors', 'ContractorController::manageContractors', ['filter' => 'auth', 'as' => 'manage-contractors']);
+$routes->get('/add-new-contractor', 'ContractorController::showNewContractorForm', ['filter' => 'auth', 'as' => 'add-new-contractor']);
+$routes->post('/add-new-contractor', 'ContractorController::addNewContractor', ['filter' => 'auth']);
+$routes->get('/contractor-details/(:num)', 'ContractorController::contractorDetail/$1', ['filter' => 'auth', 'as' => 'contractor-detail']);
+$routes->post('/renew-license', 'ContractorController::renewLicense', ['filter' => 'auth', 'as' => 'renew-license']);
+$routes->get('/manage-bids', 'ContractorController::manageBids', ['filter' => 'auth', 'as' => 'manage-bids']);
+$routes->get('/view-bid/(:num)', 'ContractorController::viewBid/$1', ['filter' => 'auth', 'as' => 'view-bid']);
+$routes->post('/update-bid-status', 'ContractorController::updateBidStatus', ['filter' => 'auth', 'as' => 'update-bid-status']);
 
 #Contract routes
-$routes->get('/contract-category', 'ContractController::showContractCategories',['filter'=>'auth','as'=>'contract-categories']);
-$routes->post('/contract-category', 'ContractController::saveContractCategory',['filter'=>'auth']);
-$routes->post('/edit-contract-category', 'ContractController::updateContractCategory',['filter'=>'auth','as'=>'edit-contract-categories']);
-$routes->get('/new-contract', 'ContractController::showContractForm',['filter'=>'auth','as'=>'add-new-contract']);
-$routes->post('/new-contract', 'ContractController::setNewContract',['filter'=>'auth']);
-$routes->get('/all-contracts', 'ContractController::allContracts',['filter'=>'auth','as'=>'all-contracts']);
-$routes->get('/view-contract/(:any)', 'ContractController::viewContract/$1',['filter'=>'auth','as'=>'view-contract']);
-$routes->get('/edit-contract/(:any)', 'ContractController::showEditContractForm/$1',['filter'=>'auth','as'=>'edit-contract']);
-$routes->post('/publish-contract', 'ContractController::publishContract',['filter'=>'auth','as'=>'publish-contract']);
-$routes->post('/contract/leave-comment', 'ContractController::setNewConversation',['filter'=>'auth','as'=>'leave-comment-contract']);
+$routes->get('/contract-category', 'ContractController::showContractCategories', ['filter' => 'auth', 'as' => 'contract-categories']);
+$routes->post('/contract-category', 'ContractController::saveContractCategory', ['filter' => 'auth']);
+$routes->post('/edit-contract-category', 'ContractController::updateContractCategory', ['filter' => 'auth', 'as' => 'edit-contract-categories']);
+$routes->get('/new-contract', 'ContractController::showContractForm', ['filter' => 'auth', 'as' => 'add-new-contract']);
+$routes->post('/new-contract', 'ContractController::setNewContract', ['filter' => 'auth']);
+$routes->get('/all-contracts', 'ContractController::allContracts', ['filter' => 'auth', 'as' => 'all-contracts']);
+$routes->get('/view-contract/(:any)', 'ContractController::viewContract/$1', ['filter' => 'auth', 'as' => 'view-contract']);
+$routes->get('/edit-contract/(:any)', 'ContractController::showEditContractForm/$1', ['filter' => 'auth', 'as' => 'edit-contract']);
+$routes->post('/publish-contract', 'ContractController::publishContract', ['filter' => 'auth', 'as' => 'publish-contract']);
+$routes->post('/contract/leave-comment', 'ContractController::setNewConversation', ['filter' => 'auth', 'as' => 'leave-comment-contract']);
 
 #Vendor routes
-$routes->get('/manage-vendors', 'ProcurementController::manageVendors',['filter'=>'auth', 'as'=>'manage-vendors']);
-$routes->get('/add-new-vendor', 'ProcurementController::showNewVendorForm',['filter'=>'auth', 'as'=>'add-new-vendor']);
-$routes->post('/add-new-vendor', 'ProcurementController::addNewVendor',['filter'=>'auth']);
-$routes->post('/update-vendor', 'ProcurementController::updateVendor',['filter'=>'auth', 'as'=>'update-vendor']);
+$routes->get('/manage-vendors', 'ProcurementController::manageVendors', ['filter' => 'auth', 'as' => 'manage-vendors']);
+$routes->get('/add-new-vendor', 'ProcurementController::showNewVendorForm', ['filter' => 'auth', 'as' => 'add-new-vendor']);
+$routes->post('/add-new-vendor', 'ProcurementController::addNewVendor', ['filter' => 'auth']);
+$routes->post('/update-vendor', 'ProcurementController::updateVendor', ['filter' => 'auth', 'as' => 'update-vendor']);
 #Product routes
-$routes->get('/manage-products', 'ProcurementController::manageProducts',['filter'=>'auth', 'as'=>'manage-products']);
-$routes->get('/add-new-product', 'ProcurementController::showNewProductForm',['filter'=>'auth', 'as'=>'add-new-product']);
-$routes->post('/add-new-product', 'ProcurementController::addNewProduct',['filter'=>'auth']);
+$routes->get('/manage-products', 'ProcurementController::manageProducts', ['filter' => 'auth', 'as' => 'manage-products']);
+$routes->get('/add-new-product', 'ProcurementController::showNewProductForm', ['filter' => 'auth', 'as' => 'add-new-product']);
+$routes->post('/add-new-product', 'ProcurementController::addNewProduct', ['filter' => 'auth']);
 
-$routes->get('/contractor-license-category', 'ProcurementController::contractorLicenseCategory',['filter'=>'auth','as'=>'contractor-license-category']);
-$routes->post('/contractor-license-category', 'ProcurementController::storeContractorLicenseCategory',['filter'=>'auth','as'=>'contractor-license-category']);
-$routes->post('/update-contractor-license-category', 'ProcurementController::updateContractorLicenseCategory',['filter'=>'auth','as'=>'update-contractor-license-category']);
-$routes->get('/contractor-license-renewal', 'ProcurementController::contractorLicenseRenewal',['filter'=>'auth','as'=>'contractor-license-renewal']);
+$routes->get('/contractor-license-category', 'ProcurementController::contractorLicenseCategory', ['filter' => 'auth', 'as' => 'contractor-license-category']);
+$routes->post('/contractor-license-category', 'ProcurementController::storeContractorLicenseCategory', ['filter' => 'auth', 'as' => 'contractor-license-category']);
+$routes->post('/update-contractor-license-category', 'ProcurementController::updateContractorLicenseCategory', ['filter' => 'auth', 'as' => 'update-contractor-license-category']);
+$routes->get('/contractor-license-renewal', 'ProcurementController::contractorLicenseRenewal', ['filter' => 'auth', 'as' => 'contractor-license-renewal']);
 
 // employee routes
 $routes->match(['get'], 'my-account', 'EmployeeController::my_account', ['filter' => 'auth']);
@@ -337,13 +340,13 @@ $routes->match(['get', 'post'], 'maintenance-schedule-calendar', 'FleetControlle
 $routes->match(['get', 'post'], 'maintenance-schedule-data', 'FleetController::maintenance_schedule_data', ['filter' => 'auth']);
 
 
-$routes->match(['get', 'post'], 'contractor-login', 'ContractorAuth::login', ['filter'=>'noauth', 'as'=>'contractor-login']);
-$routes->get('/contractor-dashboard', 'ContractorPortalController::dashboard',[ 'as'=>'contractor-dashboard', 'filter'=>'contractorauth']);
-$routes->get('/contract-listing', 'ContractorPortalController::contractListing',[ 'as'=>'contract-listing', 'filter'=>'contractorauth']);
-$routes->get('/contract-details/(:any)', 'ContractorPortalController::viewContractDetails/$1',[ 'as'=>'contract-details', 'filter'=>'contractorauth']);
-$routes->get('/bidding/(:any)', 'ContractorPortalController::showContractBiddingView/$1',[ 'as'=>'contract-bidding', 'filter'=>'contractorauth']);
-$routes->post('/submit-bid', 'ContractorPortalController::submitBid',[ 'as'=>'submit-bid', 'filter'=>'contractorauth']);
-$routes->get('/my-bids', 'ContractorPortalController::myBids',[ 'as'=>'my-bids', 'filter'=>'contractorauth']);
+$routes->match(['get', 'post'], 'contractor-login', 'ContractorAuth::login', ['filter' => 'noauth', 'as' => 'contractor-login']);
+$routes->get('/contractor-dashboard', 'ContractorPortalController::dashboard', ['as' => 'contractor-dashboard', 'filter' => 'contractorauth']);
+$routes->get('/contract-listing', 'ContractorPortalController::contractListing', ['as' => 'contract-listing', 'filter' => 'contractorauth']);
+$routes->get('/contract-details/(:any)', 'ContractorPortalController::viewContractDetails/$1', ['as' => 'contract-details', 'filter' => 'contractorauth']);
+$routes->get('/bidding/(:any)', 'ContractorPortalController::showContractBiddingView/$1', ['as' => 'contract-bidding', 'filter' => 'contractorauth']);
+$routes->post('/submit-bid', 'ContractorPortalController::submitBid', ['as' => 'submit-bid', 'filter' => 'contractorauth']);
+$routes->get('/my-bids', 'ContractorPortalController::myBids', ['as' => 'my-bids', 'filter' => 'contractorauth']);
 
 /*
  * --------------------------------------------------------------------
@@ -358,9 +361,8 @@ $routes->get('/my-bids', 'ContractorPortalController::myBids',[ 'as'=>'my-bids',
  * You will have access to the $routes object within that file without
  * needing to reload it.
  */
-if (file_exists(APPPATH . 'Config/' . ENVIRONMENT . '/Routes.php'))
-{
-  require APPPATH . 'Config/' . ENVIRONMENT . '/Routes.php';
+if (file_exists(APPPATH . 'Config/' . ENVIRONMENT . '/Routes.php')) {
+    require APPPATH . 'Config/' . ENVIRONMENT . '/Routes.php';
 }
 
 //$routes->get('/', 'Home::index');
