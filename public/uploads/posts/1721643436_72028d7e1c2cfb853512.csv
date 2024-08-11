@@ -1,0 +1,536 @@
+<% if Session("CMIS_status") <> "login" then response.redirect "login.asp" %>
+<%
+server.ScriptTimeout = 200000
+Response.expires = 0
+Response.expiresabsolute = Now() - 1
+Response.addHeader "pragma", "no-cache"
+Response.addHeader "cache-control", "private"
+Response.CacheControl = "no-cache"
+%>
+<!--#include file="db.asp"-->
+
+<% 
+displayRecs = 50
+recRange = 10
+
+' Get table name
+tablename = "[vwMemberList]"
+dbwhere = ""
+a_search = ""
+b_search = ""
+
+' Get search criteria for basic search
+pSearch = Request.QueryString("psearch")
+If pSearch <> "" Then
+	pSearch = replace(pSearch,"'","''")
+	pSearch = replace(pSearch,"[","[[]")
+	b_search = b_search & "[MemberId] LIKE '%" & pSearch & "%' OR "
+	b_search = b_search & "[FirstName] LIKE '%" & pSearch & "%' OR "
+	b_search = b_search & "[MiddleName] LIKE '%" & pSearch & "%' OR "
+	b_search = b_search & "[LastName] LIKE '%" & pSearch & "%' OR "
+	b_search = b_search & "[SBU] LIKE '%" & pSearch & "%' OR "
+End If
+If len(b_search) > 4 Then
+	b_search = mid(b_search,1,len(b_search)-4)
+	b_search = "(" & b_search & ")"
+End If
+
+'Build search criteria
+If a_search <> "" Then
+	dbwhere = dbwhere &  a_search 'advance search
+ElseIf b_search <> "" Then
+	dbwhere = dbwhere & b_search 'basic search
+End If
+
+'Save search criteria
+If dbwhere <> "" Then
+	Session("tablename") = tablename
+	Session("dbwhere") = dbwhere
+	'reset start record counter
+	startRec = 1
+	Session("MEMREC_REC") = startRec
+Else
+	If tablename = Session("tablename") Then
+		dbwhere = Session("dbwhere")
+	Else
+		'reset search criteria
+		dbwhere = ""
+		Session("dbwhere") = dbwhere
+	End If
+End If
+
+'Get clear search cmd
+If Request.QueryString("cmd").Count > 0 then
+	cmd=Request.QueryString("cmd")
+	If ucase(cmd) = "RESET" Then
+		'reset search criteria
+		dbwhere = ""
+		Session("dbwhere") = dbwhere
+	End If
+End If
+
+' Load Default Order
+DefaultOrder = ""
+DefaultOrderType = ""
+
+' Check for an Order parameter
+OrderBy = ""
+If Request.QueryString("order").Count > 0 Then
+	OrderBy = Request.QueryString("order")
+	' Check if an ASC/DESC toggle is required
+	If Session("MEMREC_OB") = OrderBy Then
+		If Session("MEMREC_OT") = "ASC" Then
+			Session("MEMREC_OT") = "DESC"
+		Else
+			Session("MEMREC_OT") = "ASC"
+		End if
+	Else
+		Session("MEMREC_OT") = "ASC"
+	End If
+	Session("MEMREC_OB") = OrderBy
+	Session("MEMREC_REC") = 1
+Else
+	OrderBy = Session("MEMREC_OB")
+	if OrderBy = "" then
+		OrderBy = DefaultOrder
+		Session("MEMREC_OB") = OrderBy
+		Session("MEMREC_OT") = DefaultOrderType
+	End If
+End If
+
+' Check for a START parameter
+If Request.QueryString("start").Count > 0 Then
+	startRec = Request.QueryString("start")
+	Session("MEMREC_REC") = startRec
+Else
+	startRec = Session("APP_REC")
+	if not isnumeric(startRec) or startRec = "" then
+		'reset start record counter
+		startRec = 1
+		Session("MEMREC_REC") = startRec
+	End If
+End If
+
+' Open Connection to the database
+set conn = Server.CreateObject("ADODB.Connection")
+set rs = Server.CreateObject("ADODB.Recordset")
+set rsAdd = Server.CreateObject("ADODB.Recordset")
+set rsDept = Server.CreateObject("ADODB.Recordset")
+set rsDiv = Server.CreateObject("ADODB.Recordset")
+set rsPay = Server.CreateObject("ADODB.Recordset")
+
+conn.Open xDb_Conn_Str
+
+' Build Query
+'strsql = "select * from [vwMemberList]"
+
+a = request("a")
+If a = "" Then
+	a = request.Form("a")
+End If
+
+x_Department = Request.Form("x_Department")
+If x_Department = "" Then
+    x_Department = Request("x_Department")
+End If
+
+If x_Department = "" Then
+	a = ""
+End If
+MySqlDelete = "Delete From VS"
+conn.Execute MySqlDelete
+If a <> "" Then
+    strsql = "select * from [vwMemberList] Where SBU ='" & Trim(x_Department) & "'"
+    rs.Open strsql, conn, 1, 2
+        If rs.RecordCount <> 0 Then
+        k = 0
+            Do While NOT rs.EOF
+            k = k + 1
+                x_MemberId = rs("MemberId")
+                x_Name = rs("FirstName") & " " & rs("MiddleName") & " " & rs("LastName") 
+                x_SBU = rs("SBU")
+	    
+	            strsql = "Select * from vwsavingsstatement where MemberID = '" & Trim(x_MemberId) & "' order by TransDate"
+	            rsDept.Open strsql, conn,3
+	                x_Credit = 0
+	                x_Debit = 0
+                    If rsDept.RecordCount <> 0 Then
+		                rsDept.MoveFirst
+		                Do While Not rsDept.EOF
+			                If rsDept("Type") = 1 Then
+				                x_Credit = cdbl(x_Credit) + rsDept("PayAmount")
+			                ElseIf rsDept("Type") = 2 Then
+				                x_Debit = cdbl(x_Debit) + rsDept("PayAmount")
+			                End If
+			                rsDept.MoveNext
+		                Loop
+		                xSavingsBal = cdbl(x_Credit) - cdbl(x_Debit)
+	                End If
+                rsDept.Close
+        	    
+        	    
+	            set rsOutTotal = Server.CreateObject("ADODB.Recordset")
+
+                SQLTotal = "Select * From Loans where MemberID = '" & trim(x_MemberId) & "' AND PaidBack = '" & trim(0) & "' AND Disbursed = '" & Trim(1) & "'"
+                rsOutTotal.Open SQLTotal, Conn,3
+                strAmount = 0
+                strEcum = 0
+                strTotalPaid = 0
+                strInterest = 0
+                x_OInt = 0
+                If rsOutTotal.RecordCount <> 0 Then
+                    rsOutTotal.MoveFirst
+                    Do While Not rsOutTotal.EOF
+                        strAmount = Cdbl(strAmount) + cdbl(rsOutTotal("Amount"))
+                        x_OInt = Cdbl(x_OInt) + cdbl(rsOutTotal("TotalInterest"))
+                        strEcum = Cdbl(strEcum) + cdbl(rsOutTotal("EncumberedAmt"))
+                        strTotalPaid = Cdbl(strTotalPaid) + cdbl(rsOutTotal("TotalPaid"))
+                        strInterest = Cdbl(strInterest) + cdbl(rsOutTotal("TotalInterestPaid"))
+                        rsOutTotal.MoveNext
+                    Loop
+                End If
+                rsOutTotal.Close	
+                x_OLoanAmount = cdbl(strAmount) + cdbl(x_OInt)
+                x_Gtotalpaid = cdbl(strTotalPaid) + cdbl(strInterest)
+                strOutstanding = Cdbl(x_OLoanAmount) - cdbl(x_Gtotalpaid)
+                
+                SqlT = "select * from VS"
+                rsAdd.Open SqlT, conn, 1, 3
+                rsAdd.AddNew
+                    'rs("Id") = k
+                    rsAdd("MemberId") = x_MemberId
+                    rsAdd("Name") = x_Name
+                    rsAdd("SBU") = x_SBU
+                    rsAdd("SavingsBal") = xSavingsBal
+                    rsAdd("LoansBal") = strOutstanding
+                    
+                    
+                rsAdd.Update
+                rsAdd.Close
+                
+            rs.MoveNext
+            Loop
+        End If
+    rs.Close
+End If
+
+If a = "" Then
+	'strsql = "SELECT dbo.Members.MemberId, dbo.Members.FirstName + SPACE(1) + dbo.Members.MiddleName + SPACE(1) + dbo.Members.LastName AS FullName, dbo.Members.Email, dbo.Departments.DeptDescription + SPACE(1) + '[' + dbo.Divisions.DivisionDesc + ']' AS Dept, dbo.Members.InstallmentPay, dbo.Members.WelfarePay, dbo.Members.ShareTotal, dbo.Members.SharePayPeriod, dbo.Members.TotalContributionsToDate, dbo.Members.AccountNo FROM dbo.Members INNER JOIN dbo.Divisions ON dbo.Members.MemDivisionId = dbo.Divisions.DivisionId INNER JOIN dbo.Departments ON dbo.Members.MemDeptId = dbo.Departments.DeptId"
+	strsql = "select * from [vwMemberList]"
+	
+	'strquery = "Select MemberId, StaffID, FirstName + SPACE(1) + MiddleName + SPACE(1) + LastName AS FullName, Email, SBU, InstallmentPay, AccountNo, Phone from [vwMemberList]"
+Else
+	strWhere = "WHERE "
+	If x_Department <> "" Then
+		strTDept = "SBU ='" & Trim(x_Department) & "'"
+		strTDept = strWhere & " " & strTDept
+		strTemp = strTDept
+	End If
+End If
+
+If a <> "" Then
+	'strsql = "SELECT Members.MemberId, Members.FirstName + SPACE(1) + dbo.Members.MiddleName + SPACE(1) + dbo.Members.LastName AS FullName, dbo.Members.Email, dbo.Members.MemDeptId, dbo.Members.MemDivisionId, dbo.Departments.DeptDescription + SPACE(1) + '[' + dbo.Divisions.DivisionDesc + ']' AS Dept, dbo.Members.InstallmentPay, dbo.Members.WelfarePay, dbo.Members.ShareTotal, dbo.Members.SharePayPeriod, dbo.Members.TotalContributionsToDate FROM dbo.Members INNER JOIN dbo.Divisions ON dbo.Members.MemDivisionId = dbo.Divisions.DivisionId INNER JOIN dbo.Departments ON dbo.Members.MemDeptId = dbo.Departments.DeptId " & strTemp 
+    strsql = "Select * From vwMemberList " & strTemp
+    
+    'strquery = "Select MemberId, StaffID, FirstName + SPACE(1) + MiddleName + SPACE(1) + LastName AS FullName, Email, SBU, InstallmentPay, AccountNo, Phone From vwMemberList " & strTemp 
+End If
+
+
+If dbwhere <> "" Then
+'	strsql = strsql & " AND " & dbwhere
+'	strquery = strquery & " WHERE " & dbwhere
+End If
+
+if OrderBy <> "" then 
+	strsql = strsql & " ORDER BY [" & OrderBy & "] " & Session("MEMREC_OT")
+	strquery = strquery & " ORDER BY [" & OrderBy & "] " & Session("MEMREC_OT")
+end if	
+'RESPONSE.Write strsql
+'response.end
+rs.Open strsql, conn, 1, 2 
+totalRecs = rs.RecordCount
+
+%>
+
+<!--#include file="header.asp"-->
+
+<p><font class="titlex"><strong>MEMBERS</strong></font></p>
+<form name="frmlist" action="" method="" ID="Form1">
+<input type="hidden" name="a" value="" ID="Hidden3">
+<input type="hidden" name="lprint" value="<%=vprint%>">
+<% if Request.QueryString("print")="" then %>
+<table width="100%" border="0" cellpadding="4" cellspacing="0">
+	<tr>
+		<td><a href="membershipreports.asp"><img src="images/back.gif" border="0" alt="Back"></a></td>
+		<td align="right"><a target="_blank" href="VS.asp?print=1&x_Department=<%=x_Department %>"><img src="images/print.gif" border="0" alt="Print"></a></td>
+	</tr>
+</table>
+<% end if %>
+
+<table width="100%" border="0" cellpadding="2" cellspacing="1" ID="Table2">
+<tr>
+	<td colspan="4"><b>List Member By:</b>&nbsp;</td>
+</tr>
+<tr>
+	<td width="33%">
+	<%
+		strsqld = "Select * From SBU Order By SBU ASC"
+		rsDept.Open strsqld, conn, 1, 3
+	%>
+		<select name="x_Department" style="width: 150px;">
+				<option value="">Select SBU</option>
+				<%If rsDept.RecordCount <> 0 Then
+					rsDept.MoveFirst
+					Do While Not rsDept.EOF
+				%>
+					<option value="<%=rsDept("SBU")%>" <%If Trim(x_Department) = Trim(rsDept("SBU")) Then%> selected <%End If%>><%=rsDept("Description")%></option>
+				<%		rsDept.MoveNext
+					Loop
+				End If
+				rsDept.Close
+					%>
+			
+			</select>
+	</td>
+	&nbsp;
+	<td><input type="button" name="btnsubmit" value=" List " class="button" onclick="fnSubmit()"></td>
+</tr>
+</table>
+<hr>
+
+<hr>
+<table width="100%" border="0" cellpadding="2" cellspacing="1" bgcolor="#333333">
+<tr bgcolor="#000033">
+	<td align="center"><font color="#FFFFFF">S/N&nbsp;</font></td>
+	<td><a href="VS.asp?order=<%= Server.URLEncode("MemberId") %>&x_Department=<%=x_Department %>"><font color="#FFFFFF">Member Id</font></a> </td>
+	<td><a href="VS.asp?order=<%= Server.URLEncode("FirstName") %>&x_Department=<%=x_Department %>"><font color="#FFFFFF">Name</font></a></td>
+	<!--
+	<td><a href="VS.asp?order=<%= Server.URLEncode("Email") %>&x_Department=<%=x_Department %>"><font color="#FFFFFF">Email</font></a></td>
+	<td><a href="VS.asp?order=<%= Server.URLEncode("Email") %>&x_Department=<%=x_Department %>"><font color="#FFFFFF">Phone</font></a></td>-->
+	<td><a href="VS.asp?order=<%= Server.URLEncode("SBU") %>&x_Department=<%=x_Department %>"><font color="#FFFFFF">SBU</font></a></td>
+	<td><a href="VS.asp?order=<%= Server.URLEncode("InstallmentPay") %>&x_Department=<%=x_Department %>"><font color="#FFFFFF">Savings Balance</font></a></td>
+	<!--<td><a href="VS.asp?order=<%= Server.URLEncode("WelfarePay") %>&x_Department=<%=x_Department %>"><font color="#FFFFFF">Monthly Welfare</font></a></td>-->
+	<!--<td><a href="VS.asp?order=<%= Server.URLEncode("ShareTotal") %>"><font color="#FFFFFF">Share Purchase</font></a></td>
+	<td><a href="VS.asp?order=<%= Server.URLEncode("SharePayPeriod") %>"><font color="#FFFFFF">Share Pay Period</font></a></td>-->
+	<td><a href="VS.asp?order=<%= Server.URLEncode("AccountNo") %>&x_Department=<%=x_Department %>"><font color="#FFFFFF">Loan Balance</font></a></td>
+</tr>
+
+
+<%
+'Avoid starting record > total records
+if clng(startRec) > clng(totalRecs) then
+	startRec = totalRecs
+end if
+'Set the last record to display
+stopRec = startRec + displayRecs - 1
+
+'Move to first record directly for performance reason
+recCount = startRec - 1
+if not rs.eof then
+	rs.movefirst
+	rs.move startRec - 1
+end if
+
+recActual = 0
+Do While (NOT rs.EOF) AND (recCount < stopRec)
+	recCount = recCount + 1
+	If Clng(recCount) >= Clng(startRec) Then 
+		recActual = recActual + 1 
+    		
+	    'set row color
+	    bgcolor="#FFFFFF"
+	
+	    ' Display alternate color for rows
+	    If recCount mod 2 <> 0 Then
+		    bgcolor="#F5F5F5"
+	    End If
+
+	    x_MemberId = rs("MemberId")
+	    x_Name = rs("FirstName") & " " & rs("MiddleName") & " " & rs("LastName") 
+	    'x_Email = rs("Email")
+	    'x_Phone = rs("Phone")
+	    x_SBU = rs("SBU")
+	   ' x_Savings = rs("InstallmentPay")
+	    
+	    strsql = "Select * from vwsavingsstatement where MemberID = '" & Trim(x_MemberId) & "' order by TransDate"
+	    rsDept.Open strsql, conn,3
+	        x_Credit = 0
+	        x_Debit = 0
+            If rsDept.RecordCount <> 0 Then
+		        rsDept.MoveFirst
+		        Do While Not rsDept.EOF
+			        If rsDept("Type") = 1 Then
+				        x_Credit = cdbl(x_Credit) + rsDept("PayAmount")
+			        ElseIf rsDept("Type") = 2 Then
+				        x_Debit = cdbl(x_Debit) + rsDept("PayAmount")
+			        End If
+			        rsDept.MoveNext
+		        Loop
+		        xSavingsBal = cdbl(x_Credit) - cdbl(x_Debit)
+	        End If
+        rsDept.Close
+	    
+	    
+	    set rsOutTotal = Server.CreateObject("ADODB.Recordset")
+
+        SQLTotal = "Select * From Loans where MemberID = '" & trim(x_MemberId) & "' AND PaidBack = '" & trim(0) & "' AND Disbursed = '" & Trim(1) & "'"
+        rsOutTotal.Open SQLTotal, Conn,3
+        strAmount = 0
+        strEcum = 0
+        strTotalPaid = 0
+        strInterest = 0
+        x_OInt = 0
+        If rsOutTotal.RecordCount <> 0 Then
+            rsOutTotal.MoveFirst
+            Do While Not rsOutTotal.EOF
+                strAmount = Cdbl(strAmount) + cdbl(rsOutTotal("Amount"))
+                x_OInt = Cdbl(x_OInt) + cdbl(rsOutTotal("TotalInterest"))
+                strEcum = Cdbl(strEcum) + cdbl(rsOutTotal("EncumberedAmt"))
+                strTotalPaid = Cdbl(strTotalPaid) + cdbl(rsOutTotal("TotalPaid"))
+                strInterest = Cdbl(strInterest) + cdbl(rsOutTotal("TotalInterestPaid"))
+                rsOutTotal.MoveNext
+            Loop
+        End If
+        rsOutTotal.Close	
+        x_OLoanAmount = cdbl(strAmount) + cdbl(x_OInt)
+        x_Gtotalpaid = cdbl(strTotalPaid) + cdbl(strInterest)
+        strOutstanding = Cdbl(x_OLoanAmount) - cdbl(x_Gtotalpaid)
+															                
+
+%>
+<tr bgcolor="<%= bgcolor %>">
+	<td align="center"><%=recActual %></td>
+	<td><%=x_MemberId %></td>
+	<td><%= x_Name %></td>
+	<!--<td><%= x_Email %></td>
+	<td><%= x_Phone %></td>-->
+	<td><%= x_SBU %>&nbsp;</td>
+	<td align="right"><% = formatnumber(xSavingsBal,2) %></td>
+	<td align="right"><% = formatnumber(strOutstanding,2) %></td>
+</tr>
+
+
+<%
+	end if
+
+	rs.MoveNext
+Loop 
+
+%>
+</table>
+</form>
+
+
+<%
+if totalRecs > 0 then
+
+	' Find out if there should be Backward or Forward Buttons on the table.
+	If 	startRec = 1 Then
+		isPrev = False
+	Else
+		isPrev = True
+		PrevStart = startRec - displayRecs
+		If PrevStart < 1 Then PrevStart = 1 %>
+	<hr size="1">
+	<strong><a href="VS.asp?start=<%=PrevStart%>&print=<%=Request.QueryString("print")%>&x_Department=<%=x_Department %>"><font face="Tahoma" size="1">[&lt;&lt;&nbsp;Prev]</font></a></strong>
+	<%
+	End If
+	
+	' Display Page numbers
+	If (isPrev OR (NOT rs.EOF)) Then
+		If (NOT isPrev) Then Response.Write "<HR SIZE=1>"
+		x = 1
+		y = 1
+	
+		dx1 = ((startRec-1)\(displayRecs*recRange))*displayRecs*recRange+1
+		dy1 = ((startRec-1)\(displayRecs*recRange))*recRange+1
+		If (dx1+displayRecs*recRange-1) > totalRecs then
+			dx2 = (totalRecs\displayRecs)*displayRecs+1
+			dy2 = (totalRecs\displayRecs)+1
+		Else
+			dx2 = dx1+displayRecs*recRange-1
+			dy2 = dy1+recRange-1
+		End If
+	
+		While x <= totalrecs
+			If x >= dx1 and x <= dx2 Then
+				If Clng(startRec) = Clng(x) Then %>
+	<strong><font face="Tahoma" size="1"><%=y%></font></strong>
+	<% 			Else %>
+	<strong><a href="VS.asp?start=<%=x%>&print=<%=Request.QueryString("print")%>&x_Department=<%=x_Department %>"><font face="Tahoma" size="1"><%=y%></font></A></strong>
+	<%			End If
+				x = x + displayRecs
+				y = y + 1
+			elseif x >= (dx1-displayRecs*recRange) and x <= (dx2+displayRecs*recRange) then
+				if x+recRange*displayRecs < totalRecs then %>
+	<strong><a href="VS.asp?start=<%=x%>&print=<%=Request.QueryString("print")%>&x_Department=<%=x_Department %>"><font face="Tahoma" size="1"><%=y%>-<%=y+recRange-1%></font></a></strong>
+	<%			else
+					ny=(totalRecs-1)\displayRecs+1
+						if ny = y then %>
+	<strong><a href="VS.asp?start=<%=x%>&print=<%=Request.QueryString("print")%>&x_Department=<%=x_Department %>"><font face="Tahoma" size="1"><%=y%></font></a></strong>
+	<%					else %>
+	<strong><a href="VS.asp?start=<%=x%>&print=<%=Request.QueryString("print")%>&x_Department=<%=x_Department %>"><font face="Tahoma" size="1"><%=y%>-<%=ny%></font></a></strong>
+	<%					end if
+				end if
+				x=x+recRange*displayRecs
+				y=y+recRange
+			else
+				x=x+recRange*displayRecs
+				y=y+recRange
+			End If
+		Wend
+	End If
+	
+	' Next link
+	If NOT rs.EOF Then
+		NextStart = startRec + displayRecs
+		isMore = True %>
+	<strong><a href="VS.asp?start=<%=NextStart%>&print=<%=Request.QueryString("print")%>&x_Department=<%=x_Department %>"><font face="Tahoma" size="1">[Next&nbsp;&gt;&gt;]</font></a></strong>
+	<% Else
+		isMore = False
+	End If %>
+	<hr size="1">
+	<% If stopRec > recCount Then stopRec = recCount %>
+	<font face="Tahoma" size="1">Records <%= startRec %> to <%= stopRec %> of <%= totalRecs %></font>
+
+<% Else %>
+<br><br>
+<font face="Tahoma" size="1">No records found!</font>
+
+<% End If %>
+<%
+If recActual <> 0 Then
+SQLReport = "Select * from VS"
+    strquerytable = SQLReport
+%>
+			<form name="strForm" id="strForm" method="POST" action="reports.asp">
+				<input type="hidden" name="strType" value="" ID="Hidden1">
+				<input type="hidden" name="strTable" value="<%=strquerytable%>" ID="Hidden2">
+				<table cellSpacing="0" cellPadding="0" width="70%" border="0" bgcolor="#ffffff" align="left" ID="Table1">
+					<tr>
+						<td valign="top">Print As:</td>
+						<td valign="top"><a href="javascript: document.all.strForm.strType.value=''; document.all.strForm.submit();">[Table View Format]</a>&nbsp;</td>
+						<td valign="top"><a href="javascript: document.all.strForm.strType.value='word'; document.all.strForm.submit();">[Word Format]</a></td>
+						<td valign="top"><a href="javascript: document.all.strForm.strType.value='excel'; document.all.strForm.submit();">[Excel Format]</a></td>
+					</tr>
+				</table>
+			</form>
+<%
+End If
+%>
+<%
+' Close recordset and connection
+rs.Close
+Set rs = Nothing
+conn.Close
+Set conn = Nothing %>
+<!--#include file="footer.asp"-->
+<script language ="javascript">
+function fnSubmit()
+{
+    document.frmlist.a.value = "a";
+	document.frmlist.action ="VS.asp";
+	document.frmlist.method = "Post";
+	document.frmlist.submit();
+}
+</script>

@@ -69,6 +69,13 @@ class UserController extends BaseController
                 $this->permission_model->insertBatch($data_to_add);
             }
 
+            if ($user_id === $this->session->user_id) {
+                $permissions = $this->permission_model->viewUserPermissions($user_id);
+
+                $this->session->remove('permissions');
+                $this->session->push('permissions', $permissions);
+            }
+
             $this->session->setFlashData('success', 'Permissions updated successfully.');
 
         } catch (Exception $exception) {

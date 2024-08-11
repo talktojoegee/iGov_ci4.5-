@@ -44,6 +44,9 @@ class MemoController extends PostController
     public function internal_memo()
     {
         if ($this->request->getMethod() == 'GET'):
+            if (!$this->_validate_permission(Permissions::MEMO->value)) {
+                return view('auth/access_denied');
+            }
             $data['department_employees'] = $this->_get_department_employees();
             $data['pager'] = $this->post->pager;
             $data['firstTime'] = $this->session->firstTime;

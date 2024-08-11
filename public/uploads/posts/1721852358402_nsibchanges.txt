@@ -1,0 +1,40 @@
+1. Adding Unit to Directorate
+
+2. To make unit reflective in Memo creation
+
+3. Above point 1 and 2 to be effected in circular
+
+4. New Memo or Circular to be Internal for now
+
+5. Email and Chat to be Functional
+
+6. To review a setting in Workflow
+
+7. task module actions are very slow
+
+8. Emails should go to the workflow and task participants when created and each time update is given
+
+9. Capture the participant name that uploaded the document in the workflow/task
+
+10. Trainings to be visited (view training is distorted - the overview/description overflows)
+
+11. Training is also slow
+
+12. New training submission doesn't give success acknowledgement and doesn't redirect
+
+13. Training should be targeted to Directorates, so it means that you can choose recipients
+
+14. Author in training should be changes to posted by and can only be edited by the poster, other can have view right
+
+15. Fleet mgt - View to be organized properly. responsible persons for all actions to be alerted via email
+
+16. Renewal and Maintenance calendar view not featuring the schedules
+
+17. Registry and Correspondence is slow
+
+18. Reminders on the Dashboard to list only upcoming events and to add email reminders
+
+19. Gdrive - my files, to list all files for quick access irrespective of the folder
+
+20. replace logo with that of NSIB
+
