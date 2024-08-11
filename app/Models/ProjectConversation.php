@@ -43,6 +43,8 @@ class ProjectConversation extends Model
     public function getProjectConversationByProjectId($id){
         $builder = $this->db->table('project_conversations as pc');
         $builder->join('employees as e','e.employee_id = pc.project_convo_participant_id' );
+        $builder->join('departments as d','e.employee_department_id = d.dpt_id' );
+        $builder->join('positions as p','e.employee_position_id = p.pos_id' );
         $builder->where('pc.project_convo_project_id = '.$id);
         return $builder->get()->getResultObject();
     }

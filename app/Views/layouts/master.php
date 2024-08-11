@@ -47,7 +47,7 @@
 				</li>
 				<li class="dropdown notification-list topbar-dropdown">
 					<a class="nav-link dropdown-toggle nav-user mr-0 waves-effect waves-light" data-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
-<!--						<img src="../assets/images/users/user-1.jpg" alt="user-image" class="rounded-circle">-->
+						<img src="/assets/images/users/<?= $_SESSION['avatar'] ?? 'avatar.png' ?>" alt="user-image" class="rounded-circle">
 						<span class="pro-user-name ml-1"><?=$username ?? '' ?> <i class="mdi mdi-chevron-down"></i></span>
 					</a>
 					<div class="dropdown-menu dropdown-menu-right profile-dropdown ">
@@ -57,7 +57,7 @@
 						</div>
 						
 						<!-- item-->
-						<a href="<?=site_url('my-account')?>" class="dropdown-item notify-item">
+						<a href="<?=site_url('profile/'.$_SESSION['user_employee_id'])?>" class="dropdown-item notify-item">
 							<i class="fe-user"></i>
 							<span>My Account</span>
 						</a>
@@ -189,7 +189,8 @@
             </a>
             <div class="collapse" id="office">
               <ul class="nav-second-level">
-                <li><a href="<?=site_url('workflow-requests'); ?>">Workflow Requests</a></li>
+                <li><a href="<?=route_to('cash-retirement'); ?>">Cash Retirement</a>
+                </li>
                 <li><a href="<?=site_url('tasks'); ?>">Tasks</a></li>
                 <li><a href="<?=site_url('trainings')?>">Trainings</a></li>
                 <li><a href="<?=site_url('correspondence')?>">Correspondence</a></li>
@@ -235,9 +236,9 @@
             </a>
           </li>
         <li>
-            <a href="<?= route_to('manage-projects') ?>">
-                <i data-feather="clipboard"></i>
-                <span>Projects</span>
+            <a href="<?= route_to('manage-programs') ?>">
+                <i data-feather="calendar"></i>
+                <span>Programs & Activities</span>
             </a>
         </li>
         <li>
@@ -248,10 +249,10 @@
             </a>
             <div class="collapse" id="procurementMenu">
                 <ul class="nav-second-level">
-                    <!--<li>
-                      <a href="route_to('manage-vendors') ?>">Manage Vendors</a>
-                    </li>
                     <li>
+                      <a href="<?= route_to('manage-projects') ?>">Projects</a>
+                    </li>
+                    <!--<li>
                       <a href="route_to('manage-products') ?>">Manage Products</a>
                     </li> -->
                     <li>
@@ -260,9 +261,9 @@
                     <li>
                         <a href="<?= route_to('all-contracts'); ?>">All Contracts</a>
                     </li>
-                    <li>
-                        <a href="<?= route_to('manage-bids'); ?>">Bids</a>
-                    </li>
+                    <!--<li>
+                        <a href="</*= route_to('manage-bids'); */?>">Bids</a>
+                    </li>-->
 
                 </ul>
             </div>
