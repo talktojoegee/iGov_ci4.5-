@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
+use App\Models\Employee;
 use App\Models\Registry;
 use App\Models\UserModel;
 use App\Models\UserPermissions;
@@ -15,6 +16,7 @@ class Auth extends BaseController
         $this->user = new UserModel();
         $this->registry = new Registry();
         $this->permission = new UserPermissions();
+        $this->employee = new Employee();
     }
 
     public function login()
@@ -60,11 +62,13 @@ class Auth extends BaseController
                         $pass = $data['user_password'];
                         $verify_password = password_verify($password, $pass);
                         if ($verify_password):
+                            $employee = $this->employee->find($data['user_employee_id']);
                             $ses_data = array(
                                 'user_id' => $data['user_id'],
                                 'user_employee_id' => $data['user_employee_id'],
                                 'user_email' => $data['user_email'],
                                 'user_username' => $data['user_username'],
+                                'avatar' => !empty($employee) ? $employee['employee_avatar'] :  'avatar.png',
                                 'user_name' => $data['user_name'],
                                 'has_registry_access' => $this->_check_registry_access($data['user_id']),
                                 'isLoggedIn' => true,

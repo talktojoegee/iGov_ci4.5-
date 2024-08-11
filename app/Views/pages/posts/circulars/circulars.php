@@ -25,44 +25,26 @@ $circular_permission = \App\Enums\Permissions::CIRCULAR->value;
         <div class="col-12">
             <div class="card-box">
                 <div class="row">
-                    <div class="col-lg-8">
+                    <div class="col-lg-4">
                         <form class="form-inline" method="get">
                             <div class="form-group">
                                 <div class="input-group">
                                     <label for="inputPassword2" class="sr-only">Search</label>
-                                    <input type="search" class="form-control" id="inputPassword2"
-                                           placeholder="Search..." name="search_params">
+                                    <input type="search" class="form-control" id="inputPassword2" placeholder="Search..." name="search_params">
                                     <div class="input-group-append">
-                                        <button class="btn btn-success waves-effect waves-light" type="submit">Search
-                                        </button>
+                                        <button class="btn btn-success waves-effect waves-light" type="submit">Search</button>
                                     </div>
                                 </div>
                             </div>
                         </form>
                     </div>
-                    <div class="col-lg-4">
+                    <div class="col-lg-8">
                         <div class="text-lg-right mt-3 mt-lg-0">
                             <?php if (in_array($circular_permission, $permissions)): ?>
-                                <div class="btn-group mr-1">
-                                    <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown"
-                                            aria-haspopup="true" aria-expanded="false"><i
-                                                class="mdi mdi-plus-circle mr-1"></i> Add New
-                                    </button>
-                                    <div class="dropdown-menu">
-                                        <a class="dropdown-item" href="<?= site_url('internal-circular') ?>">New
-                                            Internal Circular
-                                        </a>
-                                        <a class="dropdown-item" href="<?= site_url('external-circular') ?>">New
-                                            External Circular
-                                        </a>
-                                    </div>
-                                </div>
-                                <a href="<?= site_url('/my-circulars') ?>" type="button"
-                                   class="btn btn-success waves-effect waves-light mr-1">My Circulars
-                                </a>
+                                <a class="btn btn-primary" href="<?=site_url('internal-circular')?>">New Internal Circular</a>
                             <?php endif; ?>
-                            <a href="<?= site_url('/circulars/requests') ?>" type="button"
-                               class="btn btn-danger waves-effect waves-light">Signature Requests</a>
+                            <a href="<?=site_url('/my-circulars')?>" type="button" class="btn btn-success waves-effect waves-light mr-1">My Circulars</a>
+                            <a href="<?=site_url('/circulars/requests')?>" type="button" class="btn btn-danger waves-effect waves-light">Signature Requests</a>
 
                         </div>
                     </div><!-- end col-->

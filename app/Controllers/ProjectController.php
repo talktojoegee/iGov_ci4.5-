@@ -272,17 +272,17 @@ class ProjectController extends BaseController
                 'project_report_content' => $this->request->getPost('report'),
             ];
             $reportId = $this->projectreport->insert($data);
-            $this->send_notification('Project Report Submitted', 'You successfully submitted a project report', $this->session->user_id, site_url('/projects/') . $this->request->getPost('project_report'), 'click to view project');
-            $participants = $this->projectparticipant->where('part_project_id', $this->request->getPost('project_report'))->findAll();
-            foreach ($participants as $participant) {
-                $user = $this->user->where('user_employee_id', $participant['participant_id'])->find();
-                if ($user) {
-                    $this->send_notification('Project Report Submitted', 'A project report was submitted', $user['user_id'], site_url('/projects/') . $this->request->getPost('project_report'), 'click to view project');
-                }
-            }
-            if ($this->request->getFileMultiple('attachments')) {
-                foreach ($this->request->getFileMultiple('attachments') as $attachment) {
-                    if ($attachment->isValid()) {
+	         $this->send_notification('Project Report Submitted', 'You successfully submitted a project report', $this->session->user_id, site_url('/projects/').$this->request->getPost('project_report'), 'click to view project');
+	          $participants = $this->projectparticipant->where('part_project_id', $this->request->getPost('project_report'))->findAll();
+	          foreach ($participants as $participant) {
+		          $user = $this->user->where('user_employee_id', $participant['participant_id'])->first();
+		          if ($user) {
+			          $this->send_notification('Project Report Submitted', 'A project report was submitted', $user['user_id'], site_url('/projects/').$this->request->getPost('project_report'), 'click to view project');
+		          }
+	          }
+	        if($this->request->getFileMultiple('attachments')){
+                foreach ($this->request->getFileMultiple('attachments') as $attachment){
+                    if($attachment->isValid() ){
                         $extension = $attachment->guessExtension();
                         $filename = $attachment->getRandomName();
                         $attachment->move('uploads/posts', $filename);

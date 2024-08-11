@@ -6,15 +6,16 @@ use CodeIgniter\Model;
 
 class Employee extends Model
 {
-    protected $DBGroup = 'default';
-    protected $table = 'employees';
-    protected $primaryKey = 'employee_id';
-    protected $useAutoIncrement = true;
-    protected $insertID = 0;
-    protected $returnType = 'array';
-    protected $useSoftDeletes = false;
-    protected $protectFields = true;
-    protected $allowedFields = ['employee_id', 'employee_f_name', 'employee_l_name', 'employee_o_name', 'employee_sex', 'employee_dob', 'employee_level', 'employee_step', 'employee_department_id', 'employee_position_id', 'employee_mail', 'employee_phone', 'employee_signature'];
+	protected $DBGroup              = 'default';
+	protected $table                = 'employees';
+	protected $primaryKey           = 'employee_id';
+	protected $useAutoIncrement     = true;
+	protected $insertID             = 0;
+	protected $returnType           = 'array';
+	protected $useSoftDeletes       = false;
+	protected $protectFields        = true;
+	protected $allowedFields        = ['employee_id', 'employee_f_name', 'employee_l_name', 'employee_o_name', 'employee_sex', 'employee_dob', 'employee_level', 'employee_step', 'employee_department_id',
+    'employee_position_id','employee_address', 'employee_mail', 'employee_phone', 'employee_signature', 'employee_avatar' ];
 
     // Dates
     protected $useTimestamps = false;
@@ -23,25 +24,24 @@ class Employee extends Model
     protected $updatedField = 'updated_at';
     protected $deletedField = 'deleted_at';
 
-    // Validation
-    protected $validationRules = [];
-    protected $validationMessages = [];
-    protected $skipValidation = false;
-    protected $cleanValidationRules = true;
+	// Validation
+	protected $validationRules      = [];
+	protected $validationMessages   = [];
+	protected $skipValidation       = false;
+	protected $cleanValidationRules = true;
 
-    // Callbacks
-    protected $allowCallbacks = true;
-    protected $beforeInsert = [];
-    protected $afterInsert = [];
-    protected $beforeUpdate = [];
-    protected $afterUpdate = [];
-    protected $beforeFind = [];
-    protected $afterFind = [];
-    protected $beforeDelete = [];
-    protected $afterDelete = [];
+	// Callbacks
+	protected $allowCallbacks       = true;
+	protected $beforeInsert         = [];
+	protected $afterInsert          = [];
+	protected $beforeUpdate         = [];
+	protected $afterUpdate          = [];
+	protected $beforeFind           = [];
+	protected $afterFind            = [];
+	protected $beforeDelete         = [];
+	protected $afterDelete          = [];
 
-    public function getEmployeeByUserEmployeeId($user_employee_id)
-    {
+    public function getEmployeeByUserEmployeeId($user_employee_id){
         return Employee::where('employee_id', $user_employee_id)->first();
     }
 
@@ -58,13 +58,14 @@ class Employee extends Model
     {
         return Employee::findAll();
     }
-
-    public function getAllEmployeeExceptAuthUser($user)
-    {
-        $builder = $this->db->table('employees as e');
-        $builder->join('departments as d', 'd.dpt_id = e.employee_department_id');
-        $builder->where('e.employee_id != ' . $user);
-        return $builder->get()->getResultArray();
+    public function getAllHODs(){
+        return Employee::where('employee_hod = 1')->findAll();
+    }
+    public function getAllEmployeeExceptAuthUser($user){
+      $builder = $this->db->table('employees as e');
+      $builder->join('departments as d','d.dpt_id = e.employee_department_id' );
+      $builder->where('e.employee_id != '.$user);
+      return $builder->get()->getResultArray();
 
     }
 

@@ -18,64 +18,57 @@ if ($firstTime): ?>
 <?php endif; ?>
 <!-- Begin page -->
 <div id="wrapper">
-
-    <!-- Topbar Start -->
-    <div class="navbar-custom">
-        <div class="container-fluid">
-            <ul class="list-unstyled topnav-menu float-right mb-0">
-
-                <li class="dropdown d-inline-block d-lg-none">
-                    <a class="nav-link dropdown-toggle arrow-none waves-effect waves-light" data-toggle="dropdown"
-                       href="#" role="button" aria-haspopup="false" aria-expanded="false">
-                        <i class="fe-search noti-icon"></i>
-                    </a>
-                    <div class="dropdown-menu dropdown-lg dropdown-menu-right p-0">
-                        <form class="p-3">
-                            <input type="text" class="form-control" placeholder="Search ..."
-                                   aria-label="Recipient's username">
-                        </form>
-                    </div>
-                </li>
-                <li class="dropdown d-none d-lg-inline-block">
-                    <a class="nav-link dropdown-toggle arrow-none waves-effect waves-light" data-toggle="fullscreen"
-                       href="#">
-                        <i class="fe-maximize noti-icon"></i>
-                    </a>
-                </li>
-                <li class="dropdown notification-list topbar-dropdown">
-                    <a class="nav-link dropdown-toggle waves-effect waves-light" data-toggle="dropdown" href="#"
-                       role="button" aria-haspopup="false" aria-expanded="false">
-                        <i class="fe-bell noti-icon"></i>
-                        <span id="count" class="badge badge-danger rounded-circle noti-icon-badge"></span>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-right dropdown-lg">
-                        <!-- item-->
-                        <div class="dropdown-item noti-title">
-                            <h5 class="m-0">
-                                <span class="float-right"></span>
-                                Notifications
-                            </h5>
-                        </div>
-                        <div id="unseen-notifications" class="noti-scroll" data-simplebar
-                             style="max-height: 20em; overflow-y: auto">
-
-                        </div>
-                </li>
-                <li class="dropdown notification-list topbar-dropdown">
-                    <a class="nav-link dropdown-toggle nav-user mr-0 waves-effect waves-light" data-toggle="dropdown"
-                       href="#" role="button" aria-haspopup="false" aria-expanded="false">
-                        <!--						<img src="../assets/images/users/user-1.jpg" alt="user-image" class="rounded-circle">-->
-                        <span class="pro-user-name ml-1"><?= $username ?? '' ?> <i
-                                    class="mdi mdi-chevron-down"></i></span>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-right profile-dropdown ">
-                        <!-- item-->
-                        <div class="dropdown-header noti-title">
-                            <h6 class="text-overflow m-0">Welcome!</h6>
-                        </div>
-
-                        <!-- item-->
-                        <a href="<?= site_url('my-account') ?>" class="dropdown-item notify-item">
+	
+	<!-- Topbar Start -->
+	<div class="navbar-custom">
+		<div class="container-fluid">
+			<ul class="list-unstyled topnav-menu float-right mb-0">
+				
+				<li class="dropdown d-inline-block d-lg-none">
+					<a class="nav-link dropdown-toggle arrow-none waves-effect waves-light" data-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
+						<i class="fe-search noti-icon"></i>
+					</a>
+					<div class="dropdown-menu dropdown-lg dropdown-menu-right p-0">
+						<form class="p-3">
+							<input type="text" class="form-control" placeholder="Search ..." aria-label="Recipient's username">
+						</form>
+					</div>
+				</li>
+				<li class="dropdown d-none d-lg-inline-block">
+					<a class="nav-link dropdown-toggle arrow-none waves-effect waves-light" data-toggle="fullscreen" href="#">
+						<i class="fe-maximize noti-icon"></i>
+					</a>
+				</li>
+				<li class="dropdown notification-list topbar-dropdown">
+					<a class="nav-link dropdown-toggle waves-effect waves-light" data-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
+						<i class="fe-bell noti-icon"></i>
+						<span id="count" class="badge badge-danger rounded-circle noti-icon-badge"></span>
+					</a>
+					<div class="dropdown-menu dropdown-menu-right dropdown-lg">
+						<!-- item-->
+						<div class="dropdown-item noti-title">
+							<h5 class="m-0">
+                <span class="float-right">
+                </span>
+                Notifications
+							</h5>
+						</div>
+						<div id="unseen-notifications" class="noti-scroll" data-simplebar style="max-height: 20em; overflow-y: auto"></div>
+				</li>
+				<li class="dropdown notification-list topbar-dropdown">
+					<a class="nav-link dropdown-toggle nav-user mr-0 waves-effect waves-light" data-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
+<!--						<img src="../assets/images/users/user-1.jpg" alt="user-image" class="rounded-circle">-->
+                        <img src="/assets/images/users/<?= $_SESSION['avatar'] ?? 'avatar.png' ?>" alt="user-image" class="rounded-circle">
+						<span class="pro-user-name ml-1"><?=$username ?? '' ?> <i class="mdi mdi-chevron-down"></i></span>
+					</a>
+					<div class="dropdown-menu dropdown-menu-right profile-dropdown ">
+						<!-- item-->
+						<div class="dropdown-header noti-title">
+							<h6 class="text-overflow m-0">Welcome!</h6>
+						</div>
+						
+						<!-- item-->
+                        <a href="<?=site_url('profile/'.$_SESSION['user_employee_id'])?>" class="dropdown-item notify-item">
                             <i class="fe-user"></i>
                             <span>My Account</span>
                         </a>
@@ -85,27 +78,26 @@ if ($firstTime): ?>
                                 <span>Switch to Admin</span>
                             </a>
                         <?php endif ?>
-
-                        <div class="dropdown-divider"></div>
-
-                        <!-- item-->
-                        <a href="/logout" class="dropdown-item notify-item text-danger">
-                            <i class="fe-log-out"></i>
-                            <span>Logout</span>
-                        </a>
-
-                    </div>
-                </li>
-                <!--				<li class="dropdown notification-list">-->
-                <!--					<a href="javascript:void(0);" class="nav-link right-bar-toggle waves-effect waves-light">-->
-                <!--						<i class="fe-settings noti-icon"></i>-->
-                <!--					</a>-->
-                <!--				</li>-->
-            </ul>
-
-            <!-- LOGO -->
-            <div class="logo-box">
-                <a href="/" class="logo logo-dark text-center">
+						<div class="dropdown-divider"></div>
+						
+						<!-- item-->
+						<a href="/logout" class="dropdown-item notify-item text-danger">
+							<i class="fe-log-out"></i>
+							<span>Logout</span>
+						</a>
+					
+					</div>
+				</li>
+<!--				<li class="dropdown notification-list">-->
+<!--					<a href="javascript:void(0);" class="nav-link right-bar-toggle waves-effect waves-light">-->
+<!--						<i class="fe-settings noti-icon"></i>-->
+<!--					</a>-->
+<!--				</li>-->
+			</ul>
+			
+			<!-- LOGO -->
+			<div class="logo-box">
+				<a href="/" class="logo logo-dark text-center">
           <span class="logo-sm">
             <img src="../assets/images/logo-sm.png" alt="" height="50">
             <span class="logo-lg-text-light">iGov</span>
@@ -202,111 +194,98 @@ if ($firstTime): ?>
                                 <li><a href="<?= site_url('circulars'); ?>">Circular</a></li>
                                 <li><a href="<?= site_url('notices') ?>">Notice Board</a></li>
 
-                                <li><a href="<?= route_to('chat') ?>">Chat</a></li>
-                            </ul>
-                        </div>
+                <li><a href="<?= route_to('chat') ?>">Chat</a></li>
+              </ul>
+            </div>
+          </li>
+          <li>
+            <a href="#office" data-toggle="collapse">
+              <i data-feather="briefcase"></i>
+              <span> e-Office </span>
+              <span class="menu-arrow"></span>
+            </a>
+            <div class="collapse" id="office">
+              <ul class="nav-second-level">
+                <li><a href="<?=route_to('cash-retirement'); ?>">Cash Retirement</a>
+                </li>
+                <li><a href="<?=site_url('tasks'); ?>">Tasks</a></li>
+                <li><a href="<?=site_url('trainings')?>">Trainings</a></li>
+                <li><a href="<?=site_url('correspondence')?>">Correspondence</a></li>
+              </ul>
+            </div>
+          </li>
+
+          <li>
+            <a href="#fleet" data-toggle="collapse">
+              <i data-feather="truck"></i>
+              <span>Manage Fleet</span>
+              <span class="menu-arrow"></span>
+            </a>
+            <div class="collapse" id="fleet">
+              <ul class="nav-second-level">
+                <li><a href="<?=site_url('active-vehicles')?>">Active Vehicles</a></li>
+                <li><a href="<?=site_url('drivers')?>">Drivers</a></li>
+                <li><a href="<?=site_url('renewal-schedules'); ?>">Renewal Schedule</a></li>
+                <li><a href="<?=site_url('maintenance-schedules'); ?>">Maintenance Schedule</a></li>
+                <li><a href="#">Disposed Vehicles</a></li>
+              </ul>
+            </div>
+          </li>
+
+          <?php if (session()->has_registry_access):?>
+            <li>
+              <a href="<?= site_url('registry') ?>">
+                <i data-feather="inbox"></i>
+                <span> Registry </span>
+              </a>
+            </li>
+          <?php endif;?>
+          
+          <li>
+            <a href="<?= route_to('reminder') ?>">
+              <i data-feather="calendar"></i>
+              <span> Reminders </span>
+            </a>
+          </li>
+          <li>
+            <a href="<?= site_url('g-drive') ?>">
+              <i data-feather="cloud"></i>
+              <span> GDrive </span>
+            </a>
+          </li>
+        <li>
+            <a href="<?= route_to('manage-programs') ?>">
+                <i data-feather="calendar"></i>
+                <span>Programs & Activities</span>
+            </a>
+        </li>
+        <li>
+            <a href="#procurementMenu" data-toggle="collapse">
+                <i data-feather="grid"></i>
+                <span> Procurement </span>
+                <span class="menu-arrow"></span>
+            </a>
+            <div class="collapse" id="procurementMenu">
+                <ul class="nav-second-level">
+                    <li>
+                      <a href="<?= route_to('manage-projects') ?>">Projects</a>
+                    </li>
+                    <!--<li>
+                      <a href="route_to('manage-products') ?>">Manage Products</a>
+                    </li> -->
+                    <li>
+                        <a href="<?= route_to('manage-contractors') ?>">Contractors</a>
                     </li>
                     <li>
-                        <a href="#office" data-toggle="collapse">
-                            <i data-feather="briefcase"></i>
-                            <span> e-Office </span>
-                            <span class="menu-arrow"></span>
-                        </a>
-                        <div class="collapse" id="office">
-                            <ul class="nav-second-level">
-                                <li><a href="<?= site_url('workflow-requests'); ?>">Workflow Requests</a></li>
-                                <li><a href="<?= site_url('tasks'); ?>">Tasks</a></li>
-                                <li><a href="<?= site_url('trainings') ?>">Trainings</a></li>
-                                <li><a href="<?= site_url('correspondence') ?>">Correspondence</a></li>
-                            </ul>
-                        </div>
+                        <a href="<?= route_to('all-contracts'); ?>">All Contracts</a>
                     </li>
-                    <?php if (in_array($fleet_setup_permission, $permissions) || in_array($fleet_maintenance_permission, $permissions)): ?>
-
-                        <li>
-                            <a href="#fleet" data-toggle="collapse">
-                                <i data-feather="truck"></i>
-                                <span>Manage Fleet</span>
-                                <span class="menu-arrow"></span>
-                            </a>
-                            <div class="collapse" id="fleet">
-                                <ul class="nav-second-level">
-                                    <?php if (in_array($fleet_setup_permission, $permissions)): ?>
-                                        <li><a href="<?= site_url('active-vehicles') ?>">Active Vehicles</a></li>
-                                        <li><a href="<?= site_url('drivers') ?>">Drivers</a></li>
-                                    <?php endif; ?>
-                                    <?php if (in_array($fleet_maintenance_permission, $permissions)): ?>
-                                        <li><a href="<?= site_url('renewal-schedules'); ?>">Renewal Schedule</a></li>
-                                        <li><a href="<?= site_url('maintenance-schedules'); ?>">Maintenance Schedule</a>
-                                        </li>
-                                    <?php endif; ?>
-
-                                    <!--                                    <li><a href="#">Disposed Vehicles</a></li>-->
-                                </ul>
-                            </div>
-                        </li>
-                    <?php endif; ?>
-
-                    <?php if (session()->has_registry_access): ?>
-                        <li>
-                            <a href="<?= site_url('registry') ?>">
-                                <i data-feather="inbox"></i>
-                                <span> Registry </span>
-                            </a>
-                        </li>
-                    <?php endif; ?>
-
-                    <li>
-                        <a href="<?= route_to('reminder') ?>">
-                            <i data-feather="calendar"></i>
-                            <span> Reminders </span>
-                        </a>
-                    </li>
-                    <?php if (in_array($g_drive_permission, $permissions)): ?>
-                        <li>
-                            <a href="<?= site_url('g-drive') ?>">
-                                <i data-feather="cloud"></i>
-                                <span> GDrive </span>
-                            </a>
-                        </li>
-                    <?php endif ?>
-                    <li>
-                        <a href="<?= route_to('manage-projects') ?>">
-                            <i data-feather="clipboard"></i>
-                            <span>Projects</span>
-                        </a>
-                    </li>
-                    <?php if (in_array($procurement_permission, $permissions)): ?>
-                        <li>
-                            <a href="#procurementMenu" data-toggle="collapse">
-                                <i data-feather="grid"></i>
-                                <span> Procurement </span>
-                                <span class="menu-arrow"></span>
-                            </a>
-                            <div class="collapse" id="procurementMenu">
-                                <ul class="nav-second-level">
-                                    <!--<li>
-                                      <a href="route_to('manage-vendors') ?>">Manage Vendors</a>
-                                    </li>
-                                    <li>
-                                      <a href="route_to('manage-products') ?>">Manage Products</a>
-                                    </li> -->
-                                    <?php if (in_array($contractors_permission, $permissions)): ?>
-                                        <li>
-                                            <a href="<?= route_to('manage-contractors') ?>">Contractors</a>
-                                        </li>
-                                    <?php endif; ?>
-                                    <li>
-                                        <a href="<?= route_to('all-contracts'); ?>">All Contracts</a>
-                                    </li>
-                                    <li>
-                                        <a href="<?= route_to('manage-bids'); ?>">Bids</a>
-                                    </li>
+                    <!--<li>
+                        <a href="</*= route_to('manage-bids'); */?>">Bids</a>
+                    </li>-->
 
                                 </ul>
                             </div>
                         </li>
-                    <?php endif ?>
                     <?php if (in_array($finance_permission, $permissions)): ?>
                         <li>
                             <a href="#budget" data-toggle="collapse">
