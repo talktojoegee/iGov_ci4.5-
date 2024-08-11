@@ -18,6 +18,100 @@
     </div>
     <!-- end page title -->
   <div class="row">
+    <div class="col-md-6 col-xl-3">
+      <div class="card">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-6">
+              <div class="avatar-sm bg-blue rounded">
+                <i class="fe-layers avatar-title font-22 text-white"></i>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="text-end">
+                <h5 class="my-1"><?= env('APP_CURRENCY') ?><span data-plugin="counterup"><?= number_format($overallAmount,2) ?></span></h5>
+                <p class="text-muted mb-1 text-truncate">Overall</p>
+              </div>
+            </div>
+          </div>
+          <div class="mt-3">
+            <h6 class="text-uppercase">Total: <span class="float-end"><strong><?= number_format($overall ?? 0) ?></strong></span></h6>
+          </div>
+        </div>
+      </div> <!-- end card-->
+    </div>
+
+    <div class="col-md-6 col-xl-3">
+      <div class="card">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-6">
+              <div class="avatar-sm bg-primary rounded">
+                <i class="fe-loader avatar-title font-22 text-white"></i>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="text-end">
+                <h5 class="my-1"><?= env('APP_CURRENCY') ?><span data-plugin="counterup"><?= number_format($authorizedAmount,2) ?></span></h5>
+                <p class="text-muted mb-1 text-truncate">Authorized</p>
+              </div>
+            </div>
+          </div>
+          <div class="mt-3">
+            <h6 class="text-uppercase">Total: <span class="float-end"><strong><?= number_format($authorized ?? 0) ?></strong></span></h6>
+          </div>
+        </div>
+      </div> <!-- end card-->
+    </div>
+
+    <div class="col-md-6 col-xl-3">
+      <div class="card">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-6">
+              <div class="avatar-sm bg-success rounded">
+                <i class="fe-repeat avatar-title font-22 text-white"></i>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="text-end">
+                <h5 class="my-1"><?= env('APP_CURRENCY') ?><span data-plugin="counterup"><?= number_format($approvedAmount,2) ?></span></h5>
+                <p class="text-muted mb-1 text-truncate">Approved</p>
+              </div>
+            </div>
+          </div>
+          <div class="mt-3">
+            <h6 class="text-uppercase">Total: <span class="float-end"><strong><?= number_format($approved ?? 0) ?></strong></span></h6>
+          </div>
+        </div>
+      </div> <!-- end card-->
+    </div>
+
+    <div class="col-md-6 col-xl-3">
+      <div class="card">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-6">
+              <div class="avatar-sm bg-info rounded">
+                <i class="fe-loader avatar-title font-22 text-white"></i>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="text-end">
+                <h5 class="my-1"><?= env('APP_CURRENCY') ?><span data-plugin="counterup"><?= number_format($pendingAmount,2) ?></span></h5>
+                <p class="text-muted mb-1 text-truncate">Pending</p>
+              </div>
+            </div>
+          </div>
+          <div class="mt-3">
+            <h6 class="text-uppercase">Total: <span class="float-end"><strong><?= number_format($pending ?? 0) ?></strong></span></h6>
+          </div>
+        </div>
+      </div> <!-- end card-->
+    </div>
+  </div>
+
+  <div class="row">
     <div class="col-md-12 mb-3">
       <a href="<?= route_to('new-cash-retirement') ?>" class="btn btn-sm btn-blue waves-effect waves-light float-right">
         <i class="mdi mdi-plus-circle"></i> Add New Cash Retirement
@@ -73,8 +167,8 @@
                       <td>
                         <?php
                         if ($request['crm_status'] == 0) echo '<span class="badge badge-soft-primary badge-pill">Pending</span>';
-                        elseif ($request['crm_status'] == 1) echo '<span class="badge badge-soft-secondary badge-pill">Approved</span>';
-                        elseif ($request['crm_status'] == 2) echo '<span class="badge badge-soft-success badge-pill">Authorized</span>';
+                        elseif ($request['crm_status'] == 1) echo '<span class="badge badge-soft-secondary badge-pill">Authorized</span>';
+                        elseif ($request['crm_status'] == 2) echo '<span class="badge badge-soft-success badge-pill">Approved</span>';
                         ?>
                       </td>
                       <td style="text-align: right;"><?= number_format($request['crm_amount_obtained'] ?? 0,2) ?? ''  ?></td>

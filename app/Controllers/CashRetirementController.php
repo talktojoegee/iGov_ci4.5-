@@ -32,10 +32,42 @@ class CashRetirementController extends BaseController
 
 
   public function my_cash_retirement(){
+      $overall = 0; $overallAmount = 0;
+      $authorized = 0; $authorizedAmount = 0;
+      $approved = 0; $approvedAmount = 0;
+      $pending = 0; $pendingAmount = 0;
+      $requests = $this->cashretirementmaster->getAllEmployeeRetirements( $this->session->user_employee_id);
+      foreach ($requests as $key=> $request){
+        $overall += 1;
+        $overallAmount += $request['crm_amount_obtained'] ?? 0;
+        switch ($request['crm_status']){
+          case 0:
+            $pending += 1;
+            $pendingAmount += $request['crm_amount_obtained'] ?? 0;
+            break;
+          case 1:
+            $authorized += 1;
+            $authorizedAmount += $request['crm_amount_obtained'] ?? 0;
+            break;
+          case 2:
+            $approved += 1;
+            $approvedAmount += $request['crm_amount_obtained'] ?? 0;
+            break;
+        }
+
+      }
     $data = [
-      'my_requests'=>$this->cashretirementmaster->getAllEmployeeRetirements( $this->session->user_employee_id),
+      'my_requests'=>$requests,
       'firstTime'=>$this->session->firstTime,
       'username'=>$this->session->user_username,
+      'pendingAmount' =>$pendingAmount,
+      'pending' =>$pending,
+      'overallAmount' =>$overallAmount,
+      'overall' =>$overall,
+      'authorizedAmount' =>$authorizedAmount,
+      'authorized' =>$authorized,
+      'approvedAmount' =>$approvedAmount,
+      'approved' =>$approved,
     ];
 
     return view('pages/cash-retirement/index', $data);
