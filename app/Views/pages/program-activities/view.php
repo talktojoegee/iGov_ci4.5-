@@ -358,38 +358,8 @@
                   <?php endforeach; ?>
                 </div>
               </div>
-              <div class="card">
-                <div class="card-body">
-                  <h4 class="mt-0 mb-3">Report(s)</h4>
-                  <div id="accordion" class="mb-3">
-                    <?php foreach ($reports as $report): ?>
-                      <div class="card mb-1">
-                        <div class="card-header" id="heading_<?= $report->project_report_id  ?? '' ?>">
-                          <h5 class="m-0">
-                            <a class="text-dark collapsed" data-toggle="collapse" href="#collapse_<?= $report->project_report_id  ?? '' ?>" aria-expanded="false">
-                              <i class=" mr-1 text-primary"></i>
-                              <?= $report->project_report_subject ?? '' ?>
-                            </a>
-                          </h5>
-                        </div>
-
-                        <div id="collapse_<?= $report->project_report_id  ?? '' ?>" class="collapse" aria-labelledby="heading_<?= $report->project_report_id  ?? '' ?>" data-parent="#accordion" style="">
-                          <div class="card-body">
-                            <?= $report->project_report_content ?? '' ?>
-                          </div>
-                          <?php foreach ($report_attachments as $report_attachment): ?>
-                            <?php if($report_attachment->project_report_attachment_report_id == $report->project_report_id): ?>
-                              <a href="/uploads/posts/<?= $report_attachment->project_report_attachment ?>" target="_blank" class="btn btn-primary btn-sm">Download</a>
-                            <?php endif; ?>
-                          <?php endforeach; ?>
-                        </div>
-                      </div>
-                    <?php endforeach; ?>
-                  </div>
-                </div>
 
 
-              </div>
             </div>
 
             <div class="col-lg-6 col-xl-4">

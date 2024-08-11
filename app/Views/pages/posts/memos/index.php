@@ -21,7 +21,7 @@
         <div class="col-12">
             <div class="card-box">
                 <div class="row">
-                    <div class="col-lg-8">
+                    <div class="col-lg-4">
                         <form class="form-inline" method="get">
                             <div class="form-group">
                                 <div class="input-group">
@@ -36,7 +36,7 @@
                             </div>
                         </form>
                     </div>
-                    <div class="col-lg-4">
+                    <div class="col-lg-8">
                         <div class="text-lg-right mt-3 mt-lg-0">
                             <a href="<?= site_url('internal-memo') ?>" class="btn btn-success"><i
                                         class="mdi mdi-plus-circle mr-1"></i> New Memo</a>

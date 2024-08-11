@@ -190,13 +190,7 @@
             <div class="collapse" id="office">
               <ul class="nav-second-level">
                 <li><a href="<?=route_to('cash-retirement'); ?>">Cash Retirement</a>
-                  <ul>
-                    <li><a href="">Authorize</a></li>
-                    <li><a href="">Approve</a></li>
-                  </ul>
                 </li>
-
-                <li><a href="<?=site_url('workflow-requests'); ?>">Workflow Requests</a></li>
                 <li><a href="<?=site_url('tasks'); ?>">Tasks</a></li>
                 <li><a href="<?=site_url('trainings')?>">Trainings</a></li>
                 <li><a href="<?=site_url('correspondence')?>">Correspondence</a></li>
