@@ -75,6 +75,8 @@ class CircularController extends PostController
             $data['pager'] = $this->post->pager;
             $data['firstTime'] = $this->session->firstTime;
             $data['username'] = $this->session->user_username;
+            $data['hods'] = $this->_group_all_department_hods();
+            $data['department_hods'] = $this->_group_one_department_hods();
             return view('/pages/posts/circulars/new-internal-circular', $data);
         endif;
         if ($this->request->getMethod() == 'POST'):
@@ -287,5 +289,35 @@ class CircularController extends PostController
             }
         }
         return $department_employees;
+    }
+
+    private function _group_all_department_hods()
+    {
+        $grouped_hods = [];
+        $employees = $this->employee->getAllEmployeesWithPermission(Permissions::HOD->value);
+        foreach ($employees as $employee) {
+            $department_name = $employee['dpt_name'];
+            if (!isset($grouped_hods[$department_name])) {
+                $grouped_hods[$department_name] = [];
+            }
+            $grouped_hods[$department_name][] = $employee;
+        }
+        return $grouped_hods;
+    }
+
+    private function _group_one_department_hods()
+    {
+        $user = $this->user->where('user_id', $this->session->user_id)->first();
+        $employee = $this->employee->getEmployeeDetailsByUserEmployeeId($user['user_employee_id'])[0];
+        $grouped_hods = [];
+        $employees = $this->employee->getAllEmployeesInDepartmentWithPermission($employee['dpt_id'], Permissions::HOD->value);
+        foreach ($employees as $employee) {
+            $department_name = $employee['dpt_name'];
+            if (!isset($grouped_hods[$department_name])) {
+                $grouped_hods[$department_name] = [];
+            }
+            $grouped_hods[$department_name][] = $employee;
+        }
+        return $grouped_hods;
     }
 }
