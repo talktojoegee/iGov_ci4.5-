@@ -1,5 +1,9 @@
 <?= $this->extend('layouts/master'); ?>
 <?= $this->section('content'); ?>
+<?php
+$permissions = session()->get('permissions');
+$programs_permission = \App\Enums\Permissions::PROGRAMS->value;
+?>
 <div class="container-fluid">
     <!-- start page title -->
     <div class="row">
@@ -28,11 +32,14 @@
                             </p>
                         </div>
                         <div class="col-lg-4">
-                            <div class="text-lg-right mt-lg-0">
-                                <div class="btn-group mr-2">
-                                    <a href="<?= route_to('add-new-program') ?>" class="btn btn-success btn-sm"><i class="mdi mdi-plus-circle mr-1"></i> Add New Program</a>
+                            <?php if (in_array($programs_permission, $permissions)): ?>
+                                <div class="text-lg-right mt-lg-0">
+                                    <div class="btn-group mr-2">
+                                        <a href="<?= route_to('add-new-program') ?>" class="btn btn-success btn-sm"><i
+                                                    class="mdi mdi-plus-circle mr-1"></i> Add New Program</a>
+                                    </div>
                                 </div>
-                            </div>
+                            <?php endif; ?>
                         </div><!-- end col-->
                     </div> <!-- end row -->
                     <table id="datatable-buttons" class="table table-striped table-bordered dt-responsive nowrap w-100">
@@ -53,15 +60,15 @@
                         </thead>
                         <tbody>
                         <?php $serial = 1; ?>
-                        <?php foreach($programs as $program): ?>
+                        <?php foreach ($programs as $program): ?>
                             <tr>
-                                <td><?= $serial++?></td>
+                                <td><?= $serial++ ?></td>
                                 <td><?= $program['name'] ?? '' ?></td>
-                                <td><?=  $program['manager'] ?? '' ?></td>
-                                <td><?=  $program['created_by'] ?? '' ?></td>
-                                <td style="text-align: right;"><?= number_format($program['budget'],2) ?? '' ?></td>
+                                <td><?= $program['manager'] ?? '' ?></td>
+                                <td><?= $program['created_by'] ?? '' ?></td>
+                                <td style="text-align: right;"><?= number_format($program['budget'], 2) ?? '' ?></td>
                                 <td>
-                                    <?php if($program['priority'] == 1): ?>
+                                    <?php if ($program['priority'] == 1): ?>
                                         <label for="" class="badge badge-secondary">Normal</label>
                                     <?php elseif ($program['priority'] == 2): ?>
                                         <label for="" class="badge badge-primary">Medium</label>
@@ -72,25 +79,36 @@
                                 <td><?= date('d M, Y', strtotime($program['start_date'])) ?? '' ?></td>
                                 <td><?= date('d M, Y', strtotime($program['end_date'])) ?? '' ?></td>
                                 <td>
-                                    <?php if($program['status'] == 0): ?>
+                                    <?php if ($program['status'] == 0): ?>
                                         <label for="" class="badge badge-secondary">Pending</label>
                                     <?php elseif ($program['status'] == 1): ?>
-                                    <label for="" class="badge badge-primary">Started</label>
+                                        <label for="" class="badge badge-primary">Started</label>
                                     <?php elseif ($program['status'] == 2): ?>
-                                    <label for="" class="badge badge-warning">In-progress</label>
+                                        <label for="" class="badge badge-warning">In-progress</label>
                                     <?php elseif ($program['status'] == 3): ?>
-                                    <label for="" class="badge badge-success">Completed</label>
+                                        <label for="" class="badge badge-success">Completed</label>
                                     <?php elseif ($program['status'] == 4): ?>
-                                    <label for="" class="badge badge-danger">Cancelled</label>
+                                        <label for="" class="badge badge-danger">Cancelled</label>
                                     <?php endif; ?>
 
                                 </td>
                                 <td>
                                     <div class="btn-group dropdown">
-                                        <a href="javascript: void(0);" class="table-action-btn dropdown-toggle arrow-none btn btn-light btn-sm" data-toggle="dropdown" aria-expanded="false"><i class="mdi mdi-dots-horizontal"></i></a>
+                                        <a href="javascript: void(0);"
+                                           class="table-action-btn dropdown-toggle arrow-none btn btn-light btn-sm"
+                                           data-toggle="dropdown" aria-expanded="false"><i
+                                                    class="mdi mdi-dots-horizontal"></i></a>
                                         <div class="dropdown-menu dropdown-menu-right">
-                                            <a class="dropdown-item" href="<?= route_to('edit-program',  $program['id']) ?>"><i class="mdi mdi-pencil mr-2 text-muted font-18 vertical-middle"></i>Edit Program</a>
-                                            <a class="dropdown-item" href="<?= route_to('view-program', $program['id']) ?>"><i class="mdi mdi-check-all mr-2 text-muted font-18 vertical-middle"></i>View Program</a>
+                                            <?php if (in_array($programs_permission, $permissions)): ?>
+                                                <a class="dropdown-item"
+                                                   href="<?= route_to('edit-program', $program['id']) ?>"><i
+                                                            class="mdi mdi-pencil mr-2 text-muted font-18 vertical-middle"></i>Edit
+                                                    Program</a>
+                                            <?php endif; ?>
+                                            <a class="dropdown-item"
+                                               href="<?= route_to('view-program', $program['id']) ?>"><i
+                                                        class="mdi mdi-check-all mr-2 text-muted font-18 vertical-middle"></i>View
+                                                Program</a>
                                         </div>
                                     </div>
                                 </td>
