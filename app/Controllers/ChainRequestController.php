@@ -21,6 +21,7 @@ use App\Models\ProgramParticipants;
 use App\Models\ProgramAttachment;
 use App\Models\Notification;
 use App\Models\ProgramConversation;
+use App\Models\CashRetirementMaster;
 
 class ChainRequestController extends BaseController
 {
@@ -49,6 +50,7 @@ class ChainRequestController extends BaseController
     $this->projectreportattachment = new ProjectReportAttachment();
     $this->reminder = new Reminder();
     $this->notification = new Notification();
+    $this->cashretirementmaster = new CashRetirementMaster();
 
   }
 
@@ -101,16 +103,29 @@ class ChainRequestController extends BaseController
             'rc_final'=> $this->request->getPost('final'),
           ];
           $this->requestchain->update($this->request->getPost('requestId'), $data);
-          $program = $this->program->getProgramById($this->request->getPost('itemId'));
-          if(!empty($program)){
-            $programData = [
-              'program_status'=>$status,
-              'program_actioned_by'=>$this->session->user_employee_id,
-              'program_date_actioned'=>date('Y-m-d'),
-            ];
-            $this->program->update($this->request->getPost('itemId'), $programData);
-            //now register program now as project
+          if($this->request->getPost('type') == 'program'){
 
+            $program = $this->program->getProgramById($this->request->getPost('itemId'));
+            if(!empty($program)){
+              $programData = [
+                'program_status'=>$status,
+                'program_actioned_by'=>$this->session->user_employee_id,
+                'program_date_actioned'=>date('Y-m-d'),
+              ];
+              $this->program->update($this->request->getPost('itemId'), $programData);
+              //now register program now as project
+          }
+
+          }else if($this->request->getPost('type') == 'retirement'){
+            $retirement = $this->cashretirementmaster->getCashRetirementById($this->request->getPost('itemId'));
+            if(!empty($retirement)){
+              $retirementData = [
+                'crm_status'=>2, //approved
+                'crm_approved_by'=>$this->session->user_employee_id,
+                'crm_date_approved'=>date('Y-m-d'),
+              ];
+              $this->cashretirementmaster->update($this->request->getPost('itemId'), $retirementData);
+            }
           }
 
         }else{

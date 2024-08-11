@@ -330,7 +330,7 @@ class ProgramActivitiesController extends BaseController
         'username'=>$this->session->user_username,
         'empId'=>$this->session->user_employee_id,
         'hods'=>$this->employee->getAllHODs(),
-        'requests'=>$this->requestchain->getRequestChain('program', $id),
+        'requests'=>$requests, //$this->requestchain->getRequestChain('program', $id),
         'requested_by'=>$this->program->getCreatedBy($id),
         'participants'=>$this->programparticipant->getAllProgramParticipants($id),
         'attachments'=>$this->programattachment->getAllProgramAttachmentsByProgramId($id),

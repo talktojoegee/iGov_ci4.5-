@@ -17,6 +17,13 @@
         </div>
     </div>
     <!-- end page title -->
+  <div class="row">
+    <div class="col-md-12 mb-3">
+      <a href="<?= route_to('new-cash-retirement') ?>" class="btn btn-sm btn-blue waves-effect waves-light float-right">
+        <i class="mdi mdi-plus-circle"></i> Add New Cash Retirement
+      </a>
+    </div>
+  </div>
     <div class="row">
       <div class="col-12">
 
@@ -40,32 +47,54 @@
           <?php endif; ?>
       </div>
         <div class="col-12">
-            <div class="card-box">
-                <a href="<?= route_to('new-cash-retirement') ?>" class="btn btn-sm btn-blue waves-effect waves-light float-right">
-                    <i class="mdi mdi-plus-circle"></i> Add New Cash Retirement
-                </a>
-
-                <h4 class="header-title mb-4">My Cash Retirement</h4>
-
+            <div class="card">
+              <div class="modal-header mb-4">My Cash Retirement</div>
+              <div class="card-body">
                 <table id="datatable-buttons" class="table table-striped table-bordered dt-responsive nowrap w-100">
-                    <thead>
+                  <thead>
+                  <tr>
+                    <th>
+                      S/No.
+                    </th>
+                    <th>Title</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th style="text-align: right;">Amount(<?= env('APP_CURRENCY') ?>)</th>
+                    <th class="hidden-sm">Action</th>
+                  </tr>
+                  </thead>
+
+                  <tbody>
+                  <?php foreach($my_requests as $key => $request): ?>
                     <tr>
-                        <th>
-                            S/No.
-                        </th>
-                        <th>Title</th>
-                        <th>Date</th>
-                        <th>Status</th>
-                        <th>Amount</th>
-                        <th class="hidden-sm">Action</th>
+                      <td><?= $key + 1 ?></td>
+                      <td><?= $request['crm_subject'] ?? ''  ?></td>
+                      <td><?= date('d M, Y', strtotime($request['created_at'])) ?? ''  ?></td>
+                      <td>
+                        <?php
+                        if ($request['crm_status'] == 0) echo '<span class="badge badge-soft-primary badge-pill">Pending</span>';
+                        elseif ($request['crm_status'] == 1) echo '<span class="badge badge-soft-secondary badge-pill">Approved</span>';
+                        elseif ($request['crm_status'] == 2) echo '<span class="badge badge-soft-success badge-pill">Authorized</span>';
+                        ?>
+                      </td>
+                      <td style="text-align: right;"><?= number_format($request['crm_amount_obtained'] ?? 0,2) ?? ''  ?></td>
+                      <td>
+                        <a href="<?= route_to('show-cash-retirement-details', $request['crm_url']) ?>" data-toggle="tooltip" data-placement="left" title data-original-title=" Details">
+                          <i data-feather="list" class="icon-dual"></i>.
+                        </a>
+                      </td>
                     </tr>
-                    </thead>
 
-                    <tbody>
-                    <?php  $serial = 1; ?>
+                  <?php endforeach; ?>
 
-                    </tbody>
+                  </tbody>
                 </table>
+
+              </div>
+
+
+
+
             </div>
         </div><!-- end col -->
     </div>

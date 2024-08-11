@@ -8,6 +8,9 @@ use App\Models\UserModel;
 use App\Models\Employee;
 use App\Models\CashRetirementMaster;
 use App\Models\CashRetirementDetail;
+use App\Models\CashRetirementComment;
+use App\Models\CashRetirementAttachment;
+use App\Models\RequestChain;
 
 class CashRetirementController extends BaseController
 {
@@ -22,12 +25,15 @@ class CashRetirementController extends BaseController
         $this->employee = new Employee();
         $this->cashretirementmaster = new CashRetirementMaster();
         $this->cashretirementdetail = new CashRetirementDetail();
+        $this->cashretirementcomment = new CashRetirementComment();
+        $this->cashretirementattachment = new CashRetirementAttachment();
+        $this->requestchain = new RequestChain();
     }
 
 
   public function my_cash_retirement(){
     $data = [
-      'my_requests'=>[],//$this->workflowrequest->getAuthUserWorkflowRequests( $this->session->user_employee_id),
+      'my_requests'=>$this->cashretirementmaster->getAllEmployeeRetirements( $this->session->user_employee_id),
       'firstTime'=>$this->session->firstTime,
       'username'=>$this->session->user_username,
     ];
@@ -36,8 +42,8 @@ class CashRetirementController extends BaseController
   }
 
   public function new_cash_retirement(){
+
     $data = [
-      'my_requests'=>$this->cashretirementmaster->getAllEmployeeRetirements( $this->session->user_employee_id),
       'firstTime'=>$this->session->firstTime,
       'username'=>$this->session->user_username,
     ];
@@ -77,10 +83,25 @@ class CashRetirementController extends BaseController
         'crm_amount_retired'=>$this->request->getPost('amount_retired'),
         'crm_balance'=>$this->request->getPost('balance'),
         'crm_purpose'=>$this->request->getPost('purpose'),
-        'crm_status'=>$this->request->getPost('status'),
-        'crm_payable_to'=>$this->session->user_employee_id
+        'crm_status'=> 0, //$this->request->getPost('status'),
+        'crm_payable_to'=>$this->session->user_employee_id,
+        'crm_url'=>substr(sha1(time()),21,40)
       ];
-      $programId = $this->cashretirementmaster->insert($data);// $this->cashretirementmaster->insert($data);
+      $masterId = $this->cashretirementmaster->insert($data);// $this->cashretirementmaster->insert($data);
+      if($masterId){
+        if($this->request->getPost('receiptNo') !== null){
+          foreach($this->request->getPost('receiptNo') as $key => $list){
+            $listData = [
+              'crd_receipt_no'=>$this->request->getPost('receiptNo')[$key],
+              'crd_date'=>$this->request->getPost('date')[$key],
+              'crd_amount'=>$this->request->getPost('amount')[$key],
+              'crd_remark'=>$this->request->getPost('remark')[$key],
+              'crd_master_id'=>$masterId,
+            ];
+            $this->cashretirementdetail->insert($listData);
+          }
+        }
+      }
       #Notify author
       /*$notification_data = [
         'subject' => 'New Program Created',
@@ -96,23 +117,59 @@ class CashRetirementController extends BaseController
       //$this->send_notification('New Program Created', 'You created a program', $this->session->user_id, site_url('/projects/').$project, 'click to view program');
 
       
-     /* if($this->request->getFileMultiple('attachments')){
+      if($this->request->getFileMultiple('attachments')){
         foreach ($this->request->getFileMultiple('attachments') as $attachment){
           if($attachment->isValid() ){
             $extension = $attachment->guessExtension();
             $filename = $attachment->getRandomName();
             $attachment->move('uploads/posts', $filename);
-            $program_attachment = [
-              'pa_program_id' => $programId,
-              'pa_attachment' => $filename
+            $dataAttachment = [
+              'cra_master_id' => $masterId,
+              'cra_attachment' => $filename
             ];
-            $this->programattachment->save($program_attachment);
+            $this->cashretirementattachment->save($dataAttachment);
           }
         }
-      }*/
+      }
 
       return redirect()->back()->with("success", "<strong>Success!</strong> Action successful.");
     }
 
+  }
+
+
+
+  public function show_cash_retirement_details($url){
+    $record = $this->cashretirementmaster->getCashRetirementByUrl($url);
+    if(!empty($record)){
+      $requests = $this->requestchain->getRequestChain('retirement', $record->crm_id);
+      $pendingRequestStatus = true;
+      $pendingRequestStatus = true;
+      if(count($requests) > 0){
+        foreach($requests as $request){
+          if($request->rc_status == 0){
+            $pendingRequestStatus = false;
+          }
+        }
+      }
+      $data = [
+        //'pendingId'=>0,
+        'pendingRequestStatus'=>$pendingRequestStatus,
+        'firstTime'=>$this->session->firstTime,
+        'username'=>$this->session->user_username,
+        'empId'=>$this->session->user_employee_id,
+        'hods'=>$this->employee->getAllHODs(),
+        'record'=>$record,
+        'requests'=>$requests,//$this->requestchain->getRequestChain('program', $id),
+        'requested_by'=>$this->cashretirementmaster->getCreatedBy($record->crm_id),
+        'items'=>$this->cashretirementdetail->where('crd_master_id = '.$record->crm_id)->findAll(),
+        'attachments'=>$this->cashretirementattachment->where('cra_master_id = '.$record->crm_id)->findAll()
+
+      ];
+      //return dd($data);
+      return view('pages/cash-retirement/view', $data);
+    }else{
+      return redirect()->back()->with("error", "<strong>Whoops!</strong> No record found");
+    }
   }
 }

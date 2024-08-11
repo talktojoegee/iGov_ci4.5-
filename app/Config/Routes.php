@@ -283,6 +283,7 @@ $routes->match(['post'], 'update-profile', 'EmployeeController::update_profile',
 $routes->match(['get'], 'cash-retirement', 'CashRetirementController::my_cash_retirement',['filter'=>'auth', 'as'=>'cash-retirement']);
 $routes->match(['post', 'get'], 'new-cash-retirement', 'CashRetirementController::new_cash_retirement',['filter'=>'auth', 'as'=>'new-cash-retirement']);
 $routes->match(['post', 'get'], 'store-cash-retirement', 'CashRetirementController::store_new_cash_retirement',['filter'=>'auth', 'as'=>'store-cash-retirement']);
+$routes->match(['post', 'get'], 'cash-retirement-details/(:any)', 'CashRetirementController::show_cash_retirement_details/$1',['filter'=>'auth', 'as'=>'show-cash-retirement-details']);
 
 // central registry routes
 $routes->match(['get'], 'central-registry', 'CentralRegistryController::index', ['filter' => 'auth']);

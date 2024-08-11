@@ -20,6 +20,11 @@
             </div>
         </div>
     </div>
+  <div class="row">
+    <div class="col-lg-12 d-flex justify-content-end">
+      <a href="<?=route_to('cash-retirement')?>" type="button" class="btn btn-sm btn-primary float-right"> Go Back</a>
+    </div>
+  </div>
     <!-- end page title -->
     <div class="row">
         <div class="col-12">
@@ -49,9 +54,6 @@
                                     <?php endif; ?>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-lg-4">
-                            <a href="<?=route_to('cash-retirement')?>" type="button" class="btn btn-sm btn-primary float-right"> Go Back</a>
                         </div>
                     </div>
                     <?php $validation = \Config\Services::validation(); ?>

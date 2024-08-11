@@ -39,7 +39,7 @@
 
         </div>
     </div>
-
+<?php if(count($requests) > 0): ?>
   <div class="row">
     <div class="col-lg-12">
       <div class="card">
@@ -61,7 +61,7 @@
                         <div class="event-date">
                           <div class="text-primary mb-1">Submitted By</div>
                           <h5 class="mb-4">
-                             <?= $requested_by->employee_f_name ?? '' ?> <?= $requested_by->employee_l_name ?? '' ?> <?= $requested_by->employee_o_name ?? '' ?>
+                            <?= $requested_by->employee_f_name ?? '' ?> <?= $requested_by->employee_l_name ?? '' ?> <?= $requested_by->employee_o_name ?? '' ?>
                           </h5>
                         </div>
                         <div class="d-flex justify-content-center">
@@ -78,68 +78,68 @@
                   <?php foreach($requests as $key => $auth): ?>
                     <?php $pendStatus = $auth->rc_status ?>
                     <?php $currentDeskId = $auth->rc_emp_id ?>
-                  <?php if($key+1 ==  count($requests) ): ?>
-                  <div class="owl-item " style="width: 293.5px;">
-                    <div class="item event-list <?=  $auth->rc_status == 0 ? 'active' : null ?>">
-                      <div>
-                        <div class="event-date">
-                          <div class="text-primary mb-1"><?= date('d M, Y h:ia', strtotime($auth->created_at)) ?></div>
-                          <h5 class="mb-4">
-                            <?= $auth->employee_f_name ?? '' ?> <?= $auth->employee_l_name ?? '' ?> <?= $auth->employee_o_name ?? '' ?>
-                            <br>
-                            <small>( <?= $auth->pos_name ?? '' ?>, <?= $auth->dpt_name ?? '' ?>)</small>
-                          </h5>
-                        </div>
-                        <div class="event-down-icon">
-                          <?php if($auth->rc_status == 0) :?>
-                          <i class="bx bxs-hourglass-top h1 text-secondary down-arrow-icon"></i>
-                          <?php $pendingId = $auth->rc_id ?? 0 ?>
+                    <?php if($key+1 ==  count($requests) ): ?>
+                      <div class="owl-item " style="width: 293.5px;">
+                        <div class="item event-list <?=  $auth->rc_status == 0 ? 'active' : null ?>">
+                          <div>
+                            <div class="event-date">
+                              <div class="text-primary mb-1"><?= date('d M, Y h:ia', strtotime($auth->created_at)) ?></div>
+                              <h5 class="mb-4">
+                                <?= $auth->employee_f_name ?? '' ?> <?= $auth->employee_l_name ?? '' ?> <?= $auth->employee_o_name ?? '' ?>
+                                <br>
+                                <small>( <?= $auth->pos_name ?? '' ?>, <?= $auth->dpt_name ?? '' ?>)</small>
+                              </h5>
+                            </div>
+                            <div class="event-down-icon">
+                              <?php if($auth->rc_status == 0) :?>
+                                <i class="bx bxs-hourglass-top h1 text-secondary down-arrow-icon"></i>
+                                <?php $pendingId = $auth->rc_id ?? 0 ?>
 
-                          <?php elseif($auth->rc_status == 1) : ?>
-                          <i class="bx bx-check-circle h1 text-success down-arrow-icon"></i>
-                          <?php else : ?>
-                          <i class="bx bx-x-circle h1 text-warning down-arrow-icon"></i>
-                          <?php endif; ?>
-                        </div>
-                        <div class="d-flex justify-content-center">
-                          <img src="/assets/images/users/avatar.png"
-                               style="height: 64px; width: 64px;" alt=""
-                               class="rounded-circle avatar-sm">
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <?php else : ?>
-                  <div class="owl-item " style="width: 293.5px;">
-                    <div class="item event-list">
-                      <div>
-                        <div class="event-date">
-                          <div class="text-primary mb-1"> <?= date('d M, Y h:ia', strtotime($auth->created_at)) ?></div>
-                          <h5 class="mb-4">
-                            <?= $auth->employee_f_name ?? '' ?> <?= $auth->employee_l_name ?? '' ?> <?= $auth->employee_o_name ?? '' ?>
-                            <br>
-                            <small>( <?= $auth->pos_name ?? '' ?>, <?= $auth->dpt_name ?? '' ?>)</small>
-                          </h5>
-                        </div>
-                        <div class="event-down-icon">
-                          <?php if($auth->rc_status == 0): ?>
-                          <i class="bx bxs-hourglass-top h1 text-secondary down-arrow-icon"></i>
-                          <?php $pendingId = $auth->rc_id ?>
-                          <?php elseif($auth->rc_status == 1): ?>
-                          <i class="bx bx-check-circle h1 text-success down-arrow-icon"></i>
-                          <?php else: ?>
-                          <i class="bx bx-x-circle h1 text-warning down-arrow-icon"></i>
-                          <?php endif; ?>
-                        </div>
-                        <div class="d-flex justify-content-center">
-                          <img src="/assets/images/users/avatar.png"
-                               style="height: 64px; width: 64px;" alt=""
-                               class="rounded-circle avatar-sm">
+                              <?php elseif($auth->rc_status == 1) : ?>
+                                <i class="bx bx-check-circle h1 text-success down-arrow-icon"></i>
+                              <?php else : ?>
+                                <i class="bx bx-x-circle h1 text-warning down-arrow-icon"></i>
+                              <?php endif; ?>
+                            </div>
+                            <div class="d-flex justify-content-center">
+                              <img src="/assets/images/users/avatar.png"
+                                   style="height: 64px; width: 64px;" alt=""
+                                   class="rounded-circle avatar-sm">
+                            </div>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </div>
-                  <?php endif; ?>
+                    <?php else : ?>
+                      <div class="owl-item " style="width: 293.5px;">
+                        <div class="item event-list">
+                          <div>
+                            <div class="event-date">
+                              <div class="text-primary mb-1"> <?= date('d M, Y h:ia', strtotime($auth->created_at)) ?></div>
+                              <h5 class="mb-4">
+                                <?= $auth->employee_f_name ?? '' ?> <?= $auth->employee_l_name ?? '' ?> <?= $auth->employee_o_name ?? '' ?>
+                                <br>
+                                <small>( <?= $auth->pos_name ?? '' ?>, <?= $auth->dpt_name ?? '' ?>)</small>
+                              </h5>
+                            </div>
+                            <div class="event-down-icon">
+                              <?php if($auth->rc_status == 0): ?>
+                                <i class="bx bxs-hourglass-top h1 text-secondary down-arrow-icon"></i>
+                                <?php $pendingId = $auth->rc_id ?>
+                              <?php elseif($auth->rc_status == 1): ?>
+                                <i class="bx bx-check-circle h1 text-success down-arrow-icon"></i>
+                              <?php else: ?>
+                                <i class="bx bx-x-circle h1 text-warning down-arrow-icon"></i>
+                              <?php endif; ?>
+                            </div>
+                            <div class="d-flex justify-content-center">
+                              <img src="/assets/images/users/avatar.png"
+                                   style="height: 64px; width: 64px;" alt=""
+                                   class="rounded-circle avatar-sm">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    <?php endif; ?>
                   <?php endforeach; ?>
 
                 </div>
@@ -151,6 +151,8 @@
       <!-- end card -->
     </div>
   </div>
+  <?php endif; ?>
+
 
 
 
@@ -554,9 +556,8 @@
 </div>
 <?= $this->endSection(); ?>
 <?= $this->section('extra-scripts'); ?>
-<script src="/assets/libs/select2/js/select2.min.js"></script>
-<script src="/assets/libs/owl.carousel/owl.carousel.min.js"></script>
-<script src="/assets/js/pages/timeline.init.js"></script>
+
+<?= view('pages/program-activities/_request-trail-scripts.php') ?>
 <script>
   $(document).ready(function(){
     //$('#seekApprovalCard').hide();
