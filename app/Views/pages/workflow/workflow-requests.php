@@ -1,6 +1,9 @@
 <?= $this->extend('layouts/master'); ?>
-
 <?= $this->section('content'); ?>
+<?php
+$permissions = session()->get('permissions');
+$workflow_permission = \App\Enums\Permissions::WORKFLOW->value;
+?>
 <div class="container-fluid">
     <!-- start page title -->
     <div class="row">
@@ -18,32 +21,35 @@
     </div>
     <!-- end page title -->
     <div class="row">
-      <div class="col-12">
+        <div class="col-12">
 
-          <?php if(session()->has('error')): ?>
-            <div class="card-box">
-                <div class="alert alert-warning" role="alert">
-                  <i class="mdi mdi-alert-outline mr-2"></i> <?= session()->get('error') ?>
+            <?php if (session()->has('error')): ?>
+                <div class="card-box">
+                    <div class="alert alert-warning" role="alert">
+                        <i class="mdi mdi-alert-outline mr-2"></i> <?= session()->get('error') ?>
+                    </div>
                 </div>
-            </div>
-          <?php endif; ?>
+            <?php endif; ?>
 
-          <?php if(session()->has('success')): ?>
-            <div class="card-box">
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-                  <?= session()->get('success') ?>
+            <?php if (session()->has('success')): ?>
+                <div class="card-box">
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <?= session()->get('success') ?>
+                    </div>
                 </div>
-            </div>
-          <?php endif; ?>
-      </div>
+            <?php endif; ?>
+        </div>
         <div class="col-12">
             <div class="card-box">
-                <a href="<?= site_url('/workflow-requests/new-request') ?>" class="btn btn-sm btn-blue waves-effect waves-light float-right">
-                    <i class="mdi mdi-plus-circle"></i> Add New Request
-                </a>
+                <?php if (in_array($workflow_permission, $permissions)): ?>
+                    <a href="<?= site_url('/workflow-requests/new-request') ?>"
+                       class="btn btn-sm btn-blue waves-effect waves-light float-right">
+                        <i class="mdi mdi-plus-circle"></i> Add New Request
+                    </a>
+                <?php endif; ?>
 
                 <h4 class="header-title mb-4">My Workflow Requests</h4>
 
@@ -63,17 +69,18 @@
                     </thead>
 
                     <tbody>
-                    <?php  $serial = 1; ?>
-                    <?php foreach($my_requests as $request): ?>
+                    <?php $serial = 1; ?>
+                    <?php foreach ($my_requests as $request): ?>
                         <tr>
                             <td><?= $serial++ ?></td>
-                            <td><?= date('d M, Y', strtotime($request['c_at']))  ?></td>
-                            <td class="text-right"><?= number_format($request['amount'],2) ?></td>
-                            <td><?= $request['request_title']  ?></td>
-                            <td><?= strlen(strip_tags($request['request_description'])) > 35 ? substr(strip_tags($request['request_description']),0,35).'...' : strip_tags($request['request_description'])  ?></td>
+                            <td><?= date('d M, Y', strtotime($request['c_at'])) ?></td>
+                            <td class="text-right"><?= number_format($request['amount'], 2) ?></td>
+                            <td><?= $request['request_title'] ?></td>
+                            <td><?= strlen(strip_tags($request['request_description'])) > 35 ? substr(strip_tags($request['request_description']), 0, 35) . '...' : strip_tags($request['request_description']) ?></td>
                             <td><?= $request['workflow_type_name'] ?></td>
                             <td>
-                                <a href="<?= site_url('/workflow-requests/view/'.$request['workflow_request_id']) ?>" class="btn btn-info btn-sm">View</a>
+                                <a href="<?= site_url('/workflow-requests/view/' . $request['workflow_request_id']) ?>"
+                                   class="btn btn-info btn-sm">View</a>
                             </td>
                         </tr>
                     <?php endforeach; ?>

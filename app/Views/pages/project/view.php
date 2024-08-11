@@ -1,9 +1,13 @@
 <?= $this->extend('layouts/master'); ?>
 
 <?= $this->section('extra-styles') ?>
-<link href="/assets/libs/select2/css/select2.min.css" rel="stylesheet" type="text/css" />
+<link href="/assets/libs/select2/css/select2.min.css" rel="stylesheet" type="text/css"/>
 <?= $this->endsection() ?>
 <?= $this->section('content'); ?>
+<?php
+$permissions = session()->get('permissions');
+$project_permission = \App\Enums\Permissions::PROJECTS->value;
+?>
 <div class="container-fluid">
     <!-- start page title -->
     <div class="row">
@@ -328,13 +332,15 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="">Attachment(s)</label>
-                                    <input type="file"  placeholder="Attachments" name="attachments[]" multiple class="form-control-file">
+                                    <input type="file" placeholder="Attachments" name="attachments[]" multiple
+                                           class="form-control-file">
                                 </div>
                             </div>
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="">Report</label>
-                                    <textarea name="report"  id="report" class="form-control" placeholder="Type report here..." cols="30" rows="10"></textarea>
+                                    <textarea name="report" id="report" class="form-control"
+                                              placeholder="Type report here..." cols="30" rows="10"></textarea>
                                 </div>
                             </div>
                             <div class="col-md-12 d-flex justify-content-center">

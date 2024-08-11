@@ -1,5 +1,10 @@
 <?= $this->extend('layouts/master'); ?>
 <?= $this->section('content'); ?>
+<?php
+$permissions = session()->get('permissions');
+$memo_permission = \App\Enums\Permissions::MEMO->value;
+$memo_approval_permission = \App\Enums\Permissions::MEMO_APPROVAL->value;
+?>
 <div class="container-fluid">
     <!-- start page title -->
     <div class="row">
@@ -38,10 +43,13 @@
                     </div>
                     <div class="col-lg-8">
                         <div class="text-lg-right mt-3 mt-lg-0">
-                            <a href="<?= site_url('internal-memo') ?>" class="btn btn-success"><i
-                                        class="mdi mdi-plus-circle mr-1"></i> New Memo</a>
-                            <a href="<?= site_url('/my-memos') ?>" type="button"
-                               class="btn btn-success waves-effect waves-light mr-3">My Memos</a>
+                            <?php if (in_array($memo_permission, $permissions)): ?>
+                                <a href="<?= site_url('internal-memo') ?>" class="btn btn-success"><i
+                                            class="mdi mdi-plus-circle mr-1"></i> New Memo</a>
+                                <a href="<?= site_url('/my-memos') ?>" type="button"
+                                   class="btn btn-success waves-effect waves-light mr-3">My Memos</a>
+                            <?php endif; ?>
+
                             <a href="<?= site_url('/memos/requests') ?>"
                                type="button"
                                class="btn btn-danger waves-effect waves-light">
