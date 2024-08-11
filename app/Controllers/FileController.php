@@ -18,10 +18,6 @@ class FileController extends BaseController
             exit;
         endif;
 
-        if (!$this->_validate_permission(Permissions::G_DRIVE->value)) {
-            return view('auth/access_denied');
-        }
-
         $this->file = new FileModel();
         $this->folder = new FolderModel();
         $this->user = new UserModel();
@@ -32,6 +28,9 @@ class FileController extends BaseController
 
     public function index()
     {
+        if (!$this->_validate_permission(Permissions::G_DRIVE->value)) {
+            return view('auth/access_denied');
+        }
         $data = [
             'files' => $this->file->getAllMyFiles($this->session->user_id),
             'my_folders' => $this->folder->getAllMyAndPublicFolders($this->session->user_id),
