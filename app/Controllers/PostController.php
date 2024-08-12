@@ -141,26 +141,16 @@ class PostController extends BaseController
         }
         // check verification code
         $ver_code = $post_request_data['ver_code'];
-//        $verification = $this->verification->where([
-//            'ver_user_id' => session()->user_id,
-//            'ver_type' => 'doc_signing',
-//            'ver_code' => $ver_code,
-//            'ver_status' => 0
-//        ])->first();
         $token = $this->token->where([
             'token_symbol' => $ver_code,
             'token_user_id' => $this->session->user_id,
         ])->first();
         if ($token) {
-//            $verification_data = [
-//                'ver_id' => $verification['ver_id'] ?? null,
-//                'ver_status' => 1,
-//            ];
-//            $this->verification->save($verification_data);
             $post_data = [
                 'p_id' => $post_request_data['p_id'],
                 'p_status' => 2,
-                'p_signature' => $post_request_data['p_signature']
+                'p_signature' => $post_request_data['p_signature'],
+                'p_requires_approval' => $post_request_data['p_requires_approval'],
             ];
             if ($this->post->save($post_data)) {
                 $this->_create_post_sign_notification($post);
@@ -203,6 +193,72 @@ class PostController extends BaseController
             $response['success'] = false;
             $response['message'] = 'An error occurred while declining this document';
         }
+        return $this->response->setJSON($response);
+    }
+
+    public function approve_post()
+    {
+        $post_request_data = $this->request->getPost();
+        $post = $this->post->find($post_request_data['p_id']);
+
+        if ($post) {
+            $recipients = json_decode($post['p_recipients_id']);
+            if (!in_array($this->session->user_id, $recipients)) {
+                $response['success'] = false;
+                $response['message'] = 'You cannot approve this document';
+                return $this->response->setJSON($response);
+            }
+
+            $post_data = [
+                'p_id' => $post_request_data['p_id'],
+                'p_approval_status' => 2,
+                'p_approved_by' => session()->user_id,
+            ];
+            if ($this->post->save($post_data)) {
+                $response['success'] = true;
+                $response['message'] = 'The document was approved successfully';
+            } else {
+                $response['success'] = false;
+                $response['message'] = 'An error occurred while approving this document';
+            }
+            return $this->response->setJSON($response);
+
+        }
+        $response['success'] = false;
+        $response['message'] = 'Invalid document';
+        return $this->response->setJSON($response);
+    }
+
+    public function reject_post()
+    {
+        $post_request_data = $this->request->getPost();
+        $post = $this->post->find($post_request_data['p_id']);
+
+        if ($post) {
+            $recipients = json_decode($post['p_recipients_id']);
+            if (!in_array($this->session->user_id, $recipients)) {
+                $response['success'] = false;
+                $response['message'] = 'You cannot reject this document';
+                return $this->response->setJSON($response);
+            }
+
+            $post_data = [
+                'p_id' => $post_request_data['p_id'],
+                'p_approval_status' => 1,
+                'p_approved_by' => session()->user_id,
+            ];
+            if ($this->post->save($post_data)) {
+                $response['success'] = true;
+                $response['message'] = 'The document was rejected successfully';
+            } else {
+                $response['success'] = false;
+                $response['message'] = 'An error occurred while approving this document';
+            }
+            return $this->response->setJSON($response);
+
+        }
+        $response['success'] = false;
+        $response['message'] = 'Invalid document';
         return $this->response->setJSON($response);
     }
 

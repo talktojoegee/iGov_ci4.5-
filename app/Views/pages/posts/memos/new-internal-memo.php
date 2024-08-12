@@ -57,7 +57,7 @@
                                             <?php if (!empty($employees)): ?>
                                                 <optgroup label="<?= $department ?>">
                                                     <?php foreach ($employees as $employee): ?>
-                                                        <option value="<?= $employee['user_id'] ?>">
+                                                        <option value="<?= $employee['user']['user_id'] ?>">
                                                             <?= $employee['position']['pos_name'] . ' (' . $employee['user']['user_name'] . ')' ?>
                                                         </option>
                                                     <?php endforeach; ?>

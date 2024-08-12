@@ -33,7 +33,8 @@ class Post extends Model
         'p_requires_approval',
         'p_approval_status',
         'p_approved_by',
-        'p_reviewers_id'
+        'p_reviewers_id',
+        'p_reviewed_stamp'
     ];
 
     // Dates

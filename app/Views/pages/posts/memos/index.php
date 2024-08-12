@@ -118,19 +118,38 @@ $memo_approval_permission = \App\Enums\Permissions::MEMO_APPROVAL->value;
                     <!--          <p class="text-muted font-13 mb-3 sp-line-2">A handful of model sentence structures, to generate Lorem Ipsum which looks reasonable...<a href="javascript:void(0);" class="font-weight-bold text-muted">view more</a></p>-->
                     <!-- Task info-->
                     <p class="mb-1">
-            <span class="pr-3 text-nowrap mb-2 d-inline-block">
-              <strong>Signed By</strong> <br>
-              <span class="text-muted"><?= $memo['signed_by']['user_name'] ?></span>
-            </span>
+                        <span class="pr-3 text-nowrap mb-2 d-inline-block">
+                          <strong>Signed By</strong> <br>
+                          <span class="text-muted"><?= $memo['signed_by']['user_name'] ?></span>
+                        </span>
                         <span class="text-nowrap mb-2 d-inline-block">
-              <strong>Date</strong> <br>
-              <span class="text-muted">
-                <?php $date = date_create($memo['p_date']);
-                echo date_format($date, "d M Y H:i a");
-                ?>
-              </span>
-            </span>
+                          <strong>Date</strong> <br>
+                          <span class="text-muted">
+                            <?php $date = date_create($memo['p_date']);
+                            echo date_format($date, "d M Y H:i a");
+                            ?>
+                          </span>
+                        </span>
                     </p>
+
+                    <?php if ($memo['p_requires_approval'] == 1): ?>
+                        <p>
+                            <span class="pr-3 text-nowrap mb-2 d-inline-block">
+                                <strong>Approval Status</strong> <br>
+                                <?php if ($memo['p_approval_status'] == 0): ?>
+                                    <span class="text-warning">Requires Approval</span>
+                                <?php elseif ($memo['p_approval_status'] == 1): ?>
+                                    <span class="text-danger">Not Approved</span>
+                                <?php elseif ($memo['p_approval_status'] == 2): ?>
+                                    <?php foreach ($stamps as $stamp): ?>
+                                        <?php if ($stamp['stamp_type'] == 'Approved Stamp'): ?>
+                                            <img src="/uploads/stamps/<?= $stamp['stamp_image'] ?>" height="80">
+                                        <?php endif; ?>
+                                    <?php endforeach; ?>
+                                <?php endif ?>
+                            </span>
+                        </p>
+                    <?php endif; ?>
                     <strong>Recipients</strong>
                     <div class="avatar-group">
                         <?php if (!empty($memo['recipients'])): ?>

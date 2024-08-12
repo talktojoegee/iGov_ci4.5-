@@ -103,6 +103,9 @@ $routes->match(['post', 'get'], 'delete-post-attachments', 'PostController::dele
 $routes->match(['post'], 'sign-post', 'PostController::sign_post', ['filter' => 'auth']);
 $routes->match(['post'], 'decline-post', 'PostController::decline_post', ['filter' => 'auth']);
 $routes->match(['post'], 'send-doc-signing-verification', 'PostController::send_doc_signing_verification/', ['filter' => 'auth']);
+$routes->match(['post'], 'approve-post', 'PostController::approve_post', ['filter' => 'auth']);
+$routes->match(['post'], 'reject-post', 'PostController::reject_post', ['filter' => 'auth']);
+
 
 // notices route
 $routes->get('notices', 'NoticeController::index', ['filter' => 'auth']);
@@ -209,17 +212,17 @@ $routes->post('/projects/submit-project-report', 'ProjectController::submitRepor
 
 
 #Program & Activities
-$routes->get('/manage-programs-activities','ProgramActivitiesController::index',['filter'=>'auth', 'as'=>'manage-programs']);
-$routes->get('/programs-activities/create','ProgramActivitiesController::showAddNewProgramForm',['filter'=>'auth', 'as'=>'add-new-program']);
-$routes->get('/programs-activities/(:num)','ProgramActivitiesController::viewProgram/$1',['filter'=>'auth', 'as'=>'view-program']);
-$routes->post('/programs-activities/create','ProgramActivitiesController::setNewProgram',['filter'=>'auth']);
-$routes->post('/leave-program-comment','ProgramActivitiesController::setNewConversation',['filter'=>'auth', 'as'=>'leave-program-comment']);
-$routes->get('/programs-activities/edit/(:num)','ProgramActivitiesController::editProgram/$1',['filter'=>'auth', 'as'=>'edit-program']);
-$routes->post('/programs-activities/update','ProgramActivitiesController::editProgram/$1',['filter'=>'auth', 'as'=>'update-program']);
-$routes->post('/programs-activities/submit-program-report','ProgramActivitiesController::submitReport',['filter'=>'auth', 'as'=>'submit-program-report']);
+$routes->get('/manage-programs-activities', 'ProgramActivitiesController::index', ['filter' => 'auth', 'as' => 'manage-programs']);
+$routes->get('/programs-activities/create', 'ProgramActivitiesController::showAddNewProgramForm', ['filter' => 'auth', 'as' => 'add-new-program']);
+$routes->get('/programs-activities/(:num)', 'ProgramActivitiesController::viewProgram/$1', ['filter' => 'auth', 'as' => 'view-program']);
+$routes->post('/programs-activities/create', 'ProgramActivitiesController::setNewProgram', ['filter' => 'auth']);
+$routes->post('/leave-program-comment', 'ProgramActivitiesController::setNewConversation', ['filter' => 'auth', 'as' => 'leave-program-comment']);
+$routes->get('/programs-activities/edit/(:num)', 'ProgramActivitiesController::editProgram/$1', ['filter' => 'auth', 'as' => 'edit-program']);
+$routes->post('/programs-activities/update', 'ProgramActivitiesController::editProgram/$1', ['filter' => 'auth', 'as' => 'update-program']);
+$routes->post('/programs-activities/submit-program-report', 'ProgramActivitiesController::submitReport', ['filter' => 'auth', 'as' => 'submit-program-report']);
 
-$routes->post('/request-for-approval','ChainRequestController::requestForApproval',['filter'=>'auth', 'as'=>'request-for-approval']);
-$routes->post('/action-request','ChainRequestController::actionRequest',['filter'=>'auth', 'as'=>'action-request']);
+$routes->post('/request-for-approval', 'ChainRequestController::requestForApproval', ['filter' => 'auth', 'as' => 'request-for-approval']);
+$routes->post('/action-request', 'ChainRequestController::actionRequest', ['filter' => 'auth', 'as' => 'action-request']);
 
 #Reminder
 $routes->get('/reminder', 'ReminderController::index', ['filter' => 'auth', 'as' => 'reminder']);
@@ -265,25 +268,26 @@ $routes->get('/contractor-license-renewal', 'ProcurementController::contractorLi
 
 // employee routes
 $routes->match(['get'], 'my-account', 'EmployeeController::my_account', ['filter' => 'auth']);
-$routes->match(['get'], 'profile/(:any)', 'EmployeeController::view_profile/$1', ['filter' => 'auth', 'as'=>'view-profile']);
+$routes->match(['get'], 'profile/(:any)', 'EmployeeController::view_profile/$1', ['filter' => 'auth', 'as' => 'view-profile']);
 $routes->match(['get'], 'check-signature-exists', 'EmployeeController::check_signature_exists', ['filter' => 'auth']);
-$routes->match(['post'], 'setup-signature', 'EmployeeController::setup_signature', ['filter' => 'auth', 'as'=>'setup_signature']);
+$routes->match(['post'], 'setup-signature', 'EmployeeController::setup_signature', ['filter' => 'auth', 'as' => 'setup_signature']);
+$routes->match(['get'], 'check-approved-stamp', 'EmployeeController::check_approved_stamp', ['filter' => 'auth']);
 
-$routes->match(['post'], 'verify-token', 'EmployeeController::verify_token', ['filter' => 'auth', 'as'=>'verify_token']);
-$routes->match(['post'], 'submit-digitally-signed-signature', 'EmployeeController::uploadDigitalSignature', ['filter' => 'auth', 'as'=>'submit-digitally-signed-signature']);
+$routes->match(['post'], 'verify-token', 'EmployeeController::verify_token', ['filter' => 'auth', 'as' => 'verify_token']);
+$routes->match(['post'], 'submit-digitally-signed-signature', 'EmployeeController::uploadDigitalSignature', ['filter' => 'auth', 'as' => 'submit-digitally-signed-signature']);
 
 $routes->match(['post'], 'verify-signature', 'EmployeeController::verify_signature', ['filter' => 'auth']);
 $routes->match(['post'], 'submit-token', 'EmployeeController::submit_token', ['filter' => 'auth']);
 $routes->match(['post'], 'confirm-token', 'EmployeeController::confirm_token', ['filter' => 'auth']);
 $routes->match(['post'], 'change-password', 'EmployeeController::change_password', ['filter' => 'auth']);
-$routes->match(['post'], 'update-profile', 'EmployeeController::update_profile', ['filter' => 'auth', 'as'=>'update-profile']);
+$routes->match(['post'], 'update-profile', 'EmployeeController::update_profile', ['filter' => 'auth', 'as' => 'update-profile']);
 
 
 #Cash retirement
-$routes->match(['get'], 'cash-retirement', 'CashRetirementController::my_cash_retirement',['filter'=>'auth', 'as'=>'cash-retirement']);
-$routes->match(['post', 'get'], 'new-cash-retirement', 'CashRetirementController::new_cash_retirement',['filter'=>'auth', 'as'=>'new-cash-retirement']);
-$routes->match(['post', 'get'], 'store-cash-retirement', 'CashRetirementController::store_new_cash_retirement',['filter'=>'auth', 'as'=>'store-cash-retirement']);
-$routes->match(['post', 'get'], 'cash-retirement-details/(:any)', 'CashRetirementController::show_cash_retirement_details/$1',['filter'=>'auth', 'as'=>'show-cash-retirement-details']);
+$routes->match(['get'], 'cash-retirement', 'CashRetirementController::my_cash_retirement', ['filter' => 'auth', 'as' => 'cash-retirement']);
+$routes->match(['post', 'get'], 'new-cash-retirement', 'CashRetirementController::new_cash_retirement', ['filter' => 'auth', 'as' => 'new-cash-retirement']);
+$routes->match(['post', 'get'], 'store-cash-retirement', 'CashRetirementController::store_new_cash_retirement', ['filter' => 'auth', 'as' => 'store-cash-retirement']);
+$routes->match(['post', 'get'], 'cash-retirement-details/(:any)', 'CashRetirementController::show_cash_retirement_details/$1', ['filter' => 'auth', 'as' => 'show-cash-retirement-details']);
 
 // central registry routes
 $routes->match(['get'], 'central-registry', 'CentralRegistryController::index', ['filter' => 'auth']);

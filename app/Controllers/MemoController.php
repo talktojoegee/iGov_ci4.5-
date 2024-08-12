@@ -36,8 +36,7 @@ class MemoController extends PostController
         }
         $data['pager'] = $this->post->pager;
         $data['userId'] = $user_id;
-
-
+        $data['stamps'] = $this->stamp->findAll();
         return view('/pages/posts/memos/index', $data);
     }
 
