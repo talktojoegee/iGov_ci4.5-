@@ -88,7 +88,7 @@
                               <?php endif; ?>
                             </div>
                             <div class="d-flex justify-content-center">
-                              <img src="/assets/images/users/avatar.png"
+                              <img src="/assets/images/users/<?= $auth->employee_avatar ?? 'avatar.png' ?>"
                                    style="height: 64px; width: 64px;" alt=""
                                    class="rounded-circle avatar-sm">
                             </div>
