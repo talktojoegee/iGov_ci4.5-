@@ -383,7 +383,8 @@ class MemoController extends PostController
                 ->findAll();
             foreach ($employees as $employee) {
                 $user = $this->user->where('user_employee_id', $employee['employee_id'])->first();
-                if ($user['user_status'] == 1 && ($user['user_type'] == 3 || $user['user_type'] == 2)) {
+                $user_permissions = $this->user_permissions->viewUserPermissions($user['user_id']);
+                if ($user['user_status'] == 1 && ($user['user_type'] == 3 || $user['user_type'] == 2) && in_array($this->memo_permission, $user_permissions)) {
                     $employee['user'] = $user;
                     $employee['position'] = $this->position->find($employee['employee_position_id']);
                     array_push($department_employees[$department['dpt_name']], $employee);
