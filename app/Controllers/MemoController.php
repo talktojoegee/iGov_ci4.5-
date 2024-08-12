@@ -30,9 +30,9 @@ class MemoController extends PostController
                 $data['memos'] = $unreviewed_memos;
                 return view('/pages/posts/memos/review-requests', $data);
             }
-            $data['memos'] = $this->_get_memos($position_id);
+            $data['memos'] = $this->_get_memos();
         } else {
-            $data['memos'] = $this->_get_searched_memos($search_params, $position_id);
+            $data['memos'] = $this->_get_searched_memos($search_params);
         }
         $data['pager'] = $this->post->pager;
         $data['userId'] = $user_id;
@@ -66,7 +66,7 @@ class MemoController extends PostController
             'p_signed_by' => $post_data['p_signed_by'],
             'p_reviewers_id' => json_encode($post_data['p_reviewers_id']),
             'p_direction' => 1,
-            'p_recipients_id' => json_encode($post_data['positions'])
+            'p_recipients_id' => json_encode($post_data['recipients'])
         ];
         $post_id = $this->post->insert($memo_data);
         if ($post_id) {
@@ -200,7 +200,7 @@ class MemoController extends PostController
         return $this->response->setJSON($response);
     }
 
-    private function _get_memos($position_id)
+    private function _get_memos()
     {
         $memos = $this->post
             ->where('p_status', 2)
@@ -213,11 +213,12 @@ class MemoController extends PostController
             $recipients = [];
             if ($recipient_ids) {
                 foreach ($recipient_ids as $recipient_id) {
-                    array_push($recipients, $this->position->find($recipient_id));
+                    $user = $this->user->getAllUserData($recipient_id);
+                    array_push($recipients, $user);
                 }
-                if (in_array($position_id, $recipient_ids) || $memo['p_signed_by'] == session()->user_id || $memo['p_by'] == session()->user_id) {
-                    $memo['written_by'] = $this->user->find($memo['p_by']);
-                    $memo['signed_by'] = $this->user->find($memo['p_signed_by']);
+                if (in_array(session()->user_id, $recipient_ids) || $memo['p_signed_by'] == session()->user_id || $memo['p_by'] == session()->user_id) {
+                    $memo['written_by'] = $this->user->getAllUserData($memo['p_by']);
+                    $memo['signed_by'] = $this->user->getAllUserData($memo['p_signed_by']);
                     $memo['recipients'] = $recipients;
                     array_push($new_memos, $memo);
                 }
@@ -241,13 +242,14 @@ class MemoController extends PostController
             $recipients = [];
             if ($recipient_ids) {
                 foreach ($recipient_ids as $recipient_id) {
-                    array_push($recipients, $this->position->find($recipient_id));
+                    $user = $this->user->getAllUserData($recipient_id);
+                    array_push($recipients, $user);
                 }
             } else {
                 $external_recipients = explode("\n", $memo['p_recipients_id']);
                 $memos[$key]['external_recipients'] = $external_recipients;
             }
-            $memos[$key]['written_by'] = $this->user->find($memo['p_by']);
+            $memos[$key]['written_by'] = $this->user->getAllUserData($memo['p_by']);
             $memos[$key]['recipients'] = $recipients;
         }
         return $memos;
@@ -273,26 +275,26 @@ class MemoController extends PostController
             }
         }
 
-
         foreach ($unreviewed_memos as $key => $memo) {
             $recipient_ids = json_decode($memo['p_recipients_id']);
             $recipients = [];
             if ($recipient_ids) {
                 foreach ($recipient_ids as $recipient_id) {
-                    array_push($recipients, $this->position->find($recipient_id));
+                    $user = $this->user->getAllUserData($recipient_id);
+                    array_push($recipients, $user);
                 }
             } else {
                 $external_recipients = explode("\n", $memo['p_recipients_id']);
                 $unreviewed_memos[$key]['external_recipients'] = $external_recipients;
             }
-            $unreviewed_memos[$key]['written_by'] = $this->user->find($memo['p_by']);
+            $unreviewed_memos[$key]['written_by'] = $this->user->getAllUserData($memo['p_by']);
             $unreviewed_memos[$key]['recipients'] = $recipients;
         }
 
         return $unreviewed_memos;
     }
 
-    private function _get_searched_memos($search_params, $position_id)
+    private function _get_searched_memos($search_params)
     {
         $memos = $this->post
             ->where('p_status', 2)
@@ -305,11 +307,12 @@ class MemoController extends PostController
             $recipient_ids = json_decode($memo['p_recipients_id']);
             $recipients = [];
             foreach ($recipient_ids as $recipient_id) {
-                array_push($recipients, $this->position->find($recipient_id));
+                $user = $this->user->getAllUserData($recipient_id);
+                array_push($recipients, $user);
             }
-            if (in_array($position_id, $recipient_ids)) {
-                $memo['written_by'] = $this->user->find($memo['p_by']);
-                $memo['signed_by'] = $this->user->find($memo['p_signed_by']);
+            if (in_array(session()->user_id, $recipient_ids)) {
+                $memo['written_by'] = $this->user->getAllUserData($memo['p_by']);
+                $memo['signed_by'] = $this->user->getAllUserData($memo['p_signed_by']);
                 $memo['recipients'] = $recipients;
                 array_push($searched_memos, $memo);
             }
@@ -325,7 +328,7 @@ class MemoController extends PostController
             ->orderBy('p_date', 'DESC')
             ->findAll();
         foreach ($memos as $key => $memo) {
-            $memos[$key]['signed_by'] = $this->user->find($memo['p_signed_by']);
+            $memos[$key]['signed_by'] = $this->user->getAllUserData($memo['p_signed_by']);
         }
         return $memos;
     }
@@ -353,22 +356,31 @@ class MemoController extends PostController
 
             $memo['attachments'] = $this->pa->where('pa_post_id', $memo_id)->findAll();
             $recipient_ids = json_decode($memo['p_recipients_id']);
+            $reviewers_ids = json_decode($memo['p_reviewers_id']);
             $recipients = [];
+            $reviewers = [];
             if ($recipient_ids) {
                 foreach ($recipient_ids as $recipient_id) {
-                    $employee = $this->employee->where('employee_id', $recipient_id)->first();
-                    $position = $this->position->find($employee['employee_position_id']);
-                    //$position =  $this->position->find($recipient_id);
-                    $position['department'] = $this->department->find($position['pos_dpt_id']);
-                    array_push($recipients, $position);
+                    $user = $this->user->getAllUserData($recipient_id);
+                    array_push($recipients, $user);
                 }
             } else {
                 $external_recipients = explode("\n", $memo['p_recipients_id']);
                 $memo['external_recipients'] = $external_recipients;
             }
+
+            if ($reviewers_ids) {
+                foreach ($reviewers_ids as $reviewer_id) {
+                    $user = $this->user->getAllUserData($reviewer_id);
+                    array_push($reviewers, $user);
+                }
+            }
+
             $memo['recipients'] = $recipients;
+            $memo['reviewers'] = $reviewers;
             $memo['organization'] = $this->organization->first();
         }
+
         return $memo;
     }
 
