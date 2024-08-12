@@ -45,6 +45,13 @@ $memo_approval_permission = \App\Enums\Permissions::MEMO_APPROVAL->value;
                                         class="btn btn-danger mr-1">Decline
                                 </button>
                             <?php endif; ?>
+                            <?php if ($memo['p_requires_approval'] && $memo['p_approval_status'] == 0): ?>
+                                <button onclick="approveDocument(<?= $memo['p_id'] ?>)" type="button"
+                                        class="btn btn-danger mr-1">
+                                    Requires Approval
+                                </button>
+                            <?php endif; ?>
+
                             <a href="<?= site_url('/memos') ?>" type="button" class="btn btn-success">Go Back</a>
                         </div>
                     </div>
@@ -257,6 +264,18 @@ $memo_approval_permission = \App\Enums\Permissions::MEMO_APPROVAL->value;
                                 </div>
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="custom-control custom-checkbox">
+                                    <input name="p_requires_approval" type="checkbox" class="custom-control-input"
+                                           id="p_requires_approval">
+                                    <label class="custom-control-label"
+                                           for="p_requires_approval">
+                                        Check this if this memo requires approval
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
@@ -270,6 +289,55 @@ $memo_approval_permission = \App\Enums\Permissions::MEMO_APPROVAL->value;
                     </div>
                     <input type="hidden" id="post-id">
                     <input type="hidden" id="e-signature">
+                </form>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+    <div id="standard-modal-4" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="standard-modalLabel"
+         aria-hidden="true" gt>
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <form id="verify-doc-signing-form" class="needs-validation" novalidate>
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="standard-modalLabel">Memo Approval</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-12">
+                                <p>
+                                    Do you wish to approve or reject this memo?
+                                </p>
+                                <div class="custom-control custom-radio">
+                                    <input type="radio" id="yes-approve-memo" name="approve_memo"
+                                           class="custom-control-input">
+                                    <label class="custom-control-label" for="yes-approve-memo">
+                                        Yes, approve memo
+                                    </label>
+                                </div>
+                                <div class="custom-control custom-radio">
+                                    <input type="radio" id="no-reject-memo" name="approve_memo"
+                                           class="custom-control-input">
+                                    <label class="custom-control-label" for="no-reject-memo">
+                                        No, reject memo
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
+                        <button type="button" onclick="submitDocumentApproval(<?= $memo['p_id'] ?>)"
+                                class="btn btn-primary" id="save-btn">
+                            Submit
+                        </button>
+                        <button type="submit" class="btn btn-primary" id="save-btn-loading" hidden disabled>
+                            <span class="spinner-border spinner-border-sm mr-1" role="status" aria-hidden="true"></span>
+                            Please wait...
+                        </button>
+                    </div>
+                    <input type="hidden" id="post-id" name="p_id" value="<?= $memo['p_id'] ?>">
                 </form>
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->

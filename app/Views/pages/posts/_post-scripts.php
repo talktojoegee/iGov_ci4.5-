@@ -43,9 +43,11 @@
             let formData = new FormData()
             let postID = $('#post-id').val()
             let eSignature = $('#e-signature').val()
+            let requiresApproval = $('#p_requires_approval').prop('checked') ? '1' : '0'
             formData.append('p_id', postID)
             formData.append('p_signature', eSignature)
             formData.append('ver_code', verCode)
+            formData.append('p_requires_approval', requiresApproval)
             $('#save-btn').text('Submitting...');
             $('#save-btn').attr('disabled', 'true');
             $.ajax({
@@ -84,6 +86,7 @@
                 formData.append('p_id', postID)
                 jQuery.noConflict()
                 $('#loading-modal').modal('toggle');
+                $('#standard-modal-4').modal('toggle')
                 $('#modalTitle').text('Processing request')
                 $('#modalText').text('Hold on while we take into account your action')
                 $.ajax({
@@ -103,6 +106,53 @@
                 })
             }
         })
+    }
+
+    function approveDocument() {
+        jQuery.noConflict()
+        $.ajax({
+            url: '<?=site_url('/check-approved-stamp')?>',
+            type: 'get',
+            success: response => {
+                if (response.success) {
+                    $('#standard-modal-4').modal('toggle')
+                } else {
+                    Swal.fire('Sorry!', response.message, 'error').then(() => {
+                    })
+                }
+            }
+        })
+    }
+
+    function submitDocumentApproval(postID) {
+        let selectedRadio = $('input[name="approve_memo"]:checked').attr('id');
+        if (selectedRadio) {
+            const url = selectedRadio === 'yes-approve-memo' ? '<?=site_url('/approve-post')?>' : '<?=site_url('/reject-post')?>'
+            let formData = new FormData()
+            formData.append('p_id', postID)
+            jQuery.noConflict()
+            $('#loading-modal').modal('toggle');
+            $('#modalTitle').text('Processing request')
+            $('#modalText').text('Hold on while we take into account your action')
+            $.ajax({
+                url,
+                type: 'post',
+                data: formData,
+                success: response => {
+                    if (response.success) {
+                        Swal.fire('Confirmed!', response.message, 'success').then(() => location.reload())
+                    } else {
+                        Swal.fire('Sorry!', response.message, 'error')
+                    }
+                },
+                cache: false,
+                contentType: false,
+                processData: false,
+            })
+        } else {
+            Swal.fire('Invalid Submission!', 'Please select a response', 'error')
+        }
+
     }
 
     function signDocument(postID) {
