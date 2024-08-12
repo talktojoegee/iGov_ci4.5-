@@ -141,22 +141,22 @@ class PostController extends BaseController
         }
         // check verification code
         $ver_code = $post_request_data['ver_code'];
-        $verification = $this->verification->where([
-            'ver_user_id' => session()->user_id,
-            'ver_type' => 'doc_signing',
-            'ver_code' => $ver_code,
-            'ver_status' => 0
-        ])->first();
+//        $verification = $this->verification->where([
+//            'ver_user_id' => session()->user_id,
+//            'ver_type' => 'doc_signing',
+//            'ver_code' => $ver_code,
+//            'ver_status' => 0
+//        ])->first();
         $token = $this->token->where([
             'token_symbol' => $ver_code,
             'token_user_id' => $this->session->user_id,
         ])->first();
-        if ($verification || $token) {
-            $verification_data = [
-                'ver_id' => $verification['ver_id'] ?? null,
-                'ver_status' => 1,
-            ];
-            $this->verification->save($verification_data);
+        if ($token) {
+//            $verification_data = [
+//                'ver_id' => $verification['ver_id'] ?? null,
+//                'ver_status' => 1,
+//            ];
+//            $this->verification->save($verification_data);
             $post_data = [
                 'p_id' => $post_request_data['p_id'],
                 'p_status' => 2,
@@ -232,8 +232,9 @@ class PostController extends BaseController
             foreach ($recipients as $recipient) {
                 $department_users = $this->employee->where('employee_department_id', $recipient)->findAll();
                 foreach ($department_users as $department_user) {
-                    $user = $this->user->where('user_employee_id', $department_user['employee_id'])->findAll();
-                    $this->send_notification('New Circular Signing', 'A circular addressed to you was signed and approved', $user['user_id'], site_url('view-circular/') . $post['p_id'], 'click to view circular');
+                    $user = $this->user->where('user_employee_id', $department_user['employee_id'])->first();
+                    if ($user)
+                        $this->send_notification('New Circular Signing', 'A circular addressed to you was signed and approved', $user['user_id'], site_url('view-circular/') . $post['p_id'], 'click to view circular');
                 }
             }
         } else {
