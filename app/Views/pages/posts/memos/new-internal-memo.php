@@ -51,13 +51,13 @@
                             <div class="col-12">
                                 <div class="form-group">
                                     <label for="positions">To</label><span style="color: red"> *</span>
-                                    <select class="form-control select2-multiple" id="positions" name="positions[]"
+                                    <select class="form-control select2-multiple" id="positions" name="recipients[]"
                                             data-toggle="select2" multiple="multiple" required style="min-height: 38px">
                                         <?php foreach ($department_employees as $department => $employees): ?>
                                             <?php if (!empty($employees)): ?>
                                                 <optgroup label="<?= $department ?>">
                                                     <?php foreach ($employees as $employee): ?>
-                                                        <option value="<?= $employee['user']['user_id'] ?>">
+                                                        <option value="<?= $employee['user_id'] ?>">
                                                             <?= $employee['position']['pos_name'] . ' (' . $employee['user']['user_name'] . ')' ?>
                                                         </option>
                                                     <?php endforeach; ?>

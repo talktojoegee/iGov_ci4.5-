@@ -101,9 +101,9 @@ $memo_approval_permission = \App\Enums\Permissions::MEMO_APPROVAL->value;
                         <div class="col-6">
                             <div class="float-left">
                                 <h5 class="font-size-14 mb-0">From:</h5>
-                                <?= $memo['written_by']['user_name'] ?? '' ?>
-                                (<?= $memo['written_by']['position']['pos_name'] ?? '' ?>
-                                , <?= $memo['written_by']['department']['dpt_name'] ?? '' ?>)
+                                <?= esc($memo['written_by']['user_name']) ?>
+                                (<?= esc($memo['written_by']['position']['pos_name']) ?>,
+                                <?= esc($memo['written_by']['department']['dpt_name'] ?? 'N/A') ?>)
                             </div>
                         </div>
                     </div>
@@ -113,12 +113,28 @@ $memo_approval_permission = \App\Enums\Permissions::MEMO_APPROVAL->value;
                                 <h5 class="font-size-14 mb-0">To:</h5>
                                 <?php if (!empty($memo['recipients'])): ?>
                                     <?php foreach ($memo['recipients'] as $recipient): ?>
-                                        <?= $recipient['pos_name'] ?> (<?= $recipient['department']['dpt_name'] ?>) <br>
+                                        <?= $recipient['user_name'] ?> - <?= $recipient['pos_name'] ?> (<?= $recipient['dpt_name'] ?>)
+                                        <br>
                                     <?php endforeach; ?>
                                 <?php else: ?>
                                     <?php foreach ($memo['external_recipients'] as $external_recipient): ?>
                                         <?= $external_recipient ?> <br>
                                     <?php endforeach; endif; ?>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="float-left">
+                                <h5 class="font-size-14 mb-0">Through:</h5>
+                                <?php if (!empty($memo['reviewers'])): ?>
+                                    <?php foreach ($memo['reviewers'] as $reviewer): ?>
+                                        <?= $reviewer['user_name'] ?> - <?= $reviewer['pos_name'] ?> (<?= $reviewer['dpt_name'] ?>)
+                                        <br>
+                                    <?php endforeach; ?>
+                                <?php else: ?>
+                                    <p>N/A</p>
+                                <?php endif; ?>
                             </div>
                         </div>
                     </div>
