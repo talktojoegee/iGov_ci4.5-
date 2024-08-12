@@ -52,9 +52,6 @@
 
             <h4 class="mb-0"><?=$user['user_name']?></h4>
             <p class="text-muted"><?=$user['position']['pos_name'] ?? '' ?>, <?=$user['department']['dpt_name'] ?? '' ?></p>
-
-            <button type="button" class="btn btn-success btn-xs waves-effect mb-2 waves-light">Activate Account</button>
-            <button type="button" class="btn btn-danger btn-xs waves-effect mb-2 waves-light">Deactivate Account</button>
           </div>
 
           <div class="text-end mt-3">
