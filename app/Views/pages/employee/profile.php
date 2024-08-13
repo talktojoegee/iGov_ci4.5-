@@ -261,7 +261,7 @@
                   <div class="col-md-6">
                     <div class="mb-3">
                       <label for="firstname" class="form-label">First Name</label>
-                      <input type="text" class="form-control" name="firstName" value="<?= $user['employee']['employee_f_name'] ?? ''  ?>" placeholder="Enter first name">
+                      <input disabled type="text" class="form-control" name="firstName" value="<?= $user['employee']['employee_f_name'] ?? ''  ?>" placeholder="Enter first name">
                       <?php if ($validation->getError('firstName')): ?>
                         <div class="text-danger">
                           <?= $validation->getError('firstName') ?>
@@ -272,7 +272,7 @@
                   <div class="col-md-6">
                     <div class="mb-3">
                       <label for="lastname" class="form-label">Last Name</label>
-                      <input type="text" class="form-control" name="lastName" value="<?= $user['employee']['employee_l_name'] ?? ''  ?>" placeholder="Enter last name">
+                      <input disabled type="text" class="form-control" name="lastName" value="<?= $user['employee']['employee_l_name'] ?? ''  ?>" placeholder="Enter last name">
                       <?php if ($validation->getError('lastName')): ?>
                         <div class="text-danger">
                           <?= $validation->getError('lastName') ?>
@@ -283,7 +283,7 @@
                   <div class="col-md-6">
                     <div class="mb-3">
                       <label for="lastname" class="form-label">Other Names</label>
-                      <input type="text" class="form-control" name="otherNames" value="<?= $user['employee']['employee_o_name'] ?? ''  ?>" placeholder="Enter other names">
+                      <input disabled type="text" class="form-control" name="otherNames" value="<?= $user['employee']['employee_o_name'] ?? ''  ?>" placeholder="Enter other names">
                       <?php if ($validation->getError('otherNames')): ?>
                         <div class="text-danger">
                           <?= $validation->getError('otherNames') ?>
@@ -305,7 +305,7 @@
                   <div class="col-md-6">
                     <div class="mb-3">
                       <label for="dob" class="form-label">Date of Birth</label>
-                      <input type="date" class="form-control" name="dob" value="<?php $date = date_create($user['employee']['employee_dob']);
+                      <input disabled type="date" class="form-control" name="dob" value="<?php $date = date_create($user['employee']['employee_dob']);
                       echo date_format($date,"Y-m-d");
                       ?>" placeholder="DOB">
                       <?php if ($validation->getError('dob')): ?>
