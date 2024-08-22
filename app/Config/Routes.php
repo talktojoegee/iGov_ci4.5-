@@ -193,8 +193,14 @@ $routes->post('/email-settings', 'EmailController::processEmailSettings', ['filt
 
 
 $routes->get('/chat', 'ChatController::chat', ['filter' => 'auth']);
+$routes->get('/contact-list', 'ChatController::getAllUsers', ['filter' => 'auth', 'as'=>'get-all-users']);
+$routes->post('/one-contact', 'ChatController::getOneUser', ['filter' => 'auth', 'as'=>'get-one-user']);
+$routes->get('/own-details', 'ChatController::ownerDetails', ['filter' => 'auth', 'as'=>'own-details']);
+$routes->post('/get-message', 'ChatController::getMessage', ['filter' => 'auth', 'as'=>'get-message']);
+$routes->post('/set-no-message', 'ChatController::setNoMessage', ['filter' => 'auth', 'as'=>'set-no-message']);
+
 $routes->post('/chat-messages', 'ChatController::getMessages', ['filter' => 'auth']);
-$routes->post('/send-message', 'ChatController::sendMessage', ['filter' => 'auth']);
+$routes->post('/send-message', 'ChatController::sendMessage', ['filter' => 'auth', 'as'=>'send-message']);
 $routes->get('/test-chat', 'ChatController::getMessages', ['filter' => 'auth']);
 
 #Project routes

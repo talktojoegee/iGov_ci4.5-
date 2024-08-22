@@ -62,4 +62,74 @@ class Chat extends Model
         /*$builder = $this->db->table('chats as c');
         return $builder->get()->getResult();*/
     }
+
+  public function allUser(){
+    if(isset($_SESSION['user_id'])){
+      $mysession = $_SESSION['user_id'];
+
+      $builder = $this->db->table('users as u');
+      $builder->join('employees as e','e.employee_id = u.user_employee_id' );
+      $builder->select('*');
+      $builder->where('user_id != '.$mysession);
+      return $builder->get()->getResultArray();
+
+
+     /* $this->db->select('*');
+      $this->db->where('unique_id != ',$mysession);
+      $data = $this->db->get('user');
+      if($data->num_rows() > 0){
+        return $data->result_array();
+      }else{
+        return false;
+      }*/
+      
+      
+    }
+
+  }
+
+  public function getLastMessage($data){
+    $session_id = $_SESSION['user_id'];
+    $where = "chat_from_id = '$session_id' AND chat_to_id = '$data' OR 
+		chat_from_id = '$data' AND chat_to_id = '$session_id'";
+    $builder = $this->db->table('chats');
+    $builder->select('*');
+    $builder->where($where);
+    $builder->orderBy('created_at', 'DESC');
+    return $builder->get()->getResultArray();
+  }
+
+  public function getIndividual($id){
+    $builder = $this->db->table('users as u');
+    $builder->join('employees as e','e.employee_id = u.user_employee_id' );
+    $builder->select('*');
+    $builder->where('user_id = '.$id);
+    return $builder->get()->getResultArray();
+  }
+
+  public function ownerDetails(){
+    if(isset($_SESSION['user_id'])){
+      $builder = $this->db->table('users as u');
+      $builder->join('employees as e','e.employee_id = u.user_employee_id' );
+      $builder->select('*');
+      $builder->where('user_id = '.$_SESSION['user_id']);
+      return $builder->get()->getResultArray();
+    }
+  }
+
+  public function getMessage($data){
+
+    $session_id = $_SESSION['user_id'];
+    $where = "chat_from_id = '$session_id' AND chat_to_id = '$data' OR 
+		chat_from_id = '$data' AND chat_to_id = '$session_id'";
+    $builder = $this->db->table('chats');
+    $builder->select('*');
+    $builder->where($where);
+    return $builder->get()->getResultArray();
+  }
+
+  public function sentMessage($data){
+    //$this->db->insert('chats',$data);
+  }
+
 }
