@@ -63,25 +63,25 @@ $(document).ready(function () {
 				clearInterval(inter);
 				clearInterval(inter3);
 
-				getBlockUserData();
-				setInterval(getBlockUserData, 100);
+				//getBlockUserData();
+				//setInterval(getBlockUserData, 100);
 
 				getUserDetails(unique_id);
-				inter2 = setInterval(getUserList, 1000);
+				inter2 = setInterval(getUserList, 100000);//1000
 				inter3 = setInterval(function () {
 					getUserDetails(unique_id)
-				}, 1000);
+				}, 100000);
 				sendUserUniqIDForMsg(unique_id, bg_image);
 
 				inter = setInterval(function () {
 					sendUserUniqIDForMsg(unique_id, bg_image);
-				}, 100);
+				}, 10000);//100
 			})
 			$('.innerBox').mouseover(function () {
 				clearInterval(inter2);
 			})
 			$('.innerBox').mouseleave(function () {
-				inter2 = setInterval(getUserList, 1000);
+				inter2 = setInterval(getUserList, 100000);//1000
 			})
 		})
 	}
@@ -212,7 +212,7 @@ $(document).ready(function () {
 				}
 			}
 		} else {
-			inter2 = setInterval(getUserList, 1000);
+			inter2 = setInterval(getUserList, 100000);//1000
 		}
 	});
 	function getCharLength() {
@@ -350,7 +350,7 @@ $(document).ready(function () {
 	Pace.on('done', function () {
 		MAIN_PLAY.play();
 	})
-	getUserList(); //Calling the root function without interval
-	inter2 = setInterval(getUserList, 5000); //Calling the root function with interval
+	//getUserList(); //Calling the root function without interval
+	//inter2 = setInterval(getUserList, 5000); //Calling the root function with interval //5000
 })
 

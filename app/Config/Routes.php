@@ -48,8 +48,8 @@ $routes->setAutoRoute(true);
 // route since we don't have to scan directories.
 
 //normal route
-$routes->match(['get', 'post'], 'register', 'Auth::register', ['filter' => 'noauth']);
-$routes->match(['get', 'post'], 'login', 'Auth::login', ['filter' => 'noauth']);
+$routes->match(['GET', 'POST'], 'register', 'Auth::register', ['filter' => 'noauth']);
+$routes->match(['GET', 'POST'], 'login', 'Auth::login', ['filter' => 'noauth']);
 $routes->get('/', 'Home::index', ['filter' => 'auth']);
 $routes->get('/logout', 'Auth::logout', ['filter' => 'auth']);
 $routes->get('/test', 'TestController::index');
@@ -60,49 +60,49 @@ $routes->get('view-notification/(:num)', 'Home::view_notification/$1', ['filter'
 //office route
 $routes->get('office', 'Office::index', ['filter' => 'auth']);
 $routes->get('moderator', 'Auth::moderator', ['filter' => 'auth']);
-$routes->match(['get', 'post'], 'organization-profile', 'GeneralSettingController::organization_profile', ['filter' => 'auth']);
-$routes->match(['get', 'post'], 'departments', 'GeneralSettingController::departments', ['filter' => 'auth']);
-$routes->match(['get', 'post'], 'units', 'GeneralSettingController::units', ['filter' => 'auth']);
-$routes->match(['get', 'post'], 'positions', 'GeneralSettingController::positions', ['filter' => 'auth']);
+$routes->match(['GET', 'POST'], 'organization-profile', 'GeneralSettingController::organization_profile', ['filter' => 'auth']);
+$routes->match(['GET', 'POST'], 'departments', 'GeneralSettingController::departments', ['filter' => 'auth']);
+$routes->match(['GET', 'POST'], 'units', 'GeneralSettingController::units', ['filter' => 'auth']);
+$routes->match(['GET', 'POST'], 'positions', 'GeneralSettingController::positions', ['filter' => 'auth']);
 
-$routes->match(['get', 'post'], 'manage-registry', 'GeneralSettingController::registry', ['filter' => 'auth']);
-$routes->match(['get', 'post'], 'new-registry', 'GeneralSettingController::new_registry', ['filter' => 'auth']);
-$routes->match(['get', 'post'], 'manage-registry/(:num)', 'GeneralSettingController::manage_registry/$1', ['filter' => 'auth']);
+$routes->match(['GET', 'POST'], 'manage-registry', 'GeneralSettingController::registry', ['filter' => 'auth']);
+$routes->match(['GET', 'POST'], 'new-registry', 'GeneralSettingController::new_registry', ['filter' => 'auth']);
+$routes->match(['GET', 'POST'], 'manage-registry/(:num)', 'GeneralSettingController::manage_registry/$1', ['filter' => 'auth']);
 
-$routes->match(['get', 'post'], 'notice-board', 'MessagingSettingController::notice_board', ['filter' => 'auth']);
-$routes->match(['get'], 'manage-stamp', 'MessagingSettingController::stamp', ['filter' => 'auth']);
-$routes->match(['get', 'post'], 'new-stamp', 'MessagingSettingController::new_stamp', ['filter' => 'auth']);
-$routes->match(['get', 'post'], 'manage-stamp/(:num)', 'MessagingSettingController::manage_stamp/$1', ['filter' => 'auth']);
+$routes->match(['GET', 'POST'], 'notice-board', 'MessagingSettingController::notice_board', ['filter' => 'auth']);
+$routes->match(['GET'], 'manage-stamp', 'MessagingSettingController::stamp', ['filter' => 'auth']);
+$routes->match(['GET', 'POST'], 'new-stamp', 'MessagingSettingController::new_stamp', ['filter' => 'auth']);
+$routes->match(['GET', 'POST'], 'manage-stamp/(:num)', 'MessagingSettingController::manage_stamp/$1', ['filter' => 'auth']);
 
 
-$routes->match(['get', 'post'], 'new-employee', 'EmployeeSettingController::new_employee', ['filter' => 'auth']);
-$routes->match(['get', 'post'], 'fetch-positions', 'EmployeeSettingController::fetch_positions', ['filter' => 'auth']);
-$routes->match(['get', 'post'], 'employees', 'EmployeeSettingController::all_employees', ['filter' => 'auth']);
-$routes->match(['post'], 'check-username', 'EmployeeSettingController::check_username', ['filter' => 'auth']);
+$routes->match(['GET', 'POST'], 'new-employee', 'EmployeeSettingController::new_employee', ['filter' => 'auth']);
+$routes->match(['GET', 'POST'], 'fetch-positions', 'EmployeeSettingController::fetch_positions', ['filter' => 'auth']);
+$routes->match(['GET', 'POST'], 'employees', 'EmployeeSettingController::all_employees', ['filter' => 'auth']);
+$routes->match(['POST'], 'check-username', 'EmployeeSettingController::check_username', ['filter' => 'auth']);
 
 $routes->get('permissions', 'UserController::user_permissions', ['filter' => 'auth']);
 $routes->post('permissions', 'UserController::modify_user_permissions', ['filter' => 'auth']);
 $routes->get('reset-password', 'UserController::reset_password', ['filter' => 'auth']);
 
-$routes->match(['get', 'post'], 'budget-charts', 'BudgetSettingController::budget_charts', ['filter' => 'auth']);
-$routes->match(['get', 'post'], 'new-budget-chart', 'BudgetSettingController::new_budget_chart', ['filter' => 'auth']);
-$routes->match(['get', 'post'], 'edit-budget-chart/(:num)', 'BudgetSettingController::edit_budget_chart/$1', ['filter' => 'auth']);
-$routes->match(['get', 'post'], 'budget-setups', 'BudgetSettingController::budget_setups', ['filter' => 'auth']);
+$routes->match(['GET', 'POST'], 'budget-charts', 'BudgetSettingController::budget_charts', ['filter' => 'auth']);
+$routes->match(['GET', 'POST'], 'new-budget-chart', 'BudgetSettingController::new_budget_chart', ['filter' => 'auth']);
+$routes->match(['GET', 'POST'], 'edit-budget-chart/(:num)', 'BudgetSettingController::edit_budget_chart/$1', ['filter' => 'auth']);
+$routes->match(['GET', 'POST'], 'budget-setups', 'BudgetSettingController::budget_setups', ['filter' => 'auth']);
 
-$routes->match(['get'], 'view-budget-setup/(:num)', 'BudgetSettingController::view_budget/$1', ['filter' => 'auth']);
-$routes->match(['get', 'post'], 'budget-categories', 'BudgetSettingController::budget_categories', ['filter' => 'auth']);
-$routes->match(['get', 'post'], 'fetch-parent', 'BudgetSettingController::fetch_parent', ['filter' => 'auth']);
+$routes->match(['GET'], 'view-budget-setup/(:num)', 'BudgetSettingController::view_budget/$1', ['filter' => 'auth']);
+$routes->match(['GET', 'POST'], 'budget-categories', 'BudgetSettingController::budget_categories', ['filter' => 'auth']);
+$routes->match(['GET', 'POST'], 'fetch-parent', 'BudgetSettingController::fetch_parent', ['filter' => 'auth']);
 
-$routes->match(['get', 'post'], 'renewal-types', 'FleetSettingController::renewal_types', ['filter' => 'auth']);
-$routes->match(['get', 'post'], 'vehicle-types', 'FleetSettingController::vehicle_types', ['filter' => 'auth']);
-$routes->match(['get', 'post'], 'maintenance-types', 'FleetSettingController::maintenance_types', ['filter' => 'auth']);
+$routes->match(['GET', 'POST'], 'renewal-types', 'FleetSettingController::renewal_types', ['filter' => 'auth']);
+$routes->match(['GET', 'POST'], 'vehicle-types', 'FleetSettingController::vehicle_types', ['filter' => 'auth']);
+$routes->match(['GET', 'POST'], 'maintenance-types', 'FleetSettingController::maintenance_types', ['filter' => 'auth']);
 
 // post routes
-$routes->match(['post'], 'upload-post-attachments', 'PostController::upload_post_attachments', ['filter' => 'auth']);
-$routes->match(['post', 'get'], 'delete-post-attachments', 'PostController::delete_post_attachments', ['filter' => 'auth']);
-$routes->match(['post'], 'sign-post', 'PostController::sign_post', ['filter' => 'auth']);
-$routes->match(['post'], 'decline-post', 'PostController::decline_post', ['filter' => 'auth']);
-$routes->match(['post'], 'send-doc-signing-verification', 'PostController::send_doc_signing_verification/', ['filter' => 'auth']);
+$routes->match(['POST'], 'upload-post-attachments', 'PostController::upload_post_attachments', ['filter' => 'auth']);
+$routes->match(['POST', 'GET'], 'delete-post-attachments', 'PostController::delete_post_attachments', ['filter' => 'auth']);
+$routes->match(['POST'], 'sign-post', 'PostController::sign_post', ['filter' => 'auth']);
+$routes->match(['POST'], 'decline-post', 'PostController::decline_post', ['filter' => 'auth']);
+$routes->match(['POST'], 'send-doc-signing-verification', 'PostController::send_doc_signing_verification/', ['filter' => 'auth']);
 
 // notices route
 $routes->get('notices', 'NoticeController::index', ['filter' => 'auth']);
@@ -111,28 +111,28 @@ $routes->get('my-notices', 'NoticeController::my_notices', ['filter' => 'auth'])
 $routes->get('view-notice/(:num)', 'NoticeController::view_notice/$1', ['filter' => 'auth']);
 $routes->get('edit-notice/(:num)', 'NoticeController::edit_notice/$1', ['filter' => 'auth']);
 $routes->post('edit-notice', 'NoticeController::edit_notice', ['filter' => 'auth']);
-$routes->match(['get', 'post'], 'new-notice', 'NoticeController::new_notice', ['filter' => 'auth']);
+$routes->match(['GET', 'POST'], 'new-notice', 'NoticeController::new_notice', ['filter' => 'auth']);
 
 // memo routes
-$routes->match(['get'], 'memos', 'MemoController::memos', ['filter' => 'auth']);
-$routes->match(['get'], 'memos/(:alpha)', 'MemoController::memos/$1', ['filter' => 'auth']);
-$routes->match(['get', 'post'], 'internal-memo', 'MemoController::internal_memo', ['filter' => 'auth']);
-$routes->match(['get', 'post'], 'external-memo', 'MemoController::external_memo', ['filter' => 'auth']);
-$routes->match(['get'], 'my-memos', 'MemoController::my_memos', ['filter' => 'auth']);
-$routes->match(['get'], 'view-memo/(:num)', 'MemoController::view_memo/$1', ['filter' => 'auth']);
-$routes->match(['get'], 'edit-memo/(:num)', 'MemoController::edit_memo/$1', ['filter' => 'auth']);
-$routes->match(['post'], 'edit-memo', 'MemoController::edit_memo', ['filter' => 'auth']);
-$routes->match(['post'], 'upload-memo-attachments', 'MemoController::upload_mail_attachments', ['filter' => 'auth']);
-$routes->match(['post', 'get'], 'delete-memo-attachments', 'MemoController::delete_mail_attachments', ['filter' => 'auth']);
+$routes->match(['GET'], 'memos', 'MemoController::memos', ['filter' => 'auth']);
+$routes->match(['GET'], 'memos/(:alpha)', 'MemoController::memos/$1', ['filter' => 'auth']);
+$routes->match(['GET', 'POST'], 'internal-memo', 'MemoController::internal_memo', ['filter' => 'auth']);
+$routes->match(['GET', 'POST'], 'external-memo', 'MemoController::external_memo', ['filter' => 'auth']);
+$routes->match(['GET'], 'my-memos', 'MemoController::my_memos', ['filter' => 'auth']);
+$routes->match(['GET'], 'view-memo/(:num)', 'MemoController::view_memo/$1', ['filter' => 'auth']);
+$routes->match(['GET'], 'edit-memo/(:num)', 'MemoController::edit_memo/$1', ['filter' => 'auth']);
+$routes->match(['POST'], 'edit-memo', 'MemoController::edit_memo', ['filter' => 'auth']);
+$routes->match(['POST'], 'upload-memo-attachments', 'MemoController::upload_mail_attachments', ['filter' => 'auth']);
+$routes->match(['POST', 'GET'], 'delete-memo-attachments', 'MemoController::delete_mail_attachments', ['filter' => 'auth']);
 
 // circular routes
-$routes->match(['get'], 'circulars', 'CircularController::circulars', ['filter' => 'auth']);
-$routes->match(['get'], 'circulars/(:alpha)', 'CircularController::circulars/$1', ['filter' => 'auth']);
-$routes->match(['get'], 'new-circular', 'CircularController::new_circular', ['filter' => 'auth']);
-$routes->match(['get', 'post'], 'internal-circular', 'CircularController::internal_circular', ['filter' => 'auth']);
-$routes->match(['get', 'post'], 'external-circular', 'CircularController::external_circular', ['filter' => 'auth']);
-$routes->match(['get'], 'my-circulars', 'CircularController::my_circulars', ['filter' => 'auth']);
-$routes->match(['get'], 'view-circular/(:num)', 'CircularController::view_circular/$1', ['filter' => 'auth']);
+$routes->match(['GET'], 'circulars', 'CircularController::circulars', ['filter' => 'auth']);
+$routes->match(['GET'], 'circulars/(:alpha)', 'CircularController::circulars/$1', ['filter' => 'auth']);
+$routes->match(['GET'], 'new-circular', 'CircularController::new_circular', ['filter' => 'auth']);
+$routes->match(['GET', 'POST'], 'internal-circular', 'CircularController::internal_circular', ['filter' => 'auth']);
+$routes->match(['GET', 'POST'], 'external-circular', 'CircularController::external_circular', ['filter' => 'auth']);
+$routes->match(['GET'], 'my-circulars', 'CircularController::my_circulars', ['filter' => 'auth']);
+$routes->match(['GET'], 'view-circular/(:num)', 'CircularController::view_circular/$1', ['filter' => 'auth']);
 
 #GDrive routes
 $routes->get('/g-drive', 'FileController::index', ['filter' => 'auth']);
@@ -270,84 +270,84 @@ $routes->post('/update-contractor-license-category', 'ProcurementController::upd
 $routes->get('/contractor-license-renewal', 'ProcurementController::contractorLicenseRenewal', ['filter' => 'auth', 'as' => 'contractor-license-renewal']);
 
 // employee routes
-$routes->match(['get'], 'my-account', 'EmployeeController::my_account', ['filter' => 'auth']);
-$routes->match(['get'], 'profile/(:any)', 'EmployeeController::view_profile/$1', ['filter' => 'auth', 'as'=>'view-profile']);
-$routes->match(['get'], 'check-signature-exists', 'EmployeeController::check_signature_exists', ['filter' => 'auth']);
-$routes->match(['post'], 'setup-signature', 'EmployeeController::setup_signature', ['filter' => 'auth', 'as'=>'setup_signature']);
+$routes->match(['GET'], 'my-account', 'EmployeeController::my_account', ['filter' => 'auth']);
+$routes->match(['GET'], 'profile/(:any)', 'EmployeeController::view_profile/$1', ['filter' => 'auth', 'as'=>'view-profile']);
+$routes->match(['GET'], 'check-signature-exists', 'EmployeeController::check_signature_exists', ['filter' => 'auth']);
+$routes->match(['POST'], 'setup-signature', 'EmployeeController::setup_signature', ['filter' => 'auth', 'as'=>'setup_signature']);
 
-$routes->match(['post'], 'verify-token', 'EmployeeController::verify_token', ['filter' => 'auth', 'as'=>'verify_token']);
-$routes->match(['post'], 'submit-digitally-signed-signature', 'EmployeeController::uploadDigitalSignature', ['filter' => 'auth', 'as'=>'submit-digitally-signed-signature']);
+$routes->match(['POST'], 'verify-token', 'EmployeeController::verify_token', ['filter' => 'auth', 'as'=>'verify_token']);
+$routes->match(['POST'], 'submit-digitally-signed-signature', 'EmployeeController::uploadDigitalSignature', ['filter' => 'auth', 'as'=>'submit-digitally-signed-signature']);
 
-$routes->match(['post'], 'verify-signature', 'EmployeeController::verify_signature', ['filter' => 'auth']);
-$routes->match(['post'], 'submit-token', 'EmployeeController::submit_token', ['filter' => 'auth']);
-$routes->match(['post'], 'confirm-token', 'EmployeeController::confirm_token', ['filter' => 'auth']);
-$routes->match(['post'], 'change-password', 'EmployeeController::change_password', ['filter' => 'auth']);
-$routes->match(['post'], 'update-profile', 'EmployeeController::update_profile', ['filter' => 'auth', 'as'=>'update-profile']);
+$routes->match(['POST'], 'verify-signature', 'EmployeeController::verify_signature', ['filter' => 'auth']);
+$routes->match(['POST'], 'submit-token', 'EmployeeController::submit_token', ['filter' => 'auth']);
+$routes->match(['POST'], 'confirm-token', 'EmployeeController::confirm_token', ['filter' => 'auth']);
+$routes->match(['POST'], 'change-password', 'EmployeeController::change_password', ['filter' => 'auth']);
+$routes->match(['POST'], 'update-profile', 'EmployeeController::update_profile', ['filter' => 'auth', 'as'=>'update-profile']);
 
 
 #Cash retirement
-$routes->match(['get'], 'cash-retirement', 'CashRetirementController::my_cash_retirement',['filter'=>'auth', 'as'=>'cash-retirement']);
-$routes->match(['post', 'get'], 'new-cash-retirement', 'CashRetirementController::new_cash_retirement',['filter'=>'auth', 'as'=>'new-cash-retirement']);
-$routes->match(['post', 'get'], 'store-cash-retirement', 'CashRetirementController::store_new_cash_retirement',['filter'=>'auth', 'as'=>'store-cash-retirement']);
-$routes->match(['post', 'get'], 'cash-retirement-details/(:any)', 'CashRetirementController::show_cash_retirement_details/$1',['filter'=>'auth', 'as'=>'show-cash-retirement-details']);
+$routes->match(['GET'], 'cash-retirement', 'CashRetirementController::my_cash_retirement',['filter'=>'auth', 'as'=>'cash-retirement']);
+$routes->match(['POST', 'GET'], 'new-cash-retirement', 'CashRetirementController::new_cash_retirement',['filter'=>'auth', 'as'=>'new-cash-retirement']);
+$routes->match(['POST', 'GET'], 'store-cash-retirement', 'CashRetirementController::store_new_cash_retirement',['filter'=>'auth', 'as'=>'store-cash-retirement']);
+$routes->match(['POST', 'GET'], 'cash-retirement-details/(:any)', 'CashRetirementController::show_cash_retirement_details/$1',['filter'=>'auth', 'as'=>'show-cash-retirement-details']);
 
 // central registry routes
-$routes->match(['get'], 'central-registry', 'CentralRegistryController::index', ['filter' => 'auth']);
-$routes->match(['get', 'post'], 'outgoing-mail', 'CentralRegistryController::outgoing_mail', ['filter' => 'auth']);
+$routes->match(['GET'], 'central-registry', 'CentralRegistryController::index', ['filter' => 'auth']);
+$routes->match(['GET', 'POST'], 'outgoing-mail', 'CentralRegistryController::outgoing_mail', ['filter' => 'auth']);
 
 // registries routes
-$routes->match(['get'], 'registry', 'RegistryController::index', ['filter' => 'auth']);
-$routes->match(['get'], 'view-registry/(:any)', 'RegistryController::view_registry/$1', ['filter' => 'auth']);
-$routes->match(['get', 'post'], 'incoming-mail/(:num)', 'RegistryController::incoming_mail/$1', ['filter' => 'auth']);
-$routes->match(['get', 'post'], 'outgoing-mail/(:num)', 'RegistryController::outgoing_mail/$1', ['filter' => 'auth']);
-$routes->match(['get'], 'manage-mail/(:num)', 'RegistryController::manage_mail/$1', ['filter' => 'auth']);
-$routes->match(['get'], 'view-transfer-log/(:num)', 'RegistryController::view_transfer_log/$1', ['filter' => 'auth']);
-$routes->match(['get'], 'view-filing-log/(:num)', 'RegistryController::view_filing_log/$1', ['filter' => 'auth']);
-$routes->match(['post'], 'transfer-mail', 'RegistryController::transfer_mail', ['filter' => 'auth']);
-$routes->match(['post'], 'file-mail', 'RegistryController::file_mail', ['filter' => 'auth']);
-$routes->match(['post'], 'upload-mail-attachments', 'RegistryController::upload_mail_attachments', ['filter' => 'auth']);
-$routes->match(['post', 'get'], 'delete-mail-attachments', 'RegistryController::delete_mail_attachments', ['filter' => 'auth']);
-$routes->match(['get'], 'mail-transfer-requests', 'RegistryController::mail_transfer_requests', ['filter' => 'auth']);
-$routes->match(['post'], 'confirm-transfer-request', 'RegistryController::confirm_transfer_request', ['filter' => 'auth']);
-$routes->match(['get'], 'correspondence', 'RegistryController::correspondence', ['filter' => 'auth']);
+$routes->match(['GET'], 'registry', 'RegistryController::index', ['filter' => 'auth']);
+$routes->match(['GET'], 'view-registry/(:any)', 'RegistryController::view_registry/$1', ['filter' => 'auth']);
+$routes->match(['GET', 'POST'], 'incoming-mail/(:num)', 'RegistryController::incoming_mail/$1', ['filter' => 'auth']);
+$routes->match(['GET', 'POST'], 'outgoing-mail/(:num)', 'RegistryController::outgoing_mail/$1', ['filter' => 'auth']);
+$routes->match(['GET'], 'manage-mail/(:num)', 'RegistryController::manage_mail/$1', ['filter' => 'auth']);
+$routes->match(['GET'], 'view-transfer-log/(:num)', 'RegistryController::view_transfer_log/$1', ['filter' => 'auth']);
+$routes->match(['GET'], 'view-filing-log/(:num)', 'RegistryController::view_filing_log/$1', ['filter' => 'auth']);
+$routes->match(['POST'], 'transfer-mail', 'RegistryController::transfer_mail', ['filter' => 'auth']);
+$routes->match(['POST'], 'file-mail', 'RegistryController::file_mail', ['filter' => 'auth']);
+$routes->match(['POST'], 'upload-mail-attachments', 'RegistryController::upload_mail_attachments', ['filter' => 'auth']);
+$routes->match(['POST', 'GET'], 'delete-mail-attachments', 'RegistryController::delete_mail_attachments', ['filter' => 'auth']);
+$routes->match(['GET'], 'mail-transfer-requests', 'RegistryController::mail_transfer_requests', ['filter' => 'auth']);
+$routes->match(['POST'], 'confirm-transfer-request', 'RegistryController::confirm_transfer_request', ['filter' => 'auth']);
+$routes->match(['GET'], 'correspondence', 'RegistryController::correspondence', ['filter' => 'auth']);
 
 #Budget Routes (employee)
-$routes->match(['get'], 'budget-input', 'BudgetController::budget_input', ['filter' => 'auth']);
-$routes->match(['get', 'post'], 'edit-budget-input/(:num)', 'BudgetController::edit_budget_input/$1', ['filter' => 'auth']);
+$routes->match(['GET'], 'budget-input', 'BudgetController::budget_input', ['filter' => 'auth']);
+$routes->match(['GET', 'POST'], 'edit-budget-input/(:num)', 'BudgetController::edit_budget_input/$1', ['filter' => 'auth']);
 
 // Task Routes
-$routes->match(['get'], 'tasks', 'TaskController::index', ['filter' => 'auth']);
-$routes->match(['get', 'post'], 'new-task', 'TaskController::new_task', ['filter' => 'auth']);
-$routes->match(['get', 'post'], 'task-details/(:num)', 'TaskController::task_details/$1', ['filter' => 'auth']);
-$routes->match(['post'], 'upload-task-attachment', 'TaskController::upload_attachment', ['filter' => 'auth']);
-$routes->match(['get'], 'start-task/(:num)', 'TaskController::start_task/$1', ['filter' => 'auth']);
-$routes->match(['post'], 'complete-task', 'TaskController::complete_task', ['filter' => 'auth']);
-$routes->match(['post'], 'cancel-task', 'TaskController::cancel_task', ['filter' => 'auth']);
-$routes->match(['post'], 'submit-feedback', 'TaskController::submit_feedback', ['filter' => 'auth']);
-$routes->match(['get'], 'view-task-log/(:num)', 'TaskController::view_task_log/$1', ['filter' => 'auth']);
+$routes->match(['GET'], 'tasks', 'TaskController::index', ['filter' => 'auth']);
+$routes->match(['GET', 'POST'], 'new-task', 'TaskController::new_task', ['filter' => 'auth']);
+$routes->match(['GET', 'POST'], 'task-details/(:num)', 'TaskController::task_details/$1', ['filter' => 'auth']);
+$routes->match(['POST'], 'upload-task-attachment', 'TaskController::upload_attachment', ['filter' => 'auth']);
+$routes->match(['GET'], 'start-task/(:num)', 'TaskController::start_task/$1', ['filter' => 'auth']);
+$routes->match(['POST'], 'complete-task', 'TaskController::complete_task', ['filter' => 'auth']);
+$routes->match(['POST'], 'cancel-task', 'TaskController::cancel_task', ['filter' => 'auth']);
+$routes->match(['POST'], 'submit-feedback', 'TaskController::submit_feedback', ['filter' => 'auth']);
+$routes->match(['GET'], 'view-task-log/(:num)', 'TaskController::view_task_log/$1', ['filter' => 'auth']);
 
 #Meeting
-$routes->match(['get'], 'meet', 'MeetingController::meet', ['filter' => 'auth']);
-$routes->match(['get'], 'meetings', 'MeetingController::meetings', ['filter' => 'auth']);
-$routes->match(['get', 'post'], 'new-meeting', 'MeetingController::new_meeting', ['filter' => 'auth']);
+$routes->match(['GET'], 'meet', 'MeetingController::meet', ['filter' => 'auth']);
+$routes->match(['GET'], 'meetings', 'MeetingController::meetings', ['filter' => 'auth']);
+$routes->match(['GET', 'POST'], 'new-meeting', 'MeetingController::new_meeting', ['filter' => 'auth']);
 $routes->addPlaceholder('meetingtoken', '[\s\S]');
-$routes->match(['get'], 'join-meeting/(:num)/(:any)', 'MeetingController::join_meeting/$1/$2', ['filter' => 'auth']);
+$routes->match(['GET'], 'join-meeting/(:num)/(:any)', 'MeetingController::join_meeting/$1/$2', ['filter' => 'auth']);
 //
 // Fleet routes
-$routes->match(['get'], 'active-vehicles', 'FleetController::active_vehicles', ['filter' => 'auth']);
-$routes->match(['get', 'post'], 'new-vehicle', 'FleetController::new_vehicle', ['filter' => 'auth']);
-$routes->match(['get'], 'drivers', 'FleetController::drivers', ['filter' => 'auth']);
-$routes->match(['get', 'post'], 'new-driver', 'FleetController::new_driver', ['filter' => 'auth']);
-$routes->match(['get', 'post'], 'manage-vehicle/(:num)', 'FleetController::manage_vehicle/$1', ['filter' => 'auth']);
-$routes->match(['get', 'post'], 'renewal-schedules', 'FleetController::renewal_schedules', ['filter' => 'auth']);
-$routes->match(['get', 'post'], 'renewal-schedule-calendar', 'FleetController::renewal_schedule_calendar', ['filter' => 'auth']);
-$routes->match(['get', 'post'], 'renewal-schedule-data', 'FleetController::renewal_schedule_data', ['filter' => 'auth']);
-$routes->match(['get', 'post'], 'maintenance-schedules', 'FleetController::maintenance_schedules', ['filter' => 'auth']);
-$routes->match(['get', 'post'], 'maintenance-schedule-calendar', 'FleetController::maintenance_schedule_calendar', ['filter' => 'auth']);
-$routes->match(['get', 'post'], 'maintenance-schedule-data', 'FleetController::maintenance_schedule_data', ['filter' => 'auth']);
+$routes->match(['GET'], 'active-vehicles', 'FleetController::active_vehicles', ['filter' => 'auth']);
+$routes->match(['GET', 'POST'], 'new-vehicle', 'FleetController::new_vehicle', ['filter' => 'auth']);
+$routes->match(['GET'], 'drivers', 'FleetController::drivers', ['filter' => 'auth']);
+$routes->match(['GET', 'POST'], 'new-driver', 'FleetController::new_driver', ['filter' => 'auth']);
+$routes->match(['GET', 'POST'], 'manage-vehicle/(:num)', 'FleetController::manage_vehicle/$1', ['filter' => 'auth']);
+$routes->match(['GET', 'POST'], 'renewal-schedules', 'FleetController::renewal_schedules', ['filter' => 'auth']);
+$routes->match(['GET', 'POST'], 'renewal-schedule-calendar', 'FleetController::renewal_schedule_calendar', ['filter' => 'auth']);
+$routes->match(['GET', 'POST'], 'renewal-schedule-data', 'FleetController::renewal_schedule_data', ['filter' => 'auth']);
+$routes->match(['GET', 'POST'], 'maintenance-schedules', 'FleetController::maintenance_schedules', ['filter' => 'auth']);
+$routes->match(['GET', 'POST'], 'maintenance-schedule-calendar', 'FleetController::maintenance_schedule_calendar', ['filter' => 'auth']);
+$routes->match(['GET', 'POST'], 'maintenance-schedule-data', 'FleetController::maintenance_schedule_data', ['filter' => 'auth']);
 
 
-$routes->match(['get', 'post'], 'contractor-login', 'ContractorAuth::login', ['filter' => 'noauth', 'as' => 'contractor-login']);
+$routes->match(['GET', 'POST'], 'contractor-login', 'ContractorAuth::login', ['filter' => 'noauth', 'as' => 'contractor-login']);
 $routes->get('/contractor-dashboard', 'ContractorPortalController::dashboard', ['as' => 'contractor-dashboard', 'filter' => 'contractorauth']);
 $routes->get('/contract-listing', 'ContractorPortalController::contractListing', ['as' => 'contract-listing', 'filter' => 'contractorauth']);
 $routes->get('/contract-details/(:any)', 'ContractorPortalController::viewContractDetails/$1', ['as' => 'contract-details', 'filter' => 'contractorauth']);
