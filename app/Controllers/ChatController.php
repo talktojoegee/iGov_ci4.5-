@@ -81,7 +81,7 @@ class ChatController extends BaseController
             return view('pages/chat/partials/_messages',$data);
 
     }
-
+/*
     public function sendMessage(){
         $message = $this->request->getVar('message');
         $user = $this->request->getVar('user');
@@ -104,8 +104,94 @@ class ChatController extends BaseController
             ];
             /*$ably = new AblyRest('aht0IA.nknxWw:BjDaL6hWD5Pc929a');
             $channel = $ably->channel('chatchannel');
-            $channel->publish('helloevent', $message);*/
+            $channel->publish('helloevent', $message);
             return view('pages/chat/partials/_messages',$data);
         }
     }
+*/
+
+  public function getAllUsers(){
+    $data['data'] = $this->chat->allUser();
+    $data['last_msg'] = array();
+    helper(['url']);
+    //$this->load->helper('url');
+    if(!is_array($data['data'])){
+      echo "<p class='text-center'>No user available.</p>";
+    }else{
+      $count = count($data['data']);
+      for($i = 0; $i < $count; $i++){
+        $unique_id = $data['data'][$i]['user_id'];
+        $msg = $this->chat->getLastMessage($unique_id);
+        for($j = 0; $j < count($msg); $j++){
+
+          $time = explode(" ",$msg[0]['created_at']); //00:00:00.0000
+          $time = explode(".", $time[1]);//00:00:00
+          $time = explode(":",$time[0]);//00 00 00
+          if((int)$time[0] == 12){
+            $time = $time[0].":".$time[1]." PM";
+          }
+          elseif((int)$time[0] > 12){
+            $time = ($time[0] - 12).":".$time[1]." PM";
+          }else{
+            $time = $time[0].":".$time[1]." AM";
+          }
+
+          array_push($data['last_msg'],array(
+            'message' => $msg[0]['chat_message'],
+            'sender_id' => $msg[0]['chat_from_id'],
+            'receiver_id' => $msg[0]['chat_to_id'],
+            'time' => $time //00:00
+          ));
+        }
+      }
+      return view('pages/chat/partials/sampleDataShow',$data); 
+    }
+
+  }
+  
+ /* public function getOneUser(){
+      $userId = $this->request->getPost('data');
+      $user = $this->chat->getIndividual($userId);
+      return $user;
+  }*/
+
+  public function getOneUser(){
+    $returnVal = $this->chat->getIndividual($_POST['data']);
+    print_r(json_encode($returnVal,true));
+  }
+
+  public function ownerDetails(){
+    $res = $this->chat->ownerDetails();
+    print_r(json_encode($res));
+  }
+
+  public function getMessage(){
+    if(isset($_POST['data']) && isset($_SESSION['user_id'])){
+      $data['data'] = $this->chat->getMessage($_POST['data']);
+      $data['image'] = $_POST['image'];
+      return view('pages/chat/partials/sampleMessageShow',$data);
+    }
+  }
+
+  public function setNoMessage(){
+    $data['image'] = $_POST['image'];
+    $data['name'] = $_POST['name'];
+    return view('pages/chat/partials/notmessageyet',$data);
+  }
+
+  public function sendMessage(){
+    if(isset($_POST['data']) && isset($_SESSION['user_id'])){
+      $jsonDecode = json_decode($_POST['data'],true);
+      $uniq = $_SESSION['user_id'];
+      $arr = array(
+        'created_at' => $jsonDecode['datetime'],
+        'chat_from_id' => $uniq,
+        'chat_to_id' => $jsonDecode['uniq'],
+        'chat_message' => $jsonDecode['message'],
+      );
+      $this->chat->insert($arr);
+    }
+  }
+  
+  
 }
