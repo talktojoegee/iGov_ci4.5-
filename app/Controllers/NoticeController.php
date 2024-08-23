@@ -45,6 +45,8 @@ class NoticeController extends PostController
             $data['firstTime'] = $this->session->firstTime;
             $data['username'] = $this->session->user_username;
             $data['department_employees'] = $this->_get_department_employees();
+            $data['hods'] = $this->_group_all_department_hods();
+            $data['department_hods'] = $this->_group_one_department_hods();
             return view('/pages/posts/notices/new-notice', $data);
         }
         $post_data = $this->request->getPost();
@@ -59,9 +61,13 @@ class NoticeController extends PostController
             'p_direction' => 1
         ];
         $post_id = $this->post->insert($notice_data);
-        $attachments = $post_data['p_attachment'];
+
         if ($post_id) {
-            $this->_upload_attachments($attachments, $post_id);
+            if (isset($post_data['p_attachment'])) {
+                $attachments = $post_data['p_attachment'];
+                //$this->_uploadFiles($attachments, $post_id);
+                $this->_upload_attachments($attachments, $post_id);
+            }
             $this->send_notification('New Notice Created', 'You created a new notice', $this->session->user_id, site_url('view-notice/') . $post_id, 'click to view notice');
             $this->send_notification('New Notice Created', 'A notice was created. You are the signatory.', $post_data['p_signed_by'], site_url('view-notice/') . $post_id, 'click to view notice');
             $response['success'] = true;
@@ -208,6 +214,36 @@ class NoticeController extends PostController
             }
         }
         return $department_employees;
+    }
+
+    private function _group_all_department_hods()
+    {
+        $grouped_hods = [];
+        $employees = $this->employee->getAllEmployeesWithPermission(Permissions::HOD->value);
+        foreach ($employees as $employee) {
+            $department_name = $employee['dpt_name'];
+            if (!isset($grouped_hods[$department_name])) {
+                $grouped_hods[$department_name] = [];
+            }
+            $grouped_hods[$department_name][] = $employee;
+        }
+        return $grouped_hods;
+    }
+
+    private function _group_one_department_hods()
+    {
+        $user = $this->user->where('user_id', $this->session->user_id)->first();
+        $employee = $this->employee->getEmployeeDetailsByUserEmployeeId($user['user_employee_id'])[0];
+        $grouped_hods = [];
+        $employees = $this->employee->getAllEmployeesInDepartmentWithPermission($employee['dpt_id'], Permissions::HOD->value);
+        foreach ($employees as $employee) {
+            $department_name = $employee['dpt_name'];
+            if (!isset($grouped_hods[$department_name])) {
+                $grouped_hods[$department_name] = [];
+            }
+            $grouped_hods[$department_name][] = $employee;
+        }
+        return $grouped_hods;
     }
 
 }

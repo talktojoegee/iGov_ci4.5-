@@ -62,5 +62,16 @@ class UserModel extends Model
         return UserModel::findAll();
     }
 
+    public function getAllUserData($user_id)
+    {
+        $builder = $this->db->table('users');
+        $builder->select('users.*, employees.*, departments.dpt_name, positions.pos_name');
+        $builder->join('employees', 'employees.employee_id = users.user_employee_id');
+        $builder->join('departments', 'departments.dpt_id = employees.employee_department_id');
+        $builder->join('positions', 'positions.pos_id = employees.employee_position_id');
+        $builder->where('users.user_id', $user_id);
+        return $builder->get()->getRowArray();
+    }
+
 
 }

@@ -51,7 +51,7 @@
                             <div class="col-12">
                                 <div class="form-group">
                                     <label for="positions">To</label><span style="color: red"> *</span>
-                                    <select class="form-control select2-multiple" id="positions" name="positions[]"
+                                    <select class="form-control select2-multiple" id="positions" name="recipients[]"
                                             data-toggle="select2" multiple="multiple" required style="min-height: 38px">
                                         <?php foreach ($department_employees as $department => $employees): ?>
                                             <?php if (!empty($employees)): ?>
