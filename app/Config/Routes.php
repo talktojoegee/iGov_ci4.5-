@@ -335,6 +335,7 @@ $routes->match(['GET'], 'join-meeting/(:num)/(:any)', 'MeetingController::join_m
 //
 // Fleet routes
 $routes->match(['GET'], 'request-lot', 'FleetController::request_lot', ['filter' => 'auth', 'as'=>'request-lot']);
+$routes->match(['GET'], 'fleet-request', 'FleetController::fleet_request', ['filter' => 'auth', 'as'=>'fleet-request']);
 $routes->match(['GET', 'POST'], 'new-request-lot', 'FleetController::new_request_lot', ['filter' => 'auth', 'as'=>'new-request-lot']);
 $routes->match(['GET'], 'request-lot-details/(:any)', 'FleetController::show_request_lot_details/$1',['filter'=>'auth', 'as'=>'show-request-lot-details']);
 $routes->match(['POST'], 'action-request-lot', 'FleetController::action_request_lot',['filter'=>'auth', 'as'=>'action-request-lot']);

@@ -13,10 +13,10 @@ $fleet_setup_permission = \App\Enums\Permissions::FLEET_SETUP->value;
           <ol class="breadcrumb m-0">
             <li class="breadcrumb-item"><a href="<?= site_url('/') ?>">iGov</a></li>
             <li class="breadcrumb-item"><a href="javascript:void(0)">Manage Fleet</a></li>
-            <li class="breadcrumb-item active">Request LOT</li>
+            <li class="breadcrumb-item active"><?php if($route == 'fleet_request')  {echo 'My LOT Request'; } else{ echo 'Request LOT';} ?></li>
           </ol>
         </div>
-        <h4 class="page-title">Request LOT</h4>
+        <h4 class="page-title"><?php if($route == 'fleet_request')  {echo 'My LOT Request'; } else{ echo 'Request LOT';} ?> </h4>
       </div>
     </div>
   </div>
@@ -26,7 +26,7 @@ $fleet_setup_permission = \App\Enums\Permissions::FLEET_SETUP->value;
       <div class="card-box">
         <div class="row">
           <div class="col-lg-8">
-            <h4 class="header-title">All LOT Requests</h4>
+            <h4 class="header-title"><?php if($route == 'fleet_request')  {echo 'All my LOT Requests'; } else{ echo 'All LOT Requests';} ?> </h4>
             <p class="text-muted font-13">
               Below are the active vehicles registered on iGov.
             </p>

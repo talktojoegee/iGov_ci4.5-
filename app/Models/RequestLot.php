@@ -51,6 +51,13 @@ class RequestLot extends Model
     $builder->join('fleet_vehicles as fv','fv.fv_id = rl.rl_vehicle' );
     return $builder->get()->getResultArray();
   }
+  public  function getMyRequestLots($userId){
+    $builder = $this->db->table('request_lots as rl');
+    $builder->join('employees as e','e.employee_id = rl.rl_driver' );
+    $builder->join('fleet_vehicles as fv','fv.fv_id = rl.rl_vehicle' );
+    $builder->where('rl.rl_by = '.$userId);
+    return $builder->get()->getResultArray();
+  }
 
   public  function getRequestLotById($id){
     $builder = $this->db->table('request_lots as rl');

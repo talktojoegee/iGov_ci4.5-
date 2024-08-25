@@ -246,9 +246,8 @@ if ($firstTime): ?>
               <div class="collapse" id="fleet">
                 <ul class="nav-second-level">
                   <?php if (in_array($fleet_setup_permission, $permissions ?? [])): ?>
-                    <li><a href="<?= site_url('active-vehicles') ?>">Manage Fleet</a></li>
                     <li><a href="<?= site_url('request-lot') ?>">Request LOT</a></li>
-                    <li><a href="<?= site_url('active-vehicles') ?>">Fleet Request</a></li>
+                    <li><a href="<?= site_url('fleet-request') ?>">Fleet Request</a></li>
                     <li><a href="<?= site_url('active-vehicles') ?>">Active Vehicles</a></li>
                     <li><a href="<?= site_url('drivers') ?>">Drivers</a></li>
                   <?php endif; ?>

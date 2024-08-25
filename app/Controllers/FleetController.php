@@ -61,6 +61,15 @@ class FleetController extends BaseController
       $data['firstTime'] = $this->session->firstTime;
       $data['username'] = $this->session->user_username;
       $data['requests'] = $this->requestlot->getRequestLots();
+      $data['route'] = 'request_lot';
+      return view('/pages/fleet/request-lot', $data);
+    }
+    public function fleet_request(){
+      $authUserId = $this->session->user_employee_id;
+      $data['firstTime'] = $this->session->firstTime;
+      $data['username'] = $this->session->user_username;
+      $data['requests'] = $this->requestlot->getMyRequestLots($authUserId);
+      $data['route'] = 'fleet_request';
       return view('/pages/fleet/request-lot', $data);
     }
 
