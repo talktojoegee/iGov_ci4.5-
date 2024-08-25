@@ -45,7 +45,7 @@
                             <div class="col-12">
                                 <div class="form-group">
                                     <label for="ref-no">Reference No</label><span style="color: red"> *</span>
-                                    <input type="text" class="form-control" id="ref-no" name="p_ref_no" required>
+                                    <input placeholder="Reference No." type="text" class="form-control" id="ref-no" name="p_ref_no" required>
                                     <div class="invalid-feedback">
                                         Please enter a reference number.
                                     </div>
@@ -81,7 +81,7 @@
                             <div class="col-12">
                                 <div class="form-group">
                                     <label for="subject">Subject</label><span style="color: red"> *</span>
-                                    <input type="text" id="subject" class="form-control" name="p_subject" required>
+                                    <input placeholder="Subject" type="text" id="subject" class="form-control" name="p_subject" required>
                                     <div class="invalid-feedback">
                                         Please enter a subject.
                                     </div>
@@ -138,7 +138,7 @@
                         <div class="row g-3">
                             <div class="col-lg-12 offset-lg-12">
                                 <div class="form-group mt-2">
-                                    <button type="submit" class="btn btn-primary btn-block">Submit</button>
+                                    <button type="submit" id="submitCircular" class="btn btn-primary btn-block">Submit</button>
                                 </div>
                             </div>
                         </div>

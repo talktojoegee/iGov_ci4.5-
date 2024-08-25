@@ -16,6 +16,7 @@ use App\Models\Department;
 use App\Models\Position;
 use App\Models\RenewalSchedule;
 use App\Models\AssignmentLogs;
+use App\Models\RequestLot;
 
 use CodeIgniter\Exceptions\PageNotFoundException;
 
@@ -40,6 +41,7 @@ class FleetController extends BaseController
         $this->position = new Position();
         $this->rs = new RenewalSchedule();
         $this->al = new AssignmentLogs();
+        $this->requestlot = new RequestLot();
     }
 
     public function active_vehicles()
@@ -51,6 +53,38 @@ class FleetController extends BaseController
         $data['username'] = $this->session->user_username;
         $data['active_vehicles'] = $this->_get_vehicles(1);
         return view('/pages/fleet/active-vehicles', $data);
+    }
+
+
+    public function request_lot(){
+
+      $data['firstTime'] = $this->session->firstTime;
+      $data['username'] = $this->session->user_username;
+      $data['requests'] = $this->requestlot->getRequestLots();
+      $data['route'] = 'request_lot';
+      return view('/pages/fleet/request-lot', $data);
+    }
+    public function fleet_request(){
+      $authUserId = $this->session->user_employee_id;
+      $data['firstTime'] = $this->session->firstTime;
+      $data['username'] = $this->session->user_username;
+      $data['requests'] = $this->requestlot->getMyRequestLots($authUserId);
+      $data['route'] = 'fleet_request';
+      return view('/pages/fleet/request-lot', $data);
+    }
+
+    public function show_request_lot_details($id){
+      $request = $this->requestlot->getRequestLotById($id);
+      if(!empty($request)){
+        $data['request'] = $request;
+        $data['persons'] = $this->employee->whereIn('employee_id', explode(',',$request->rl_persons))->findAll();
+        $data['submitted_by'] = $this->employee->where('employee_id', $request->rl_by)->first();
+        $data['actioned_by'] = !is_null($request->rl_actioned_by) ? $this->employee->where('employee_id', $request->rl_actioned_by)->first() : [];
+        return view('/pages/fleet/request-lot-details', $data);
+      }else{
+        return redirect()->back()->with("error", "<strong>Whoops!</strong> No record found");
+      }
+
     }
 
     public function new_vehicle()
@@ -82,6 +116,102 @@ class FleetController extends BaseController
             $response['message'] = 'There was an error while adding the new vehicle';
         }
         return $this->response->setJSON($response);
+    }
+    public function new_request_lot()
+    {
+        if ($this->request->getMethod() == 'GET'):
+            if (!$this->_validate_permission(Permissions::FLEET_SETUP->value)) {
+                return view('auth/access_denied');
+            }
+            $data['firstTime'] = $this->session->firstTime;
+            $data['username'] = $this->session->user_username;
+            $data['drivers'] = $this->_get_drivers();
+            $data['vehicles'] = $this->_get_vehicles(1);
+            $data['employees'] = $this->employee->findAll();
+            return view('/pages/fleet/new-request-lot', $data);
+        endif;
+      $inputs = $this->validate(
+        [
+          'from' =>
+            ['rules'=> 'required', 'label'=>'From','errors' => [
+              'required' => 'Indicate from: Date & time']
+            ],
+          'to' =>
+            ['rules'=> 'required', 'errors'=>
+              ['required'=>'Indicate to: Date & time']
+            ],
+          'persons' =>
+            ['rules'=> 'required', 'errors'=>
+              ['required'=>'Select responsible persons']
+            ],
+          'driver' =>
+            ['rules'=> 'required', 'errors'=>
+              ['required'=>'Select driver']
+            ],
+          'vehicle' =>
+            ['rules'=> 'required', 'errors'=>
+              ['required'=>'Indicate the vehicle that will be used']
+            ],
+          'note' =>
+            ['rules'=> 'required', 'errors'=>
+              ['required'=>'Give us vital information about this request']
+            ],
+        ]);
+      if (!$inputs) {
+        $data['firstTime'] = $this->session->firstTime;
+        $data['username'] = $this->session->user_username;
+        $data['drivers'] = $this->_get_drivers();
+        $data['vehicles'] = $this->_get_vehicles(1);
+        $data['employees'] = $this->employee->findAll();
+        $data['validation'] = $this->validator;
+        return view('/pages/fleet/new-request-lot', $data);
+      }else{
+        $data = [
+          'rl_from'=>$this->request->getPost('from'),
+          'rl_to'=>$this->request->getPost('to'),
+          'rl_driver'=>$this->request->getPost('driver'),
+          'rl_vehicle'=>$this->request->getPost('vehicle'),
+          'rl_note'=> $this->request->getPost('note'),
+          'rl_by'=>$this->session->user_employee_id,
+          'rl_persons'=>implode(',',$this->request->getVar('persons'))
+        ];
+      $this->requestlot->save($data);
+        return redirect()->back()->with("success", "<strong>Success!</strong> Action successful.");
+
+      }
+    }
+
+    public function action_request_lot()
+    {
+
+      $inputs = $this->validate(
+        [
+          'action' =>
+            ['rules'=> 'required', 'label'=>'From','errors' => [
+              'required' => '']
+            ],
+          'request' =>
+            ['rules'=> 'required', 'errors'=>
+              ['required'=>'']
+            ],
+        ]);
+      if (!$inputs) {
+        $request = $this->requestlot->getRequestLotById($_GET['id']) ?? 1;
+        $data['request'] = $request;
+        $data['persons'] = $this->employee->whereIn('employee_id', explode(',',$request->rl_persons))->findAll();
+        $data['submitted_by'] = $this->employee->where('employee_id', $request->rl_by)->first();
+        $data['validation'] = $this->validator;
+        return view('/pages/fleet/request-lot-details', $data);
+      }else{
+        $data = [
+          'rl_status'=>$this->request->getPost('action'),
+          'rl_date_actioned'=> date('y-m-d'),
+          'rl_actioned_by'=>$this->session->user_employee_id,
+        ];
+      $this->requestlot->update($this->request->getPost('request'), $data);
+        return redirect()->back()->with("success", "<strong>Success!</strong> Action successful.");
+
+      }
     }
 
     public function drivers()

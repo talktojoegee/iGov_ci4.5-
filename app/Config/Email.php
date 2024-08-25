@@ -36,13 +36,13 @@ class Email extends BaseConfig
     /**
      * SMTP Username
      */
-    public string $SMTPUser = '368170c0abcb76';
+    public string $SMTPUser = '90d95c7dda4a44';
     //public string $SMTPUser = 'info@cnxigov.com';
 
     /**
      * SMTP Password
      */
-    public string $SMTPPass = 'bc50ec3279346d';
+    public string $SMTPPass = '9554a813c869e7';
     //public string $SMTPPass = 'P@ssword#123';
 
     /**
