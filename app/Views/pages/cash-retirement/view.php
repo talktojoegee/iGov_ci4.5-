@@ -247,7 +247,7 @@
                         <div class="col-auto">
                           <div class="avatar-sm">
                                                             <span class="avatar-title badge-soft-primary text-primary rounded">
-                                                                ZIP
+                                                                FILE
                                                             </span>
                           </div>
                         </div>

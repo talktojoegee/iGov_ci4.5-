@@ -55,8 +55,8 @@ $this->extend('layouts/admin')
                                     <td> <?= $user['user_username'] ?></td>
                                     <td> <?= $user['user_name'] ?></td>
                                     <td> <?= $user['user_email'] ?></td>
-                                    <td><?= $user['employee'][0]['dpt_name'] ?></td>
-                                    <td><?= $user['employee'][0]['pos_name'] ?></td>
+                                    <td><?= $user['employee'][0]['dpt_name'] ?? null  ?></td>
+                                    <td><?= $user['employee'][0]['pos_name'] ?? null  ?></td>
                                     <td> <?= $user['user_status'] == 1 ? 'ACTIVE' : 'INACTIVE' ?></td>
                                     <td>
                                         <?php

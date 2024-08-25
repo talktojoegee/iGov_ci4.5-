@@ -240,12 +240,15 @@ if ($firstTime): ?>
             <li>
               <a href="#fleet" data-toggle="collapse">
                 <i data-feather="truck"></i>
-                <span>Manage Fleet</span>
+                <span> Fleet Management</span>
                 <span class="menu-arrow"></span>
               </a>
               <div class="collapse" id="fleet">
                 <ul class="nav-second-level">
                   <?php if (in_array($fleet_setup_permission, $permissions ?? [])): ?>
+                    <li><a href="<?= site_url('active-vehicles') ?>">Manage Fleet</a></li>
+                    <li><a href="<?= site_url('request-lot') ?>">Request LOT</a></li>
+                    <li><a href="<?= site_url('active-vehicles') ?>">Fleet Request</a></li>
                     <li><a href="<?= site_url('active-vehicles') ?>">Active Vehicles</a></li>
                     <li><a href="<?= site_url('drivers') ?>">Drivers</a></li>
                   <?php endif; ?>

@@ -96,4 +96,5 @@ class Employee extends Model
         $builder->where('user_permissions.permission', $permission);
         return $builder->get()->getResultArray();
     }
+
 }

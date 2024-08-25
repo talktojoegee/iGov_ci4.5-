@@ -21,6 +21,8 @@
           cancelButtonColor: "#d33"
         }).then(confirm => {
           if (confirm.value) {
+            $('#submitCircular').text('Submitting...');
+            $('#submitCircular').attr('disabled', 'true');
             $.ajax({
               url: '<?=site_url('/internal-circular')?>',
               type: 'post',
@@ -31,6 +33,8 @@
                 } else {
                   Swal.fire('Sorry!', response.message, 'error')
                 }
+                $('#submitCircular').text( 'Submit');
+                $('#submitCircular').attr('disabled', 'false');
               },
               cache: false,
               contentType: false,

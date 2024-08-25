@@ -334,6 +334,10 @@ $routes->addPlaceholder('meetingtoken', '[\s\S]');
 $routes->match(['GET'], 'join-meeting/(:num)/(:any)', 'MeetingController::join_meeting/$1/$2', ['filter' => 'auth']);
 //
 // Fleet routes
+$routes->match(['GET'], 'request-lot', 'FleetController::request_lot', ['filter' => 'auth', 'as'=>'request-lot']);
+$routes->match(['GET', 'POST'], 'new-request-lot', 'FleetController::new_request_lot', ['filter' => 'auth', 'as'=>'new-request-lot']);
+$routes->match(['GET'], 'request-lot-details/(:any)', 'FleetController::show_request_lot_details/$1',['filter'=>'auth', 'as'=>'show-request-lot-details']);
+$routes->match(['POST'], 'action-request-lot', 'FleetController::action_request_lot',['filter'=>'auth', 'as'=>'action-request-lot']);
 $routes->match(['GET'], 'active-vehicles', 'FleetController::active_vehicles', ['filter' => 'auth']);
 $routes->match(['GET', 'POST'], 'new-vehicle', 'FleetController::new_vehicle', ['filter' => 'auth']);
 $routes->match(['GET'], 'drivers', 'FleetController::drivers', ['filter' => 'auth']);

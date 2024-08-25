@@ -79,6 +79,7 @@ class CircularController extends PostController
             $data['department_hods'] = $this->_group_one_department_hods();
             return view('/pages/posts/circulars/new-internal-circular', $data);
         endif;
+
         if ($this->request->getMethod() == 'POST'):
             $p_attachments = array();
             if (isset($_POST['p_attachment'])):
@@ -104,9 +105,16 @@ class CircularController extends PostController
             endif;
             $p_id = $this->post->insert($_POST);
             if ($p_id):
+                //$signedBy = $this->employee->getEmployeeByUserEmployeeId($_POST['p_signed_by']);
+                //$signedByName = !empty($signedBy) ? $signedBy['employee_f_name'] : null;
+
+                $title = $_POST['p_subject'];
+                $message = "You have received a circular titled $title. You are the signatory. Please login to your iGov profile to 
+                read the circular. <p>Thank you, <br/> iGov Support</p>";
+                //'An internal circular was created. You are the signatory.'
                 $this->_upload_attachments($p_attachments, $p_id);
-                $this->send_notification('New Internal Circular Created', 'You created a new internal circular', $this->session->user_id, site_url('view-circular/') . $p_id, 'click to view circular');
-                $this->send_notification('New Internal Circular Created', 'An internal circular was created. You are the signatory.', $_POST['p_signed_by'], site_url('view-circular/') . $p_id, 'click to view circular');
+                $this->send_notification("iGov Circular($title)", 'You created a new internal circular', $this->session->user_id, site_url('view-circular/') . $p_id, 'click to view circular');
+                $this->send_notification("iGov Circular($title)", $message, $_POST['p_signed_by'], site_url('view-circular/') . $p_id, 'click to view circular');
                 $response['success'] = true;
                 $response['message'] = 'Successfully created the internal circular';
             else:
