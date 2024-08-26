@@ -69,6 +69,26 @@ class Reminder extends Model
         }
     }
 
+
+  function getEmployeeRemindersForTheWeek($user_id){
+    $builder = $this->db->table('reminders');
+    $builder->select('title');
+    $builder->select('reminder_start_date as start');
+    $builder->select('reminder_end_date as end');
+    $builder->where('reminder_employee_id',$user_id);
+    $builder->where('reminder_start_date < DATE_ADD(now(), INTERVAL 7 DAY) AND reminder_start_date > NOW()');
+    return $builder->get()->getResultArray();
+  }
+  function getNextSevenDaysReminders(){
+    $builder = $this->db->table('reminders');
+    $builder->select('title');
+    $builder->select('reminder_employee_id as empId');
+    $builder->select('reminder_start_date as start');
+    $builder->select('reminder_end_date as end');
+    $builder->where('reminder_start_date < DATE_ADD(now(), INTERVAL 7 DAY) AND reminder_start_date > NOW()');
+    return $builder->get()->getResultArray();
+  }
+
 /*    function insert_event($data)
     {
         $this->db->insert('events', $data);

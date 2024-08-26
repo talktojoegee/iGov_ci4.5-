@@ -26,24 +26,21 @@
           <?php endif;?>
         </div>
       </div>
-      <div class="card-box" style="border-radius: 10px">
+      <div class="card-box" >
         <small class="float-right">
           <a class="text-success" href="<?=site_url('/reminder')?>">View more</a>
         </small>
         <h4 class="header-title mb-3">Upcoming <span class="text-muted">Reminders</span></h4>
         <ul class="list-group">
-          <li class="list-group-item d-flex justify-content-between align-items-center">
-            Investments and crops project
-            <small>Today</small>
-          </li>
-          <li class="list-group-item d-flex justify-content-between align-items-center">
-            Investment Address At Central Bank
-            <small>13 Oct 2020</small>
-          </li>
-          <li class="list-group-item d-flex justify-content-between align-items-center">
-            Action Needed
-            <small>13 Oct 2020</small>
-          </li>
+          <?php foreach ($reminders as $key=> $reminder): ?>
+            <a href="<?=site_url('/reminder')?>" class="list-group-item list-group-item-action">
+              <div class="d-flex w-100 justify-content-between">
+                <h6  class="mb-1 fs-11"><?= $reminder['title'] ?? '' ?></h6>
+                <small class="text-muted fs-8"><?= date('d M, Y h:ia', strtotime($reminder['start'])) ?></small>
+              </div>
+            </a>
+          <?php endforeach; ?>
+
         </ul>
       </div> <!-- end card-box-->
     </div>

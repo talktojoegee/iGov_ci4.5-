@@ -10,6 +10,7 @@ use App\Models\Task;
 use App\Models\TaskExecutor;
 use App\Models\UserModel;
 use App\Models\Employee;
+use App\Models\Reminder;
 
 class Home extends BaseController
 {
@@ -36,6 +37,7 @@ class Home extends BaseController
     $this->department = new Department();
     $this->task = new Task();
     $this->task_executor = new TaskExecutor();
+    $this->reminder = new Reminder();
   }
 
 	public function index()
@@ -54,6 +56,7 @@ class Home extends BaseController
 		$data['overview_stats']['unsigned_circulars'] = $this->_count_unsigned_circulars();
 		$data['overview_stats']['unsigned_notices'] = $this->_count_unsigned_notices();
 		$data['recent_tasks'] = $this->_get_tasks();
+    $data['reminders'] = $this->reminder->getEmployeeRemindersForTheWeek($this->session->user_employee_id);
     $unseen_notifications = $this->_get_unseen_notifications();
     $this->session->set('unseen_notifications_count', count($unseen_notifications));
     $this->session->set('unseen_notifications', $unseen_notifications);

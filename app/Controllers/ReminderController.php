@@ -19,12 +19,13 @@ class ReminderController extends BaseController
 
 	public function index()
 	{
-
 	    $data = [
 	      'firstTime'=>$this->session->firstTime,
           'username'=>$this->session->username,
-          'employee_id'=>$this->session->user_employee_id
+          'employee_id'=>$this->session->user_employee_id,
+          //'reminders'=>$this->reminder->getEmployeeRemindersForTheWeek($this->session->user_employee_id)
         ];
+      //return dd($data);
 		return view('pages/reminder/index',$data);
 	}
 
