@@ -246,8 +246,23 @@ if ($firstTime): ?>
               <div class="collapse" id="fleet">
                 <ul class="nav-second-level">
                   <?php if (in_array($fleet_setup_permission, $permissions ?? [])): ?>
-                    <li><a href="<?= site_url('request-lot') ?>">Request LOT</a></li>
-                    <li><a href="<?= site_url('fleet-request') ?>">Fleet Request</a></li>
+                    <li><a href="<?= site_url('request-lot') ?>">Request Processing</a></li>
+                    <li><a href="<?= site_url('fleet-request') ?>">My Request</a></li>
+                  <?php endif; ?>
+                </ul>
+              </div>
+            </li>
+          <?php endif; ?>
+          <?php if (in_array($fleet_setup_permission, $permissions ?? []) || in_array($fleet_maintenance_permission, $permissions ?? [])): ?>
+            <li>
+              <a href="#fleet_administration" data-toggle="collapse">
+                <i data-feather="truck"></i>
+                <span> Fleet Administration</span>
+                <span class="menu-arrow"></span>
+              </a>
+              <div class="collapse" id="fleet_administration">
+                <ul class="nav-second-level">
+                  <?php if (in_array($fleet_setup_permission, $permissions ?? [])): ?>
                     <li><a href="<?= site_url('active-vehicles') ?>">Active Vehicles</a></li>
                     <li><a href="<?= site_url('drivers') ?>">Drivers</a></li>
                   <?php endif; ?>
