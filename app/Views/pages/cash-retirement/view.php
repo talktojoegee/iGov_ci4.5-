@@ -286,10 +286,21 @@
                 <label for="">Choose Authorizing Person</label>
                 <input type="hidden" name="type" value="retirement">
                 <input type="hidden" name="itemId" value="<?= $record->crm_id ?? '' ?>">
+
                 <select name="authPerson" id="" class="form-control" data-toggle="select2" required>
-                  <?php foreach($hods as $hod) :?>
-                    <option value="<?= $hod['employee_id'] ?>"><?= $hod['employee_f_name'] ?? ''  ?> <?= $hod['employee_l_name'] ?? ''  ?> <?= $hod['employee_o_name'] ?? ''  ?></option>
+
+                  <?php foreach ($hods as $department => $employees): ?>
+                    <?php if (!empty($employees)): ?>
+                      <optgroup label="<?= $department ?>">
+                        <?php foreach ($employees as $employee): ?>
+                          <option value="<?= $employee['user_id'] ?>">
+                            <?= $employee['pos_name'] . ' (' . $employee['user_name'] . ')' ?>
+                          </option>
+                        <?php endforeach; ?>
+                      </optgroup>
+                    <?php endif; ?>
                   <?php endforeach; ?>
+
                 </select>
               </div>
               <div class="form-group">
