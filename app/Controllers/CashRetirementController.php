@@ -11,6 +11,7 @@ use App\Models\CashRetirementDetail;
 use App\Models\CashRetirementComment;
 use App\Models\CashRetirementAttachment;
 use App\Models\RequestChain;
+use App\Enums\Permissions;
 
 class CashRetirementController extends BaseController
 {
@@ -190,7 +191,7 @@ class CashRetirementController extends BaseController
         'firstTime'=>$this->session->firstTime,
         'username'=>$this->session->user_username,
         'empId'=>$this->session->user_employee_id,
-        'hods'=>$this->employee->getAllHODs(),
+        //'hods'=>$this->employee->getAllHODs(),
         'record'=>$record,
         'requests'=>$requests,//$this->requestchain->getRequestChain('program', $id),
         'requested_by'=>$this->cashretirementmaster->getCreatedBy($record->crm_id),
@@ -198,10 +199,42 @@ class CashRetirementController extends BaseController
         'attachments'=>$this->cashretirementattachment->where('cra_master_id = '.$record->crm_id)->findAll()
 
       ];
+      $data['hods'] = $this->_group_all_department_hods();
+      $data['department_hods'] = $this->_group_one_department_hods();
       //return dd($data);
       return view('pages/cash-retirement/view', $data);
     }else{
       return redirect()->back()->with("error", "<strong>Whoops!</strong> No record found");
     }
+  }
+
+  private function _group_all_department_hods()
+  {
+    $grouped_hods = [];
+    $employees = $this->employee->getAllEmployeesWithPermission(Permissions::HOD->value);
+    foreach ($employees as $employee) {
+      $department_name = $employee['dpt_name'];
+      if (!isset($grouped_hods[$department_name])) {
+        $grouped_hods[$department_name] = [];
+      }
+      $grouped_hods[$department_name][] = $employee;
+    }
+    return $grouped_hods;
+  }
+
+  private function _group_one_department_hods()
+  {
+    $user = $this->user->where('user_id', $this->session->user_id)->first();
+    $employee = $this->employee->getEmployeeDetailsByUserEmployeeId($user['user_employee_id'])[0];
+    $grouped_hods = [];
+    $employees = $this->employee->getAllEmployeesInDepartmentWithPermission($employee['dpt_id'], Permissions::HOD->value);
+    foreach ($employees as $employee) {
+      $department_name = $employee['dpt_name'];
+      if (!isset($grouped_hods[$department_name])) {
+        $grouped_hods[$department_name] = [];
+      }
+      $grouped_hods[$department_name][] = $employee;
+    }
+    return $grouped_hods;
   }
 }

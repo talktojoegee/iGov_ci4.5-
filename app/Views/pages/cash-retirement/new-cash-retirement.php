@@ -146,18 +146,7 @@
                                     </div>
                                 </div>
                             </div>
-                          <div class="col-4">
-                            <div class="form-group">
-                              <label for="subject">Payable to</label>
-                              <select class="form-control select2-hidden-accessible" data-toggle="select2" data-select2-id="4" tabindex="-1" aria-hidden="true" name="project_manager">
-                                <option disabled selected>-- Select  --</option>
-
-                              </select>
-                              <div class="invalid-feedback">
-                                Please enter a amount
-                              </div>
-                            </div>
-                          </div>
+                          
                         </div>
                       <div class="row">
                         <div class="col-12">
