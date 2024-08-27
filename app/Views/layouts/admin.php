@@ -275,8 +275,8 @@ $type = session()->get('type');
                             </ul>
                         </div>
                     </li>
-                    <li>
-                        <a href="<?= route_to('chat') ?>">
+                   <!-- <li>
+                        <a href="</*= route_to('chat') */?>">
                             <i data-feather="layout"></i>
                             <span> Forms </span>
                         </a>
@@ -290,7 +290,7 @@ $type = session()->get('type');
                     </li>
 
                     <li>
-                        <a href="<?= site_url('trainings') ?>">
+                        <a href="</*= site_url('trainings') */?>">
                             <i data-feather="bar-chart-2"></i>
                             <span> Trainings </span>
                         </a>
@@ -300,7 +300,7 @@ $type = session()->get('type');
                             <i data-feather="message-square"></i>
                             <span> Messaging </span>
                         </a>
-                    </li>
+                    </li>-->
 
 
                     <li>

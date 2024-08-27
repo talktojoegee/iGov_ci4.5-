@@ -19,6 +19,8 @@ class Office extends BaseController
 		$data['username'] = $this->session->user_username;
 		$data['firstTime'] = $this->session->firstTime;
 		$data['type'] = $this->session->type;
-		return view('office/dashboard', $data);
+    //return dd('data');
+		//return view('office/dashboard', $data);
+    return redirect()->to(base_url('/organization-profile'));
 	}
 }
