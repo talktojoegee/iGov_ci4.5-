@@ -165,6 +165,14 @@ $routes->post('/workflow/update-workflow-type', 'WorkflowController::updateWorkf
 $routes->post('/workflow/setup-workflow-processor', 'WorkflowController::setupWorkflowProcessor', ['filter' => 'auth']);
 $routes->post('/workflow/update-workflow-processor', 'WorkflowController::updateWorkflowProcessor', ['filter' => 'auth']);
 
+#g-docs
+$routes->get('/g-docs', 'GDocsController::index', ['filter' => 'auth']);
+$routes->get('/g-docs/new-doc-upload', 'GDocsController::get_new_document_upload', ['filter' => 'auth']);
+$routes->post('/g-docs/new-doc-upload', 'GDocsController::post_new_document_upload', ['filter' => 'auth']);
+$routes->get('/g-docs/manage-doc/(:num)', 'GDocsController::get_manage_document/$1', ['filter' => 'auth']);
+$routes->post('/g-docs/manage-doc/(:num)', 'GDocsController::patch_manage_document/$1', ['filter' => 'auth']);
+$routes->post('/g-docs/save-doc-changes', 'GDocsController::save_doc_changes', ['filter' => 'auth']);
+
 #Exception process routes
 $routes->post('/workflow/setup-exception-workflow-processor', 'WorkflowController::setupExceptionWorkflowProcessor', ['filter' => 'auth']);
 $routes->post('/workflow/update-exception-workflow-processor', 'WorkflowController::updateExceptionWorkflowProcessor', ['filter' => 'auth']);
@@ -193,14 +201,14 @@ $routes->post('/email-settings', 'EmailController::processEmailSettings', ['filt
 
 
 $routes->get('/chat', 'ChatController::chat', ['filter' => 'auth']);
-$routes->get('/contact-list', 'ChatController::getAllUsers', ['filter' => 'auth', 'as'=>'get-all-users']);
-$routes->post('/one-contact', 'ChatController::getOneUser', ['filter' => 'auth', 'as'=>'get-one-user']);
-$routes->get('/own-details', 'ChatController::ownerDetails', ['filter' => 'auth', 'as'=>'own-details']);
-$routes->post('/get-message', 'ChatController::getMessage', ['filter' => 'auth', 'as'=>'get-message']);
-$routes->post('/set-no-message', 'ChatController::setNoMessage', ['filter' => 'auth', 'as'=>'set-no-message']);
+$routes->get('/contact-list', 'ChatController::getAllUsers', ['filter' => 'auth', 'as' => 'get-all-users']);
+$routes->post('/one-contact', 'ChatController::getOneUser', ['filter' => 'auth', 'as' => 'get-one-user']);
+$routes->get('/own-details', 'ChatController::ownerDetails', ['filter' => 'auth', 'as' => 'own-details']);
+$routes->post('/get-message', 'ChatController::getMessage', ['filter' => 'auth', 'as' => 'get-message']);
+$routes->post('/set-no-message', 'ChatController::setNoMessage', ['filter' => 'auth', 'as' => 'set-no-message']);
 
 $routes->post('/chat-messages', 'ChatController::getMessages', ['filter' => 'auth']);
-$routes->post('/send-message', 'ChatController::sendMessage', ['filter' => 'auth', 'as'=>'send-message']);
+$routes->post('/send-message', 'ChatController::sendMessage', ['filter' => 'auth', 'as' => 'send-message']);
 $routes->get('/test-chat', 'ChatController::getMessages', ['filter' => 'auth']);
 
 #Project routes
@@ -215,17 +223,17 @@ $routes->post('/projects/submit-project-report', 'ProjectController::submitRepor
 
 
 #Program & Activities
-$routes->get('/manage-programs-activities','ProgramActivitiesController::index',['filter'=>'auth', 'as'=>'manage-programs']);
-$routes->get('/programs-activities/create','ProgramActivitiesController::showAddNewProgramForm',['filter'=>'auth', 'as'=>'add-new-program']);
-$routes->get('/programs-activities/(:num)','ProgramActivitiesController::viewProgram/$1',['filter'=>'auth', 'as'=>'view-program']);
-$routes->post('/programs-activities/create','ProgramActivitiesController::setNewProgram',['filter'=>'auth']);
-$routes->post('/leave-program-comment','ProgramActivitiesController::setNewConversation',['filter'=>'auth', 'as'=>'leave-program-comment']);
-$routes->get('/programs-activities/edit/(:num)','ProgramActivitiesController::editProgram/$1',['filter'=>'auth', 'as'=>'edit-program']);
-$routes->post('/programs-activities/update','ProgramActivitiesController::editProgram/$1',['filter'=>'auth', 'as'=>'update-program']);
-$routes->post('/programs-activities/submit-program-report','ProgramActivitiesController::submitReport',['filter'=>'auth', 'as'=>'submit-program-report']);
+$routes->get('/manage-programs-activities', 'ProgramActivitiesController::index', ['filter' => 'auth', 'as' => 'manage-programs']);
+$routes->get('/programs-activities/create', 'ProgramActivitiesController::showAddNewProgramForm', ['filter' => 'auth', 'as' => 'add-new-program']);
+$routes->get('/programs-activities/(:num)', 'ProgramActivitiesController::viewProgram/$1', ['filter' => 'auth', 'as' => 'view-program']);
+$routes->post('/programs-activities/create', 'ProgramActivitiesController::setNewProgram', ['filter' => 'auth']);
+$routes->post('/leave-program-comment', 'ProgramActivitiesController::setNewConversation', ['filter' => 'auth', 'as' => 'leave-program-comment']);
+$routes->get('/programs-activities/edit/(:num)', 'ProgramActivitiesController::editProgram/$1', ['filter' => 'auth', 'as' => 'edit-program']);
+$routes->post('/programs-activities/update', 'ProgramActivitiesController::editProgram/$1', ['filter' => 'auth', 'as' => 'update-program']);
+$routes->post('/programs-activities/submit-program-report', 'ProgramActivitiesController::submitReport', ['filter' => 'auth', 'as' => 'submit-program-report']);
 
-$routes->post('/request-for-approval','ChainRequestController::requestForApproval',['filter'=>'auth', 'as'=>'request-for-approval']);
-$routes->post('/action-request','ChainRequestController::actionRequest',['filter'=>'auth', 'as'=>'action-request']);
+$routes->post('/request-for-approval', 'ChainRequestController::requestForApproval', ['filter' => 'auth', 'as' => 'request-for-approval']);
+$routes->post('/action-request', 'ChainRequestController::actionRequest', ['filter' => 'auth', 'as' => 'action-request']);
 
 #Reminder
 $routes->get('/reminder', 'ReminderController::index', ['filter' => 'auth', 'as' => 'reminder']);
@@ -271,25 +279,25 @@ $routes->get('/contractor-license-renewal', 'ProcurementController::contractorLi
 
 // employee routes
 $routes->match(['GET'], 'my-account', 'EmployeeController::my_account', ['filter' => 'auth']);
-$routes->match(['GET'], 'profile/(:any)', 'EmployeeController::view_profile/$1', ['filter' => 'auth', 'as'=>'view-profile']);
+$routes->match(['GET'], 'profile/(:any)', 'EmployeeController::view_profile/$1', ['filter' => 'auth', 'as' => 'view-profile']);
 $routes->match(['GET'], 'check-signature-exists', 'EmployeeController::check_signature_exists', ['filter' => 'auth']);
-$routes->match(['POST'], 'setup-signature', 'EmployeeController::setup_signature', ['filter' => 'auth', 'as'=>'setup_signature']);
+$routes->match(['POST'], 'setup-signature', 'EmployeeController::setup_signature', ['filter' => 'auth', 'as' => 'setup_signature']);
 
-$routes->match(['POST'], 'verify-token', 'EmployeeController::verify_token', ['filter' => 'auth', 'as'=>'verify_token']);
-$routes->match(['POST'], 'submit-digitally-signed-signature', 'EmployeeController::uploadDigitalSignature', ['filter' => 'auth', 'as'=>'submit-digitally-signed-signature']);
+$routes->match(['POST'], 'verify-token', 'EmployeeController::verify_token', ['filter' => 'auth', 'as' => 'verify_token']);
+$routes->match(['POST'], 'submit-digitally-signed-signature', 'EmployeeController::uploadDigitalSignature', ['filter' => 'auth', 'as' => 'submit-digitally-signed-signature']);
 
 $routes->match(['POST'], 'verify-signature', 'EmployeeController::verify_signature', ['filter' => 'auth']);
 $routes->match(['POST'], 'submit-token', 'EmployeeController::submit_token', ['filter' => 'auth']);
 $routes->match(['POST'], 'confirm-token', 'EmployeeController::confirm_token', ['filter' => 'auth']);
 $routes->match(['POST'], 'change-password', 'EmployeeController::change_password', ['filter' => 'auth']);
-$routes->match(['POST'], 'update-profile', 'EmployeeController::update_profile', ['filter' => 'auth', 'as'=>'update-profile']);
+$routes->match(['POST'], 'update-profile', 'EmployeeController::update_profile', ['filter' => 'auth', 'as' => 'update-profile']);
 
 
 #Cash retirement
-$routes->match(['GET'], 'cash-retirement', 'CashRetirementController::my_cash_retirement',['filter'=>'auth', 'as'=>'cash-retirement']);
-$routes->match(['POST', 'GET'], 'new-cash-retirement', 'CashRetirementController::new_cash_retirement',['filter'=>'auth', 'as'=>'new-cash-retirement']);
-$routes->match(['POST', 'GET'], 'store-cash-retirement', 'CashRetirementController::store_new_cash_retirement',['filter'=>'auth', 'as'=>'store-cash-retirement']);
-$routes->match(['POST', 'GET'], 'cash-retirement-details/(:any)', 'CashRetirementController::show_cash_retirement_details/$1',['filter'=>'auth', 'as'=>'show-cash-retirement-details']);
+$routes->match(['GET'], 'cash-retirement', 'CashRetirementController::my_cash_retirement', ['filter' => 'auth', 'as' => 'cash-retirement']);
+$routes->match(['POST', 'GET'], 'new-cash-retirement', 'CashRetirementController::new_cash_retirement', ['filter' => 'auth', 'as' => 'new-cash-retirement']);
+$routes->match(['POST', 'GET'], 'store-cash-retirement', 'CashRetirementController::store_new_cash_retirement', ['filter' => 'auth', 'as' => 'store-cash-retirement']);
+$routes->match(['POST', 'GET'], 'cash-retirement-details/(:any)', 'CashRetirementController::show_cash_retirement_details/$1', ['filter' => 'auth', 'as' => 'show-cash-retirement-details']);
 
 // central registry routes
 $routes->match(['GET'], 'central-registry', 'CentralRegistryController::index', ['filter' => 'auth']);
@@ -334,11 +342,11 @@ $routes->addPlaceholder('meetingtoken', '[\s\S]');
 $routes->match(['GET'], 'join-meeting/(:num)/(:any)', 'MeetingController::join_meeting/$1/$2', ['filter' => 'auth']);
 //
 // Fleet routes
-$routes->match(['GET'], 'request-lot', 'FleetController::request_lot', ['filter' => 'auth', 'as'=>'request-lot']);
-$routes->match(['GET'], 'fleet-request', 'FleetController::fleet_request', ['filter' => 'auth', 'as'=>'fleet-request']);
-$routes->match(['GET', 'POST'], 'new-request-lot', 'FleetController::new_request_lot', ['filter' => 'auth', 'as'=>'new-request-lot']);
-$routes->match(['GET'], 'request-lot-details/(:any)', 'FleetController::show_request_lot_details/$1',['filter'=>'auth', 'as'=>'show-request-lot-details']);
-$routes->match(['POST'], 'action-request-lot', 'FleetController::action_request_lot',['filter'=>'auth', 'as'=>'action-request-lot']);
+$routes->match(['GET'], 'request-lot', 'FleetController::request_lot', ['filter' => 'auth', 'as' => 'request-lot']);
+$routes->match(['GET'], 'fleet-request', 'FleetController::fleet_request', ['filter' => 'auth', 'as' => 'fleet-request']);
+$routes->match(['GET', 'POST'], 'new-request-lot', 'FleetController::new_request_lot', ['filter' => 'auth', 'as' => 'new-request-lot']);
+$routes->match(['GET'], 'request-lot-details/(:any)', 'FleetController::show_request_lot_details/$1', ['filter' => 'auth', 'as' => 'show-request-lot-details']);
+$routes->match(['POST'], 'action-request-lot', 'FleetController::action_request_lot', ['filter' => 'auth', 'as' => 'action-request-lot']);
 $routes->match(['GET'], 'active-vehicles', 'FleetController::active_vehicles', ['filter' => 'auth']);
 $routes->match(['GET', 'POST'], 'new-vehicle', 'FleetController::new_vehicle', ['filter' => 'auth']);
 $routes->match(['GET'], 'drivers', 'FleetController::drivers', ['filter' => 'auth']);
@@ -350,7 +358,6 @@ $routes->match(['GET', 'POST'], 'renewal-schedule-data', 'FleetController::renew
 $routes->match(['GET', 'POST'], 'maintenance-schedules', 'FleetController::maintenance_schedules', ['filter' => 'auth']);
 $routes->match(['GET', 'POST'], 'maintenance-schedule-calendar', 'FleetController::maintenance_schedule_calendar', ['filter' => 'auth']);
 $routes->match(['GET', 'POST'], 'maintenance-schedule-data', 'FleetController::maintenance_schedule_data', ['filter' => 'auth']);
-
 
 $routes->match(['GET', 'POST'], 'contractor-login', 'ContractorAuth::login', ['filter' => 'noauth', 'as' => 'contractor-login']);
 $routes->get('/contractor-dashboard', 'ContractorPortalController::dashboard', ['as' => 'contractor-dashboard', 'filter' => 'contractorauth']);
