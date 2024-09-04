@@ -365,6 +365,8 @@ class EmployeeController extends BaseController
                                 'employee_avatar' => $file_name
                             ];
                             $this->employee->save($employee_data);
+                          unset($_SESSION['avatar']);
+                          $_SESSION['avatar'] = !empty($employee) ? $employee['employee_avatar'] :  'avatar.png';
                         }
                     }
                     return redirect()->back()->with("success", "Profile updated");
