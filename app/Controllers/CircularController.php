@@ -77,6 +77,15 @@ class CircularController extends PostController
             $data['username'] = $this->session->user_username;
             $data['hods'] = $this->_group_all_department_hods();
             $data['department_hods'] = $this->_group_one_department_hods();
+          $data['authUser'] = $this->employee->getEmployeeByUserEmployeeId($this->session->user_employee_id);
+          if(empty($data['authUser'])){
+            return redirect()->back()->with("error", "<strong>Whoops!</strong> User record not found");
+          }
+          $data['authDirectorate'] = $this->department->find($data['authUser']['employee_department_id']);
+          if(empty($data['authDirectorate'])){
+            return redirect()->back()->with("error", "<strong>Whoops!</strong> We had issues identifying your directorate.");
+          }
+          $data['counter'] = count($this->post->findAll()) + 1;
             return view('/pages/posts/circulars/new-internal-circular', $data);
         endif;
 

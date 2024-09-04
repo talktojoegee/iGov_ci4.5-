@@ -45,7 +45,7 @@
                             <div class="col-12">
                                 <div class="form-group">
                                     <label for="ref-no">Reference No</label><span style="color: red"> *</span>
-                                    <input placeholder="Reference No." type="text" class="form-control" id="ref-no" name="p_ref_no" required>
+                                    <input readonly value="<?= $authDirectorate['dpt_ref_no'] ?? null ?>/<?= $counter ?? rand(9,9999) ?>"  placeholder="Reference No." type="text" class="form-control" id="ref-no" name="p_ref_no" required>
                                     <div class="invalid-feedback">
                                         Please enter a reference number.
                                     </div>
