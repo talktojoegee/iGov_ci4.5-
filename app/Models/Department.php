@@ -14,7 +14,7 @@ class Department extends Model
 	protected $returnType           = 'array';
 	protected $useSoftDeletes       = false;
 	protected $protectFields        = true;
-	protected $allowedFields        = ['dpt_id', 'dpt_name'];
+	protected $allowedFields        = ['dpt_id', 'dpt_name', 'dpt_ref_no'];
 
 	// Dates
 	protected $useTimestamps        = false;

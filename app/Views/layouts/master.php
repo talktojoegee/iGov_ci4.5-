@@ -296,7 +296,8 @@ if ($firstTime): ?>
             <li>
               <a href="<?= site_url('g-drive') ?>">
                 <i data-feather="cloud"></i>
-                <span> GDrive </span>
+                <span> GDrive </span> <!-- $2y$10$Eh.ADgyNHK5vJpx6XHLKquuDAFikFkIBlupLMSpYHwEbCpl6aKYfK -->
+                <!-- $2y$10$XAbL9m4VZ/WVdOVqPCESS.VpCZtOPrpNyU89cQnl4dK... -->
               </a>
             </li>
           <?php endif; ?>

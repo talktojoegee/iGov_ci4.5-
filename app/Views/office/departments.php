@@ -48,6 +48,7 @@
 						<tr>
 							<th>S/N</th>
 							<th>Directory</th>
+							<th>Ref. No.</th>
 							<th>Action</th>
 							
 						</tr>
@@ -61,7 +62,8 @@
 							?>
 						<tr>
 							<td><?=$sn++; ?></td>
-							<td><?=$department['dpt_name'] ?></td>
+							<td><?=$department['dpt_name'] ?? null  ?></td>
+              <td><?= $department['dpt_ref_no']  ?? null  ?></td>
 							<td><button  type="button" class="btn btn-primary" data-toggle="modal" data-target="#edit-department<?=$department['dpt_id'] ?>" > <i class="mdi mdi-pen-lock mr-2"></i></button>
 							</td>
 						
@@ -106,10 +108,23 @@
 						<div class="col-lg-12">
 							<div class="form-group">
 								<div class="form-control-wrap">
-									<input type="text" class="form-control" name="dpt_name" required>
+									<input placeholder="Directory Name" type="text" class="form-control" name="dpt_name" required>
 								</div>
 							</div>
 						</div>
+            <div class="col-lg-12">
+              <div class="form-group">
+                <label class="form-label" for="site-name">Reference Number</label>
+                <span class="form-note">Enter Reference Number</span>
+              </div>
+            </div>
+            <div class="col-lg-12">
+              <div class="form-group">
+                <div class="form-control-wrap">
+                  <input placeholder="Reference No." type="text" class="form-control" name="dpt_ref_no" required>
+                </div>
+              </div>
+            </div>
 					</div>
 				
 					
@@ -151,10 +166,24 @@
 						<div class="col-lg-12">
 							<div class="form-group">
 								<div class="form-control-wrap">
-									<input type="text" class="form-control" name="dpt_name" value="<?=$department['dpt_name'] ?>" required>
+									<input type="text" class="form-control" name="dpt_name" value="<?=$department['dpt_name'] ?? null ?>" required>
 								</div>
 							</div>
 						</div>
+
+            <div class="col-lg-12">
+              <div class="form-group">
+                <label class="form-label" for="site-name">Reference Number</label>
+                <span class="form-note">Enter Reference Number</span>
+              </div>
+            </div>
+            <div class="col-lg-12">
+              <div class="form-group">
+                <div class="form-control-wrap">
+                  <input placeholder="Reference No." type="text" value="<?=$department['dpt_ref_no'] ?? null ?>" class="form-control" name="dpt_ref_no" required>
+                </div>
+              </div>
+            </div>
 					</div>
 					
 					<input type="hidden" value="<?=$department['dpt_id']; ?>" name="dpt_id">
