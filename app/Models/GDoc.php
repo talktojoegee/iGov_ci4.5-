@@ -64,8 +64,9 @@ class GDoc extends Model
         }
 
         $authorizers = $this->db->table('g_docs_authorizers')
-            ->select('g_docs_authorizers.*, users.user_name, users.user_email')
+            ->select('g_docs_authorizers.*, users.user_name, users.user_email, employees.employee_signature')
             ->join('users', 'users.user_id = g_docs_authorizers.g_doc_auth_user_id')
+            ->join('employees', 'employees.employee_id = users.user_employee_id', 'left')
             ->where('g_docs_authorizers.g_doc_auth_doc_id', $g_doc_id)
             ->get()
             ->getResultArray();

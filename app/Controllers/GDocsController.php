@@ -55,6 +55,11 @@ class GDocsController extends BaseController
             return $this->response->setJSON($response);
         }
 
+        $user_id = session()->user_id;
+        if (!in_array($user_id, $authorizers)) {
+            $authorizers[] = $user_id;
+        }
+
         $db = Database::connect();
         $db->transStart();
         try {
