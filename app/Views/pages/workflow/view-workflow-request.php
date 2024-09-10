@@ -17,14 +17,24 @@
             </div>
         </div>
     </div>
+
+  <div class="row">
+    <div class="col-lg-12 d-flex justify-content-end mb-3">
+      <div class="btn-group">
+        <button data-toggle="modal" data-target="#reportModal" type="button" class="btn btn-sm btn-success ">Request for Approval</button>
+        <a href="<?=site_url('/workflow-requests')?>" type="button" class="btn btn-sm btn-primary float-right">Go Back</a>
+
+      </div>
+    </div>
+  </div>
     <!-- end page title -->
     <div class="row">
         <div class="col-12">
             <div class="card">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-lg-8">
-                            <h4 class="header-title mt-2 mb-4">Workflow Request Details</h4>
+              <h4 class="header-title mt-2 modal-header mb-0">Workflow Request Details</h4>
+              <div class="card-body">
+                  <div class="row">
+                      <div class="col-lg-8">
                             <div class="row">
                                 <div class="col-md-12">
                                     <?php if(session()->has('error')): ?>
@@ -48,13 +58,108 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-4">
-                            <div class="btn-group">
-                            <a href="<?=site_url('/workflow-requests')?>" type="button" class="btn btn-sm btn-primary float-right">Go Back</a>
-
-                            </div>
-                        </div>
                     </div>
+                <div class="col-md-8 col-lg-8">
+                  <div class="card d-block">
+                    <div class="card-body">
+
+                      <!-- project title-->
+                      <h3 class="mt-0 font-20">
+                        <?= $workflow_request->request_title ?? '' ?>
+                      </h3>
+                      <?php if($workflow_request->request_status == 0): ?>
+                        <div class="badge badge-warning text-white mb-3">Pending</div>
+                      <?php elseif ($workflow_request->request_status == 1) : ?>
+                        <div class="badge badge-success mb-3">Approved</div>
+                      <?php elseif ($workflow_request->request_status == 2): ?>
+                        <div class="badge badge-danger mb-3">Declined</div>
+                      <?php endif; ?>
+                      <h5>Overview:</h5>
+
+                      <?= $workflow_request->request_description ?? '' ?>
+
+                      <div class="row">
+                        <div class="col-md-4">
+                          <div class="mb-4">
+                            <h5> <i class="fe-calendar"></i> Date</h5>
+                            <p><?= date('d M, Y', strtotime($workflow_request->created_at)) ?></p>
+                          </div>
+                        </div>
+                        <div class="col-md-4">
+                          <div class="mb-4">
+                            <h5> <i class="fe-credit-card"></i> Amount</h5>
+                            <p>  <?=  env('APP_CURRENCY').''.number_format($workflow_request->amount,2) ?></p>
+                          </div>
+                        </div>
+                        <div class="col-md-4">
+                          <div class="mb-4">
+                            <h5> <i class="fe-shield"></i> Type</h5>
+                            <p><?= $workflow_request->workflow_type_name ?></p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div>
+                        <h5> <i class="fe-users"></i> Responsible Persons(s):</h5>
+                        <?php foreach($responsible_persons as $person):  ?>
+                          <a href="javascript:void(0);" data-toggle="tooltip" data-placement="top" title="" data-original-title="<?= $person['employee_f_name']  ?> <?= $person['employee_l_name'] ?>" class="d-inline-block">
+                            <img src="/assets/images/users/avatar.png" class="rounded-circle img-thumbnail avatar-sm" alt="friend">
+                          </a>
+                          <?php if($person['redirected_to_id'] == $auth_user && $person['request_status'] == 0): ?>
+                            <button class="btn btn-sm btn-danger" data-target="#declineRequest" data-toggle="modal">Decline</button>
+                            <button class="btn btn-sm btn-success" data-target="#approveRequest" data-toggle="modal">Approve</button>
+                            <div id="approveRequest" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="standard-modalLabel" aria-hidden="true">
+                              <div class="modal-dialog">
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <h4 class="modal-title" id="standard-modalLabel">Approve Request</h4>
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                  </div>
+                                  <div class="modal-body">
+                                    <h6>This action cannot be undone. Are you sure you want to approve this request?</h6>
+                                    <form action="<?= site_url('/workflow-requests/process-request') ?>" method="post">
+                                      <?= csrf_field() ?>
+                                      <div class="btn-group float-right mt-3">
+                                        <input type="hidden" name="request" value="<?= $workflow_request->workflow_request_id ?>">
+                                        <input type="hidden" name="workflow_responsible" value="<?= $person['workflow_responsible_people_id'] ?>">
+                                        <input type="hidden" name="action" value="1">
+                                        <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-primary">Yes, please</button>
+                                      </div>
+                                    </form>
+                                  </div>
+                                </div><!-- /.modal-content -->
+                              </div><!-- /.modal-dialog -->
+                            </div>
+                            <div id="declineRequest" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="standard-modalLabel" aria-hidden="true">
+                              <div class="modal-dialog">
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <h4 class="modal-title" id="standard-modalLabel">Decline Request</h4>
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                  </div>
+                                  <div class="modal-body">
+                                    <h6>This action cannot be undone. Are you sure you want to decline this request?</h6>
+                                    <form action="<?= site_url('/workflow-requests/process-request') ?>" method="post">
+                                      <?= csrf_field() ?>
+                                      <div class="btn-group float-right mt-3">
+                                        <input type="hidden" name="request" value="<?= $workflow_request->workflow_request_id ?>">
+                                        <input type="hidden" name="workflow_responsible" value="<?= $person['workflow_responsible_people_id'] ?>">
+                                        <input type="hidden" name="action" value="2">
+                                        <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-primary">Yes, please</button>
+                                      </div>
+                                    </form>
+                                  </div>
+                                </div><!-- /.modal-content -->
+                              </div><!-- /.modal-dialog -->
+                            </div>
+                          <?php endif; ?>
+                        <?php endforeach; ?>
+                      </div>
+                    </div>
+                  </div>
+                </div>
                 </div>
             </div>
         </div>
@@ -228,6 +333,44 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="reportModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="card">
+        <h5 class="modal-header pb-1">Request For Approval</h5>
+        <div class="card-body">
+          <form action="<?= site_url('/request-for-approval') ?>" method="post">
+            <div class="form-group">
+              <label for="">Choose Authorizing Person</label>
+              <input type="hidden" name="type" value="retirement">
+              <input type="hidden" name="itemId" value="<?= $record->crm_id ?? '' ?>">
+
+              <select name="authPerson" id="" class="form-control" data-toggle="select2" required>
+
+                <?php foreach ($hods as $department => $employees): ?>
+                  <?php if (!empty($employees)): ?>
+                    <optgroup label="<?= $department ?>">
+                      <?php foreach ($employees as $employee): ?>
+                        <option value="<?= $employee['user_id'] ?>">
+                          <?= $employee['pos_name'] . ' (' . $employee['user_name'] . ')' ?>
+                        </option>
+                      <?php endforeach; ?>
+                    </optgroup>
+                  <?php endif; ?>
+                <?php endforeach; ?>
+
+              </select>
+            </div>
+            <div class="form-group">
+              <button class="btn btn-block btn-success">Submit Request</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <?= $this->endSection(); ?>
 <?= $this->section('extra-scripts'); ?>
 <script>

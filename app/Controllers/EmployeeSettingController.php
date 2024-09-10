@@ -313,6 +313,93 @@ class EmployeeSettingController extends BaseController
 		endif;
 		return $this->response->setJSON($response);
 	}
-	
-	
+
+
+  public function manage_employee($id){
+    $employee = $this->employee->getEmployeeByUserEmployeeId($id);
+    if(empty($employee)){
+      return redirect()->back()->with("error", "<strong>Whoops!</strong> No record found");
+    }
+    $data['firstTime'] = $this->session->firstTime;
+    $data['username'] = $this->session->user_username;
+    $data['employee'] = $employee;
+    $data['positions'] = $this->position->findAll();
+    $data['departments'] = $this->department->findAll();
+
+    return view('office/manage-employee', $data);
+  }
+
+
+  public function update_employee_profile(){
+    $employeeId = $_POST['employee'];
+    $employee = null;
+    if(isset($employeeId)){
+      $employee = $this->employee->getEmployeeByUserEmployeeId($employeeId);
+    }
+    if(empty($employee)){
+      return redirect()->back()->with("error", "<strong>Whoops!</strong> No record found");
+    }
+
+    $inputs = $this->validate(
+      [
+        'surname' =>
+          ['rules'=> 'required', 'label'=>'Subject','errors' => [
+            'required' => 'Enter surname']
+          ],
+        'firstName' =>
+          ['rules'=> 'required', 'errors'=>
+            ['required'=>'Enter first name']
+          ],
+        'mobileNo' => ['rules'=>'required', 'errors'=>['required'=>'Enter mobile number']],
+        'address' => ['rules'=> 'required', 'errors'=>['required'=>'Enter address']],
+        'userType' => ['rules'=> 'required', 'errors'=>['required'=>'Indicate user type']],
+        'directorate' => ['rules'=> 'required', 'errors'=>['required'=>'Select directorate from the list provided']],
+        'section' => ['rules'=> 'required', 'errors'=>['required'=>'Select section']],
+        'employee' => ['rules'=> 'required', 'errors'=>['required'=>'']],
+      ]);
+    if (!$inputs) {
+
+      return view('office/manage-employee',
+        [
+        'validation' => $this->validator,
+        'firstTime'=>$this->session->firstTime,
+        'username'=>$this->session->user_username,
+         'positions'=>$this->position->findAll(),
+         'departments'=>$this->department->findAll(),
+          'employee'=>$employee
+      ]);
+    }else{
+      $data = [
+        'employee_f_name'=>$this->request->getPost('firstName'),
+        'employee_l_name'=>$this->request->getPost('surname'),
+        'employee_o_name'=>$this->request->getPost('otherNames'),
+        'employee_sex'=>$this->request->getPost('gender'),
+        'employee_dob'=>$this->request->getPost('dateOfBirth'),
+        'employee_department_id'=>$this->request->getPost('directorate'),
+        'employee_position_id'=>$this->request->getPost('section'),
+        'employee_phone'=>$this->request->getPost('mobileNo'),
+        'employee_address'=>$this->request->getPost('address'),
+      ];
+      $this->employee->update($employeeId, $data);
+
+      #Notify author
+      /*$notification_data = [
+        'subject' => 'New Program Created',
+        'body' => 'You created a program',
+        'recipient' => $this->session->user_employee_id,
+        'link' => site_url('/projects/').$programId,
+        'cta' => 'click to view program',
+        'notification_status' => 0,
+      ];
+      $this->notification->save($notification_data);*/
+
+
+      //$this->send_notification('New Program Created', 'You created a program', $this->session->user_id, site_url('/projects/').$project, 'click to view program');
+
+      return redirect()->back()->with("success", "<strong>Success!</strong> Action successful.");
+    }
+
+  }
+
+
 }
