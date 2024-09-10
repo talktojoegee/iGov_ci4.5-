@@ -42,7 +42,12 @@ class Employee extends Model
 	protected $afterDelete          = [];
 
     public function getEmployeeByUserEmployeeId($user_employee_id){
-        return Employee::where('employee_id', $user_employee_id)->first();
+      $builder = $this->db->table('employees');
+      $builder->where('employee_id', $user_employee_id);
+      $builder->join('users', 'users.user_employee_id = employees.employee_id');
+      $builder->join('departments', 'departments.dpt_id = employees.employee_department_id');
+      $builder->join('positions', 'positions.pos_id = employees.employee_position_id');
+      return $builder->get()->getRowArray();
     }
 
     public function getEmployeeDetailsByUserEmployeeId($user_employee_id)

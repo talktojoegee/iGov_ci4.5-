@@ -190,6 +190,7 @@ class WorkflowController extends BaseController
             'username' => $this->session->username,
         ];
 
+
         return view('pages/workflow/workflow-requests', $data);
     }
 
@@ -198,6 +199,7 @@ class WorkflowController extends BaseController
         if (!$this->_validate_permission(Permissions::WORKFLOW->value)) {
             return view('auth/access_denied');
         }
+
         $user_employee_id = $this->session->user_employee_id;
         $employee = $this->employee->getEmployeeByUserEmployeeId($user_employee_id);
         if (!empty($employee)) {
@@ -241,7 +243,9 @@ class WorkflowController extends BaseController
                 $user_employee_id = $this->session->user_employee_id;
                 $employee = $this->employee->getEmployeeByUserEmployeeId($user_employee_id);
                 $department = $employee['employee_department_id'];
-                if (!empty($department)) {
+              $this->postRequest();
+              return redirect()->to(base_url('/workflow-requests'))->with('success', "<strong>Success!</strong> Your request was submitted successfully.");
+               /* if (!empty($department)) {
                     #Exception processors
                     $exception_list = $this->workflowexceptionprocessor->checkExceptionList($user_employee_id, $workflow_type);
                     #Normal
@@ -259,32 +263,6 @@ class WorkflowController extends BaseController
                     }
                 } else {
                     return redirect()->back()->with("error", "<strong>Whoops!</strong> You've not been assigned to a department. Kindly do that.");
-                }
-
-                /*$data = [
-                    'requested_by' => $this->session->user_id,
-                    'requested_type_id' => $workflow_type,
-                    'request_title' => $title,
-                    'request_description' => $description,
-                    'amount'=>$amount
-                ];
-                $workflow_request_id = $this->workflowrequest->insert($data);
-                #Process attachments
-                if(!empty($workflow_request_id)){
-                    if($this->request->getFileMultiple('attachments')){
-                        foreach ($this->request->getFileMultiple('attachments') as $attachment){
-                            if($attachment->isValid() ){
-                                $extension = $attachment->guessExtension();
-                                $filename = $attachment->getRandomName();
-                                $attachment->move('uploads/posts', $filename);
-                                $request_attachment = [
-                                    'workflow_request_id' => $workflow_request_id,
-                                    'attachment' => $filename
-                                ];
-                                $this->workflowrequestattachment->save($request_attachment);
-                            }
-                        }
-                    }
                 }*/
 
             }
@@ -292,6 +270,26 @@ class WorkflowController extends BaseController
         }
     }
 
+  public function requestForApproval(){
+    $inputs = $this->validate([
+      'itemId' => ['rules'=> 'required'],
+      'type' => ['rules'=> 'required'],
+      'authPerson' => ['rules'=> 'required', 'errors'=>['required'=>'Select who to act on this request']],
+    ]);
+    if (!$inputs) {
+      return redirect()->back()->with("error", "Something went wrong. Try again.");
+    }else{
+      $data = [
+        'rc_item_id'=>$this->request->getPost('itemId'),
+        'rc_type'=>$this->request->getPost('type'),
+        'rc_emp_id'=>$this->request->getPost('authPerson'),
+        'rc_status'=>0,
+        'rc_final'=>0,
+      ];
+      $this->requestchain->save($data);
+      return redirect()->back()->with("success", "Request submitted!");
+    }
+  }
 
     public function postRequest()
     {
@@ -358,6 +356,8 @@ class WorkflowController extends BaseController
                 'comments' => $this->workflowconversation->getWorkflowConversationByRequestId($id),
                 'firstTime' => $this->session->firstTime,
                 'username' => $this->session->username,
+              'department_hods' =>$this->_group_one_department_hods(),
+              'hods'=>$this->_group_all_department_hods()
             ];
             return view('pages/workflow/view-workflow-request', $data);
         } else {
@@ -365,6 +365,37 @@ class WorkflowController extends BaseController
         }
 
     }
+
+  private function _group_all_department_hods()
+  {
+    $grouped_hods = [];
+    $employees = $this->employee->getAllEmployeesWithPermission(Permissions::HOD->value);
+    foreach ($employees as $employee) {
+      $department_name = $employee['dpt_name'];
+      if (!isset($grouped_hods[$department_name])) {
+        $grouped_hods[$department_name] = [];
+      }
+      $grouped_hods[$department_name][] = $employee;
+    }
+    return $grouped_hods;
+  }
+
+  private function _group_one_department_hods()
+  {
+    $user = $this->user->where('user_id', $this->session->user_id)->first();
+    $employee = $this->employee->getEmployeeDetailsByUserEmployeeId($user['user_employee_id'])[0];
+    $grouped_hods = [];
+    $employees = $this->employee->getAllEmployeesInDepartmentWithPermission($employee['dpt_id'], Permissions::HOD->value);
+    foreach ($employees as $employee) {
+      $department_name = $employee['dpt_name'];
+      if (!isset($grouped_hods[$department_name])) {
+        $grouped_hods[$department_name] = [];
+      }
+      $grouped_hods[$department_name][] = $employee;
+    }
+    return $grouped_hods;
+  }
+
 
     public function processWorkflowRequest()
     {

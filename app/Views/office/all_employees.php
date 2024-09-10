@@ -47,6 +47,7 @@
               <th>Unit/Dept.</th>
 
 							<th>E-Mail</th>
+              <th>Action</th>
 							
 						</tr>
 						</thead>
@@ -64,6 +65,7 @@
                 <td> <?=$employee['pos_name'] ?? null ; ?></td>
 
 								<td> <?=$employee['employee_mail'] ?? null ; ?></td>
+                <td><a href="<?= site_url('manage-employee/') . $employee['employee_id'] ?>">Edit</a></td>
 							</tr>
 						
 						<?php endforeach; endif; ?>
