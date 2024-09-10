@@ -192,12 +192,18 @@
             let hasUnsavedChanges = false;
             const saveChangeButton = $('#saveButton')
             const noEdits = parseInt('<?=$doc['current_user_authorizer']['g_doc_auth_status']?>')
+            let signatureUrl = ''
+            const signature = '<?=$doc['current_user_authorizer']['employee_signature']?>'
+            if (signature) {
+                signatureUrl = `<?= base_url('uploads/signatures/') ?>${signature}`
+            }
+
             PSPDFKit.load({
                 container: "#pspdfkit",
                 document: "<?= base_url('uploads/g-docs/' . $doc['g_doc_upload']) ?>",
                 autoSaveMode: PSPDFKit.AutoSaveMode.DISABLED,
                 enableHistory: true,
-            }).then(function (instance) {
+            }).then(async function (instance) {
                 console.log("PSPDFKit loaded", instance);
                 instance.addEventListener("document.saveStateChange", (event) => {
                     hasUnsavedChanges = event.hasUnsavedChanges;
@@ -216,11 +222,66 @@
                 saveChangeButton.on('click', async function () {
                     await saveDocument(instance);
                 });
-                console.log({status})
                 if (noEdits !== 0) {
                     const state = instance.viewState
                     const newState = state.set('readOnly', true)
                     instance.setViewState(newState)
+                } else {
+                    const signatureToolbarItem = {
+                        type: "custom",
+                        id: "add-signature",
+                        title: "Add IGOV Signature",
+                        onPress: async () => {
+                            try {
+                                const request = await fetch(signatureUrl);
+                                if (!request.ok) {
+                                    throw new Error('Failed to fetch the image for the signature');
+                                }
+                                const blob = await request.blob();
+                                if (!blob || blob.size === 0) {
+                                    throw new Error('The fetched image is invalid or empty');
+                                }
+                                const imageAttachmentId = await instance.createAttachment(blob);
+                                const currentPageIndex = instance.viewState.currentPageIndex;
+                                const annotation = new PSPDFKit.Annotations.ImageAnnotation({
+                                    pageIndex: currentPageIndex,
+                                    isSignature: true,
+                                    contentType: 'image/jpeg',
+                                    imageAttachmentId,
+                                    description: 'Example Image Annotation',
+                                    boundingBox: new PSPDFKit.Geometry.Rect({
+                                        left: 10,
+                                        top: 20,
+                                        width: 150,
+                                        height: 150,
+                                    }),
+                                });
+
+                                // Let the user choose where to place the signature
+                                const newAnnotation = await instance.create(annotation, {pickPlacement: true});
+                                console.log('Signature annotation placed:', newAnnotation);
+                            } catch (error) {
+                                console.error('Error adding signature:', error);
+                            }
+                        }
+                    };
+
+                    // Try to fetch the image before adding the toolbar item
+                    try {
+                        const request = await fetch(signatureUrl);
+
+                        if (request.ok) {
+                            // Add the custom toolbar item to the existing toolbar if the image fetch is successful
+                            instance.setToolbarItems([
+                                ...PSPDFKit.defaultToolbarItems, // Keep the default items
+                                signatureToolbarItem // Add the custom signature item
+                            ]);
+                        } else {
+                            throw new Error('Failed to fetch image for toolbar item.');
+                        }
+                    } catch (error) {
+                        console.error('Error initializing signature toolbar item:', error);
+                    }
                 }
             }).catch(function (error) {
                 console.error("Error loading PSPDFKit:", error.message);

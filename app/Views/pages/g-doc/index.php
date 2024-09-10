@@ -43,12 +43,12 @@
                         <thead>
                         <tr>
                             <th class="text-center" style="width: 5%">S/n</th>
-                            <th>Ref</th>
+                            <th style="width: 10%">Ref</th>
                             <th>Title</th>
-                            <th>Uploaded By</th>
-                            <th>Document Status</th>
-                            <th>Authorization Status</th>
-                            <th>Added</th>
+                            <th style="width: 12%">Uploaded By</th>
+                            <th style="width: 10%">Document Status</th>
+                            <th style="width: 10%">Authorization Status</th>
+                            <th style="width: 10%">Added</th>
                             <th class="text-center" style="width: 10%">Actions</th>
                         </tr>
                         </thead>
@@ -71,9 +71,13 @@
                                 </td>
                                 <td>
                                     <?php
-                                    if ($doc['g_doc_auth_status'] == 1) echo 'Cancelled';
-                                    elseif ($doc['g_doc_auth_status'] == 0) echo 'Pending';
-                                    elseif ($doc['g_doc_auth_status'] == 2) echo 'Reviewed';
+                                    if ($doc['g_doc_auth_status'] == 1) {
+                                        echo '<span class="badge badge-danger">Cancelled</span>';
+                                    } elseif ($doc['g_doc_auth_status'] == 0) {
+                                        echo '<span class="badge badge-warning">Pending</span>';
+                                    } elseif ($doc['g_doc_auth_status'] == 2) {
+                                        echo '<span class="badge badge-success">Reviewed</span>';
+                                    }
                                     ?>
                                 </td>
                                 <td>

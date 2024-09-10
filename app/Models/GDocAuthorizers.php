@@ -56,6 +56,7 @@ class GDocAuthorizers extends Model
             ->join('g_docs', 'g_docs.g_doc_id = g_docs_authorizers.g_doc_auth_doc_id')
             ->join('users', 'users.user_id = g_docs.g_doc_uploaded_by')
             ->where('g_docs_authorizers.g_doc_auth_user_id', $userId)
+            ->orderBy('g_docs_authorizers.created_at', 'DESC')
             ->findAll();
     }
 }
