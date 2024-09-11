@@ -235,65 +235,7 @@
                             </div>
                           </div>
                         </div>
-
-                        <div>
-                          <h5> <i class="fe-users"></i> Responsible Persons(s):</h5>
-                          <?php foreach($responsible_persons as $person):  ?>
-                            <a href="javascript:void(0);" data-toggle="tooltip" data-placement="top" title="" data-original-title="<?= $person['employee_f_name']  ?> <?= $person['employee_l_name'] ?>" class="d-inline-block">
-                              <img src="/assets/images/users/avatar.png" class="rounded-circle img-thumbnail avatar-sm" alt="friend">
-                            </a>
-                            <?php if($person['redirected_to_id'] == $auth_user && $person['request_status'] == 0): ?>
-                              <button class="btn btn-sm btn-danger" data-target="#declineRequest" data-toggle="modal">Decline</button>
-                              <button class="btn btn-sm btn-success" data-target="#approveRequest" data-toggle="modal">Approve</button>
-                              <div id="approveRequest" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="standard-modalLabel" aria-hidden="true">
-                                <div class="modal-dialog">
-                                  <div class="modal-content">
-                                    <div class="modal-header">
-                                      <h4 class="modal-title" id="standard-modalLabel">Approve Request</h4>
-                                      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                                    </div>
-                                    <div class="modal-body">
-                                      <h6>This action cannot be undone. Are you sure you want to approve this request?</h6>
-                                      <form action="<?= site_url('/workflow-requests/process-request') ?>" method="post">
-                                        <?= csrf_field() ?>
-                                        <div class="btn-group float-right mt-3">
-                                          <input type="hidden" name="request" value="<?= $workflow_request->workflow_request_id ?>">
-                                          <input type="hidden" name="workflow_responsible" value="<?= $person['workflow_responsible_people_id'] ?>">
-                                          <input type="hidden" name="action" value="1">
-                                          <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
-                                          <button type="submit" class="btn btn-primary">Yes, please</button>
-                                        </div>
-                                      </form>
-                                    </div>
-                                  </div><!-- /.modal-content -->
-                                </div><!-- /.modal-dialog -->
-                              </div>
-                              <div id="declineRequest" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="standard-modalLabel" aria-hidden="true">
-                                <div class="modal-dialog">
-                                  <div class="modal-content">
-                                    <div class="modal-header">
-                                      <h4 class="modal-title" id="standard-modalLabel">Decline Request</h4>
-                                      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                                    </div>
-                                    <div class="modal-body">
-                                      <h6>This action cannot be undone. Are you sure you want to decline this request?</h6>
-                                      <form action="<?= site_url('/workflow-requests/process-request') ?>" method="post">
-                                        <?= csrf_field() ?>
-                                        <div class="btn-group float-right mt-3">
-                                          <input type="hidden" name="request" value="<?= $workflow_request->workflow_request_id ?>">
-                                          <input type="hidden" name="workflow_responsible" value="<?= $person['workflow_responsible_people_id'] ?>">
-                                          <input type="hidden" name="action" value="2">
-                                          <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
-                                          <button type="submit" class="btn btn-primary">Yes, please</button>
-                                        </div>
-                                      </form>
-                                    </div>
-                                  </div><!-- /.modal-content -->
-                                </div><!-- /.modal-dialog -->
-                              </div>
-                            <?php endif; ?>
-                          <?php endforeach; ?>
-                        </div>
+                        
                       </div>
                     </div>
                   </div>
