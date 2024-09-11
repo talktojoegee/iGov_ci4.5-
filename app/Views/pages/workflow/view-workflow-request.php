@@ -373,12 +373,12 @@
                   </div>
                   <div class="form-group">
                     <label for="">Should your action be marked as final?</label>
-                    <select name="final" id="final" class="form-control">
+                    <select name="final" id="appFinal" class="form-control">
                       <option value="0">No</option>
                       <option value="1">Yes</option>
                     </select>
                   </div>
-                  <div class="form-group" id="nextAuth">
+                  <div class="form-group nextAuth" id="">
                     <label for="">Next Authorizing Person</label>
                     <select name="authPerson"  class="form-control" data-toggle="select2" required>
                       <?php foreach ($hods as $department => $employees): ?>
@@ -415,6 +415,7 @@
     </div>
   <?php endif; ?>
 <?php endif; ?>
+
 <?php if(count($requests) > 0): ?>
   <?php if(($currentDeskId == $empId) && ($workflow_request->request_status == 0)) : ?>
     <div class="modal fade" id="declineModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -441,7 +442,7 @@
                       <option value="1">Yes</option>
                     </select>
                   </div>
-                  <div class="form-group" id="nextAuth">
+                  <div class="form-group nextAuth" id="">
                     <label for="">Next Authorizing Person</label>
                     <select name="authPerson"  class="form-control" data-toggle="select2" required>
                       <?php foreach ($hods as $department => $employees): ?>
@@ -478,6 +479,7 @@
     </div>
   <?php endif; ?>
 <?php endif; ?>
+
 <?= $this->endSection(); ?>
 <?= $this->section('extra-scripts'); ?>
 <?= view('pages/program-activities/_request-trail-scripts.php') ?>
@@ -494,11 +496,21 @@
         e.preventDefault();
         let val = $(this).val();
         if(parseInt(val) === 1){
-          $('#nextAuth').hide();
+          $('.nextAuth').hide();
         }else{
-          $('#nextAuth').show();
+          $('.nextAuth').show();
         }
       })
+      $('#appFinal').on('change',function(e){
+        e.preventDefault();
+        let val = $(this).val();
+        if(parseInt(val) === 1){
+          $('.nextAuth').hide();
+        }else{
+          $('.nextAuth').show();
+        }
+      })
+
     });
 </script>
 <?= $this->endSection(); ?>
