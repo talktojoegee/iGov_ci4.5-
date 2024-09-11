@@ -64,4 +64,16 @@ class WorkflowRequest extends Model
         $result = $builder->get()->getRowObject();
         return $result;
     }
+
+  public  function getCreatedBy($id){
+    $builder = $this->db->table('workflow_requests as wr');
+    $builder->join('employees as e','e.employee_id = wr.requested_by' );
+    $builder->where('wr.workflow_request_id = '.$id);
+    return $builder->get()->getFirstRow();
+  }
+  public  function getWorkflowRequestById($id){
+    $builder = $this->db->table('workflow_requests as wr');
+    $builder->where('wr.workflow_request_id = '.$id);
+    return $builder->get()->getFirstRow();
+  }
 }
