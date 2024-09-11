@@ -358,7 +358,6 @@ class EmployeeSettingController extends BaseController
         'employee' => ['rules'=> 'required', 'errors'=>['required'=>'']],
       ]);
     if (!$inputs) {
-
       return view('office/manage-employee',
         [
         'validation' => $this->validator,
@@ -381,6 +380,14 @@ class EmployeeSettingController extends BaseController
         'employee_address'=>$this->request->getPost('address'),
       ];
       $this->employee->update($employeeId, $data);
+      $userData = [
+        'user_type'=>$this->request->getPost('userType'),
+      ];
+      $user = $this->user->where('user_employee_id', $employeeId)->first();
+      if(!empty($user)){
+        $user->update($user->user_id, $data);
+      }
+
 
       #Notify author
       /*$notification_data = [
