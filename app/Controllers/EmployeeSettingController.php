@@ -351,7 +351,7 @@ class EmployeeSettingController extends BaseController
             ['required'=>'Enter first name']
           ],
         'mobileNo' => ['rules'=>'required', 'errors'=>['required'=>'Enter mobile number']],
-        'address' => ['rules'=> 'required', 'errors'=>['required'=>'Enter address']],
+       // 'address' => ['rules'=> 'required', 'errors'=>['required'=>'Enter address']],
         'userType' => ['rules'=> 'required', 'errors'=>['required'=>'Indicate user type']],
         'directorate' => ['rules'=> 'required', 'errors'=>['required'=>'Select directorate from the list provided']],
         'section' => ['rules'=> 'required', 'errors'=>['required'=>'Select section']],
