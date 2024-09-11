@@ -151,7 +151,7 @@
           <?php if(count($requests) > 0): ?>
             <?php if(($currentDeskId == $empId) && ($record->crm_status == 0)) : ?>
               <button class="btn btn-success btn-sm" data-toggle="modal" data-target="#approvalModal"> Approve  </button>
-              <button class="btn btn-danger btn-sm">  Decline</button>
+              <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#declineModal">  Decline</button>
             <?php endif; ?>
           <?php endif; ?>
           <a href="<?=route_to('cash-retirement')?>" type="button" class="btn btn-sm btn-primary ">Go Back</a>
@@ -293,7 +293,7 @@
                     <?php if (!empty($employees)): ?>
                       <optgroup label="<?= $department ?>">
                         <?php foreach ($employees as $employee): ?>
-                          <option value="<?= $employee['user_id'] ?>">
+                          <option value="<?= $employee['user_employee_id'] ?>">
                             <?= $employee['pos_name'] . ' (' . $employee['user_name'] . ')' ?>
                           </option>
                         <?php endforeach; ?>
@@ -312,6 +312,72 @@
       </div>
     </div>
   </div>
+
+
+  <?php if(count($requests) > 0): ?>
+    <?php if(($currentDeskId == $empId) && ($record->crm_status == 0))  : ?>
+      <div class="modal fade" id="declineModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title text-white" id="exampleModalLabel">Are you sure?</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true" class="text-white">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form action="<?= site_url('/action-request') ?>" method="post" enctype="multipart/form-data">
+                <?= csrf_field() ?>
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <p>This action cannot be undone. Are you sure you want to <code>decline</code> this request?</p>
+                    </div>
+                    <div class="form-group">
+                      <label for="">Should your action be marked as final?</label>
+                      <select name="final" id="final" class="form-control">
+                        <option value="0">No</option>
+                        <option value="1">Yes</option>
+                      </select>
+                    </div>
+                    <div class="form-group nextAuth" >
+                      <label for="">Next Authorizing Person</label>
+                      <select name="authPerson"  class="form-control" data-toggle="select2" required>
+                        <?php foreach ($hods as $department => $employees): ?>
+                          <?php if (!empty($employees)): ?>
+                            <optgroup label="<?= $department ?>">
+                              <?php foreach ($employees as $employee): ?>
+                                <option value="<?= $employee['user_employee_id'] ?>">
+                                  <?= $employee['pos_name'] . ' (' . $employee['user_name'] . ')' ?>
+                                </option>
+                              <?php endforeach; ?>
+                            </optgroup>
+                          <?php endif; ?>
+                        <?php endforeach; ?>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-md-12 d-flex justify-content-center">
+                    <input type="hidden" name="itemId" value="<?= $record->crm_id ?>">
+                    <input type="hidden" name="requestId" value="<?= $pendingId ?>">
+                    <input type="hidden" name="decision" value="decline">
+                    <input type="hidden" name="type" value="retirement">
+                    <div class="form-group">
+                      <div class="btn-group">
+                        <button class="btn btn-secondary btn-sm" type="button">Cancel</button>
+                        <button class="btn btn-sm btn-primary" type="submit">Yes, proceed</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    <?php endif; ?>
+  <?php endif; ?>
+
   <?php if(count($requests) > 0): ?>
     <?php if(($currentDeskId == $empId) && ($record->crm_status == 0)) : ?>
       <div class="modal fade" id="approvalModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -333,16 +399,24 @@
                     </div>
                     <div class="form-group">
                       <label for="">Should your action be marked as final?</label>
-                      <select name="final" id="final" class="form-control">
+                      <select name="final" id="appFinal" class="form-control">
                         <option value="0">No</option>
                         <option value="1">Yes</option>
                       </select>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group nextAuth" >
                       <label for="">Next Authorizing Person</label>
                       <select name="authPerson" id="" class="form-control" data-toggle="select2" required>
-                        <?php foreach($hods as $h) :?>
-                          <option value="<?= $h['employee_id'] ?>"><?= $h['employee_f_name'] ?? ''  ?> <?= $h['employee_l_name'] ?? ''  ?> <?= $h['employee_o_name'] ?? ''  ?></option>
+                        <?php foreach ($hods as $department => $employees): ?>
+                          <?php if (!empty($employees)): ?>
+                            <optgroup label="<?= $department ?>">
+                              <?php foreach ($employees as $employee): ?>
+                                <option value="<?= $employee['user_employee_id'] ?>">
+                                  <?= $employee['pos_name'] . ' (' . $employee['user_name'] . ')' ?>
+                                </option>
+                              <?php endforeach; ?>
+                            </optgroup>
+                          <?php endif; ?>
                         <?php endforeach; ?>
                       </select>
                     </div>
@@ -373,6 +447,26 @@
 <?= view('pages/program-activities/_request-trail-scripts.php') ?>
 <script>
   $(document).ready(function(){
+
+    $('#final').on('change',function(e){
+      e.preventDefault();
+      let val = $(this).val();
+      if(parseInt(val) === 1){
+        $('.nextAuth').hide();
+      }else{
+        $('.nextAuth').show();
+      }
+    })
+    $('#appFinal').on('change',function(e){
+      e.preventDefault();
+      let val = $(this).val();
+      if(parseInt(val) === 1){
+        $('.nextAuth').hide();
+      }else{
+        $('.nextAuth').show();
+      }
+    })
+
     var quill = new Quill ();
     $("#training-form").on("submit",function(){
       let editor = document.querySelector('#snow-editor');
