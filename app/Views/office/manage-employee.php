@@ -145,8 +145,8 @@ $this->extend('layouts/admin')
                 <div class="form-group">
                   <label for="">User Type <sup class="text-danger">*</sup></label>
                   <select name="userType"  class="form-control">
-                    <option value="1"  <?= $employee['user_type'] == 1 ? 'selected' : null  ?>  >Employee</option>
-                    <option value="2" <?= $employee['user_type'] == 2 ? 'selected' : null  ?> >Moderator</option>
+                    <option value="2"  <?= $employee['user_type'] == 2 ? 'selected' : null  ?>  >Employee</option>
+                    <option value="3" <?= $employee['user_type'] == 3 ? 'selected' : null  ?> >Moderator</option>
                   </select>
                   <?php if ($validation->getError('userType')): ?>
                     <div class="text-danger">
