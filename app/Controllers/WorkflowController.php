@@ -14,6 +14,7 @@ use App\Models\WorkflowRequest;
 use App\Models\WorkflowRequestAttachment;
 use App\Models\WorkflowResponsiblePerson;
 use App\Models\WorkflowType;
+use App\Models\RequestChain;
 
 class WorkflowController extends BaseController
 {
@@ -34,7 +35,7 @@ class WorkflowController extends BaseController
         $this->employee = new Employee();
         $this->workflowresponsibleperson = new WorkflowResponsiblePerson();
         $this->workflowconversation = new WorkflowConversation();
-
+      $this->requestchain = new RequestChain();
 
     }
 
@@ -187,7 +188,7 @@ class WorkflowController extends BaseController
         $data = [
             'my_requests' => $this->workflowrequest->getAuthUserWorkflowRequests($this->session->user_employee_id),
             'firstTime' => $this->session->firstTime,
-            'username' => $this->session->username,
+            'username' => $this->session->user_username,
         ];
 
 
@@ -270,7 +271,7 @@ class WorkflowController extends BaseController
         }
     }
 
-  public function requestForApproval(){
+ /* public function requestForApproval(){
     $inputs = $this->validate([
       'itemId' => ['rules'=> 'required'],
       'type' => ['rules'=> 'required'],
@@ -279,17 +280,12 @@ class WorkflowController extends BaseController
     if (!$inputs) {
       return redirect()->back()->with("error", "Something went wrong. Try again.");
     }else{
-      $data = [
-        'rc_item_id'=>$this->request->getPost('itemId'),
-        'rc_type'=>$this->request->getPost('type'),
-        'rc_emp_id'=>$this->request->getPost('authPerson'),
-        'rc_status'=>0,
-        'rc_final'=>0,
-      ];
-      $this->requestchain->save($data);
+
+      $this->publishResponsiblePersons($this->request->getPost('authPerson'), $this->request->getPost('itemId'));
+      //$this->requestchain->save($data);
       return redirect()->back()->with("success", "Request submitted!");
     }
-  }
+  }*/
 
     public function postRequest()
     {
@@ -348,16 +344,30 @@ class WorkflowController extends BaseController
         $request = $this->workflowrequest->getWorkflowRequestDetail($id);
 
         if (!empty($request)) {
+          $requests = $this->requestchain->getRequestChain('workflow', $request->workflow_request_id);
+          $pendingRequestStatus = true;
+          if(count($requests) > 0){
+            foreach($requests as $req){
+              if($req->rc_status == 0){
+                $pendingRequestStatus = false;
+              }
+            }
+          }
+          
             $data = [
+              'pendingRequestStatus'=>$pendingRequestStatus,
+              'empId'=>$this->session->user_employee_id,
+              'requests'=>$requests,
                 'workflow_request' => $request,
                 'workflow_attachments' => $this->workflowrequestattachment->getWorkflowRequestAttachments($id),
                 'responsible_persons' => $this->workflowresponsibleperson->getWorkflowResponsiblePersonsByRequestId($id),
                 'auth_user' => $this->session->user_employee_id,
                 'comments' => $this->workflowconversation->getWorkflowConversationByRequestId($id),
                 'firstTime' => $this->session->firstTime,
-                'username' => $this->session->username,
+                'username' => $this->session->user_username,
               'department_hods' =>$this->_group_one_department_hods(),
-              'hods'=>$this->_group_all_department_hods()
+              'hods'=>$this->_group_all_department_hods(),
+              'requested_by'=>[],$this->workflowrequest->getCreatedBy($request->workflow_request_id)
             ];
             return view('pages/workflow/view-workflow-request', $data);
         } else {
@@ -365,6 +375,9 @@ class WorkflowController extends BaseController
         }
 
     }
+
+
+
 
   private function _group_all_department_hods()
   {

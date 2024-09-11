@@ -22,6 +22,7 @@ use App\Models\ProgramAttachment;
 use App\Models\Notification;
 use App\Models\ProgramConversation;
 use App\Models\CashRetirementMaster;
+use App\Models\WorkflowRequest;
 
 class ChainRequestController extends BaseController
 {
@@ -51,6 +52,8 @@ class ChainRequestController extends BaseController
     $this->reminder = new Reminder();
     $this->notification = new Notification();
     $this->cashretirementmaster = new CashRetirementMaster();
+    $this->workflowrequest = new WorkflowRequest();
+
 
   }
 
@@ -82,6 +85,7 @@ class ChainRequestController extends BaseController
     }
 
     public function actionRequest(){
+    
     //return dd($this->request->getVar());
       $inputs = $this->validate([
         'itemId' => ['rules'=> 'required'],
@@ -93,7 +97,8 @@ class ChainRequestController extends BaseController
       if (!$inputs) {
         return redirect()->back()->with("error", "Something went wrong. Try again.");
     }else{
-        $status = $this->request->getPost('decision') ? 1 : 2;
+        
+        $status = $this->request->getPost('decision') == 'approve' ? 1 : 2;
         $final = $this->request->getPost('final');
         if($final == 1){
           $data = [
@@ -103,6 +108,7 @@ class ChainRequestController extends BaseController
             'rc_final'=> $this->request->getPost('final'),
           ];
           $this->requestchain->update($this->request->getPost('requestId'), $data);
+
           if($this->request->getPost('type') == 'program'){
 
             $program = $this->program->getProgramById($this->request->getPost('itemId'));
@@ -126,6 +132,12 @@ class ChainRequestController extends BaseController
               ];
               $this->cashretirementmaster->update($this->request->getPost('itemId'), $retirementData);
             }
+          }else if($this->request->getPost('type') == 'workflow'){
+            
+                $flowData = [
+                  'request_status'=>$status,
+                ];
+                $this->workflowrequest->update($this->request->getPost('itemId'), $flowData);
           }
 
         }else{
