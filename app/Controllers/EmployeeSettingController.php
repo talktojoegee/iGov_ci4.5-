@@ -385,7 +385,7 @@ class EmployeeSettingController extends BaseController
       ];
       $user = $this->user->where('user_employee_id', $employeeId)->first();
       if(!empty($user)){
-        $this->user->update($user->user_id, $data);
+        $this->user->update($user['user_id'], $userData);
       }
 
 
