@@ -367,7 +367,7 @@ class WorkflowController extends BaseController
                 'username' => $this->session->user_username,
               'department_hods' =>$this->_group_one_department_hods(),
               'hods'=>$this->_group_all_department_hods(),
-              'requested_by'=>[],$this->workflowrequest->getCreatedBy($request->workflow_request_id)
+              'requested_by'=>$this->workflowrequest->getCreatedBy($request->workflow_request_id)
             ];
             return view('pages/workflow/view-workflow-request', $data);
         } else {
