@@ -232,7 +232,7 @@ if ($firstTime): ?>
                                 <li><a href="<?= site_url('tasks'); ?>">Tasks</a></li>
                                 <li><a href="<?= site_url('trainings') ?>">Trainings</a></li>
                                 <li><a href="<?= site_url('correspondence') ?>">Correspondence</a></li>
-                                <!-- <li><a href="?= site_url('g-docs') ?>">G-Docs</a></li> -->
+                                <li><a href="<?= site_url('g-docs') ?>">G-Docs</a></li>
                             </ul>
                         </div>
                     </li>

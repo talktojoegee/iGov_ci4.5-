@@ -117,6 +117,7 @@ class GDocsController extends BaseController
         $data['username'] = $this->session->user_username;
         $data['doc'] = $doc;
         $data['hods'] = $this->_group_remaining__department_hods($doc['authorizers']);
+        $data['licenseKey'] = getenv('PSPDFKIT_LICENSE_KEY');
         return view('/pages/g-doc/manage_document', $data);
     }
 
