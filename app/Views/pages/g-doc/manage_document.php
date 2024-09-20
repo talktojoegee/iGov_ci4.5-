@@ -189,6 +189,7 @@
     <script src="/assets/libs/pspdfkit/pspdfkit.js"></script>
     <script>
         $(document).ready(() => {
+            const licenseKey = '<?= $licenseKey ?>';
             let hasUnsavedChanges = false;
             const saveChangeButton = $('#saveButton')
             const noEdits = parseInt('<?=$doc['current_user_authorizer']['g_doc_auth_status']?>')
@@ -202,6 +203,7 @@
                 container: "#pspdfkit",
                 document: "<?= base_url('uploads/g-docs/' . $doc['g_doc_upload']) ?>",
                 autoSaveMode: PSPDFKit.AutoSaveMode.DISABLED,
+                licenseKey,
                 enableHistory: true,
             }).then(async function (instance) {
                 console.log("PSPDFKit loaded", instance);
