@@ -190,6 +190,7 @@
     <script>
         $(document).ready(() => {
             const licenseKey = '<?= $licenseKey ?>';
+            console.log(licenseKey)
             let hasUnsavedChanges = false;
             const saveChangeButton = $('#saveButton')
             const noEdits = parseInt('<?=$doc['current_user_authorizer']['g_doc_auth_status']?>')

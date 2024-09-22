@@ -35,7 +35,7 @@
                     submitButton.prop('disabled', false);
                     submitButton.text('Submit');
                     if (response.success) {
-                        Swal.fire('Confirmed!', response.message, 'success').then(() => location.href = `<?=site_url('/g-docs/manage-doc/')?>${response.doc_id}`)
+                        Swal.fire('Confirmed!', response.message, 'success').then(() => location.href = `<?=site_url('/manage-doc/')?>${response.doc_id}`)
                     } else {
                         Swal.fire('Sorry!', response.message, 'error')
                     }
@@ -59,7 +59,7 @@
             submitButton.text('Updating...');
             let formData = new FormData(this)
             $.ajax({
-                url: `<?=site_url('/g-docs/manage-doc') ?>/${id}`,
+                url: `<?=site_url('/manage-doc') ?>/${id}`,
                 type: 'post',
                 data: formData,
                 success: response => {

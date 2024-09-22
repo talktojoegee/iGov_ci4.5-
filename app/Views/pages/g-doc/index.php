@@ -86,7 +86,7 @@
                                     ?>
                                 </td>
                                 <td>
-                                    <a href="<?= site_url('/g-docs/manage-doc/' . $doc['g_doc_id']) ?>"
+                                    <a href="<?= site_url('/manage-doc/' . $doc['g_doc_id']) ?>"
                                        class="btn btn-sm btn-outline-info" title="Edit">
                                         Manage
                                     </a>
