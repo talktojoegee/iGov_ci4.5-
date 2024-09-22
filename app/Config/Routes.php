@@ -78,7 +78,7 @@ $routes->match(['GET', 'POST'], 'manage-stamp/(:num)', 'MessagingSettingControll
 $routes->match(['GET', 'POST'], 'new-employee', 'EmployeeSettingController::new_employee', ['filter' => 'auth']);
 $routes->match(['GET', 'POST'], 'fetch-positions', 'EmployeeSettingController::fetch_positions', ['filter' => 'auth']);
 $routes->match(['GET', 'POST'], 'employees', 'EmployeeSettingController::all_employees', ['filter' => 'auth']);
-$routes->match(['GET'], 'manage-employee/(:any)', 'EmployeeSettingController::manage_employee/$1', ['filter' => 'auth', 'as'=>'manage-employee']);
+$routes->match(['GET'], 'manage-employee/(:any)', 'EmployeeSettingController::manage_employee/$1', ['filter' => 'auth', 'as' => 'manage-employee']);
 $routes->match(['POST'], '/update-employee-profile', 'EmployeeSettingController::update_employee_profile', ['filter' => 'auth']);
 $routes->match(['POST'], 'check-username', 'EmployeeSettingController::check_username', ['filter' => 'auth']);
 
@@ -171,8 +171,8 @@ $routes->post('/workflow/update-workflow-processor', 'WorkflowController::update
 $routes->get('/g-docs', 'GDocsController::index', ['filter' => 'auth']);
 $routes->get('/g-docs/new-doc-upload', 'GDocsController::get_new_document_upload', ['filter' => 'auth']);
 $routes->post('/g-docs/new-doc-upload', 'GDocsController::post_new_document_upload', ['filter' => 'auth']);
-$routes->get('/g-docs/manage-doc/(:num)', 'GDocsController::get_manage_document/$1', ['filter' => 'auth']);
-$routes->post('/g-docs/manage-doc/(:num)', 'GDocsController::patch_manage_document/$1', ['filter' => 'auth']);
+$routes->get('/manage-doc/(:num)', 'GDocsController::get_manage_document/$1', ['filter' => 'auth']);
+$routes->post('/manage-doc/(:num)', 'GDocsController::patch_manage_document/$1', ['filter' => 'auth']);
 $routes->post('/g-docs/save-doc-changes', 'GDocsController::save_doc_changes', ['filter' => 'auth']);
 
 #Exception process routes
