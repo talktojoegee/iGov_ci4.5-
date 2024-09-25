@@ -13,6 +13,8 @@ enum Permissions: string
     case FLEET_SETUP = 'fleet_setup';
     case FLEET_MAINTENANCE = 'fleet_maintenance';
     case G_DRIVE = 'g_drive';
+    case G_DOCS = 'g_docs';
+    case CAN_SEND_TO_DG = 'can_send_to_dg';
     case PROGRAMS = 'programs';
     case PROJECTS = 'projects';
     case PROCUREMENT = 'procurement';
@@ -36,6 +38,8 @@ enum Permissions: string
             self::FLEET_SETUP => 'Fleet Setup',
             self::FLEET_MAINTENANCE => 'Fleet Maintenance',
             self::G_DRIVE => 'G-Drive',
+            self::G_DOCS => 'G-Docs',
+            self::CAN_SEND_TO_DG => 'Can Send to DG',
             self::PROGRAMS => 'Programs',
             self::PROJECTS => 'Projects',
             self::PROCUREMENT => 'Procurement',
@@ -63,6 +67,8 @@ enum Permissions: string
             (object)['label' => self::FLEET_SETUP->label(), 'value' => self::FLEET_SETUP->value],
             (object)['label' => self::FLEET_MAINTENANCE->label(), 'value' => self::FLEET_MAINTENANCE->value],
             (object)['label' => self::G_DRIVE->label(), 'value' => self::G_DRIVE->value],
+            (object)['label' => self::G_DOCS->label(), 'value' => self::G_DOCS->value],
+            (object)['label' => self::CAN_SEND_TO_DG->label(), 'value' => self::CAN_SEND_TO_DG->value],
             (object)['label' => self::PROGRAMS->label(), 'value' => self::PROGRAMS->value],
             (object)['label' => self::PROJECTS->label(), 'value' => self::PROJECTS->value],
             (object)['label' => self::PROCUREMENT->label(), 'value' => self::PROCUREMENT->value],

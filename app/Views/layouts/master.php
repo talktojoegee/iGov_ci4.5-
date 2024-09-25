@@ -3,6 +3,8 @@ echo view('templates/_header.php');
 $type = session()->get('type');
 $permissions = session()->get('permissions');
 $g_drive_permission = \App\Enums\Permissions::G_DRIVE->value;
+$g_docs_permission = \App\Enums\Permissions::G_DOCS->value;
+$g_can_send_to_dg_permission = \App\Enums\Permissions::CAN_SEND_TO_DG->value;
 $fleet_setup_permission = \App\Enums\Permissions::FLEET_SETUP->value;
 $fleet_maintenance_permission = \App\Enums\Permissions::FLEET_MAINTENANCE->value;
 $procurement_permission = \App\Enums\Permissions::PROCUREMENT->value;
@@ -67,7 +69,7 @@ if ($firstTime): ?>
                     <a class="nav-link dropdown-toggle nav-user mr-0 waves-effect waves-light" data-toggle="dropdown"
                        href="#" role="button" aria-haspopup="false" aria-expanded="false">
                         <!--						<img src="../assets/images/users/user-1.jpg" alt="user-image" class="rounded-circle">-->
-                        <img src="/assets/images/users/<?= $_SESSION['avatar'] ?? 'avatar.png' ?>" alt="user-image"
+                        <img src="/assets/images/users/<?= $avatar ?? 'avatar.png' ?>" alt="user-image"
                              class="rounded-circle">
                         <span class="pro-user-name ml-1"><?= $username ?? '' ?> <i
                                     class="mdi mdi-chevron-down"></i></span>
@@ -232,7 +234,9 @@ if ($firstTime): ?>
                                 <li><a href="<?= site_url('tasks'); ?>">Tasks</a></li>
                                 <li><a href="<?= site_url('trainings') ?>">Trainings</a></li>
                                 <li><a href="<?= site_url('correspondence') ?>">Correspondence</a></li>
+                              <?php if( (in_array($g_docs_permission, $permissions ?? [])) ) :?>
                                 <li><a href="<?= site_url('g-docs') ?>">G-Docs</a></li>
+                              <?php endif; ?>
                             </ul>
                         </div>
                     </li>

@@ -59,6 +59,25 @@ class BaseController extends ResourceController
         // Do Not Edit This Line
         parent::initController($request, $response, $logger);
 
+      // Ensure user is logged in before attempting to load profile image
+      if (session()->has('user_id')) {
+        $userModel = new UserModel();
+        $user = $userModel->find(session()->get('user_id'));
+
+        // Assuming 'profile_image' is the column in your users table for the image path
+        if ($user ) {
+          $employeeModel = new Employee();
+          $emp = $employeeModel->find($user['user_employee_id']);
+          //if(isset($user['profile_image'])){
+            $avatar = !empty($emp) ? $emp['employee_avatar'] :  'avatar.png';
+          //}
+          //$profileImagePath = base_url('uploads/profile_images/' . $user['profile_image']);
+          // Make profile image available to all views
+          //$this->setVar('avatar', $avatar);
+          //view()->setVar('avatar', $avatar);
+          service('renderer')->setData(['avatar'=> $avatar]);
+        }
+      }
         //--------------------------------------------------------------------
         // Preload any models, libraries, etc, here.
         //--------------------------------------------------------------------

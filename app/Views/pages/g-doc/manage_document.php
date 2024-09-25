@@ -80,7 +80,7 @@
                                     foreach ($doc['authorizers'] as $authorizer): ?>
                                         <div class="d-flex mb-1">
                                             <span class="mr-1"><?= ++$sn; ?>.</span>
-                                            <span><?= $authorizer['user_name'] ?> (<?= $authorizer['user_email'] ?>)</span>
+                                            <span><?= $authorizer['employee_f_name'] ?? '' ?> <?= $authorizer['employee_l_name'] ?? '' ?> (<?= $authorizer['pos_name'] ?? '' ?>)</span>
                                         </div>
                                     <?php endforeach; ?>
                                 </div>
