@@ -299,11 +299,11 @@
                     <?php foreach($comments as $comment): ?>
                     <div class="mt-2">
                         <div class="media">
-                            <img class="mr-2 avatar-sm rounded-circle" src="/assets/images/users/avatar.png"
+                            <img class="mr-2 avatar-sm rounded-circle" src="/assets/images/users/<?= $comment['employee_avatar'] ?>"
                                  alt="Generic placeholder image">
                             <div class="media-body">
                                 <h5 class="mt-0">
-                                    <a href="contacts-profile.html" class="text-reset"><?= $comment['employee_f_name'] ?> <?= $comment['employee_l_name'] ?> </a> <small class="text-muted"><?= date('d M, Y h:ia', strtotime($comment['created_at'])) ?></small></h5>
+                                    <a href="#" class="text-reset"><?= $comment['employee_f_name'] ?> <?= $comment['employee_l_name'] ?> </a> <small class="text-muted"><?= date('d M, Y h:ia', strtotime($comment['created_at'])) ?></small></h5>
                                 <?= $comment['comment'] ?>
                                 <br/>
                             </div>

@@ -34,7 +34,7 @@
                             <div class="text-lg-right mt-lg-0">
                                 <a href="<?= site_url('g-docs/new-doc-upload') ?>" class="btn btn-success">
                                     <i class="mdi mdi-plus-circle mr-1"></i>
-                                    New Document Upload
+                                  New Document Workflow
                                 </a>
                             </div>
                         </div><!-- end col-->

@@ -17,7 +17,7 @@ $memo_approval_permission = \App\Enums\Permissions::MEMO_APPROVAL->value;
                         <li class="breadcrumb-item active">Memo Board</li>
                     </ol>
                 </div>
-                <h4 class="page-title">Memo Board</h4>
+                <h4 class="page-title">Memo Board </h4>
             </div>
         </div>
     </div>
