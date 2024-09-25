@@ -8,6 +8,7 @@ use App\Models\Employee;
 use App\Models\GDoc;
 use App\Models\GDocAuthorizers;
 use App\Models\GDocAuthorizersLogs;
+use App\Models\Notification;
 use CodeIgniter\HTTP\ResponseInterface;
 use Config\Database;
 
@@ -24,6 +25,7 @@ class GDocsController extends BaseController
         $this->g_doc_authorizers = new GdocAuthorizers();
         $this->g_doc_authorizers_logs = new GdocAuthorizersLogs();
         $this->employee = new Employee();
+        $this->notification = new Notification();
     }
 
     public function index()
@@ -84,6 +86,15 @@ class GDocsController extends BaseController
                     'g_doc_auth_status_at' => date('Y-m-d H:i:s'),
                 ];
                 $this->g_doc_authorizers->insert($gDocAuthorizerData);
+              $notification_data = [
+                'subject' => $title ?? 'Unknown title',
+                'body' => $comment ?? 'Unknown',
+                'recipient' => $userId,
+                'link' => site_url('manage-doc/'). $g_doc_id,
+                'cta' => 'View',
+                'notification_status' => 0,
+              ];
+              $this->notification->save($notification_data);
             }
 
             $db->transComplete();

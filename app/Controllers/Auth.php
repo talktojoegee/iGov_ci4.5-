@@ -73,6 +73,7 @@ class Auth extends BaseController
                                 //'position' => !empty($employee) ? $employee['employee_f_name'].' '.$employee['employee_l_name'] :  'N/A',
                                 'user_name' => $data['user_name'],
                                 'has_registry_access' => $this->_check_registry_access($data['user_id']),
+                                'position'=> !empty($employee) ? $employee['employee_position_id'] :  0,
                                 'isLoggedIn' => true,
                                 'firstTime' => true,
                                 'type' => $data['user_type'],

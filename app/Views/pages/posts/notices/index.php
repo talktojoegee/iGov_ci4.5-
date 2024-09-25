@@ -42,7 +42,7 @@ $notice_permission = \App\Enums\Permissions::NOTICES->value;
                     </div>
                     <div class="col-lg-4">
                         <div class="text-lg-right mt-3 mt-lg-0">
-                            <?php if (in_array($notice_permission, $permissions)): ?>
+                            <?php if (in_array($notice_permission, $permissions  ?? [])): ?>
                                 <a href="<?= site_url('/new-notice') ?>" type="button"
                                    class="btn btn-success waves-effect waves-light mr-1"><i
                                             class="mdi mdi-plus-circle mr-1"></i> Add New</a>

@@ -43,7 +43,7 @@ $memo_approval_permission = \App\Enums\Permissions::MEMO_APPROVAL->value;
                     </div>
                     <div class="col-lg-8">
                         <div class="text-lg-right mt-3 mt-lg-0">
-                            <?php if (in_array($memo_permission, $permissions)): ?>
+                            <?php if (in_array($memo_permission, $permissions ?? [])): ?>
                                 <a href="<?= site_url('internal-memo') ?>" class="btn btn-success"><i
                                             class="mdi mdi-plus-circle mr-1"></i> New Memo</a>
                                 <a href="<?= site_url('/my-memos') ?>" type="button"
