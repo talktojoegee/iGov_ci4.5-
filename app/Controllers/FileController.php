@@ -87,21 +87,43 @@ class FileController extends BaseController
     {
         if ($this->request->getMethod() == 'POST') {
             helper(['form', 'url']);
-            $rule = [
-                'folder_name' => 'required',
-                'parent_folder' => 'required',
-                'visibility' => 'required'
-            ];
-            $this->validate($rule);
+          $inputs = $this->validate(
+            [
+              'folder_name' =>
+                ['rules'=> 'required', 'label'=>'Folder name','errors' => [
+                  'required' => 'Enter folder name']
+                ],
+              'parent_folder' =>
+                ['rules'=> 'required', 'errors'=>
+                  ['required'=>'Choose type']
+                ],
+              'visibility' => ['rules'=>'required', 'errors'=>['required'=>'Indicate folder visibility']],
+            ]);
+          if (!$inputs) {
             $data = [
-                'created_by' => $this->session->user_id,
-                'parent_id' => $this->request->getPost('parent_folder'),
-                'folder' => $this->request->getPost('folder_name'),
-                'visibility' => $this->request->getPost('visibility'),
-                'slug' => substr(sha1(time()), 32, 40)
+              'files' => $this->file->getAllMyFiles($this->session->user_id),
+              'my_folders' => $this->folder->getAllMyAndPublicFolders($this->session->user_id),
+              'folders' => $this->folder->getAllMyAndPublicFolders($this->session->user_id),
+              'users' => $this->user->getAllUsers(),
+              'firstTime' => $this->session->firstTime,
+              'username' => $this->session->username,
+              'validation' => $this->validator,
+            ];
+            return view('pages/gdrive/index', $data);
+
+          }else{
+            $data = [
+              'created_by' => $this->session->user_id,
+              'parent_id' => $this->request->getPost('parent_folder'),
+              'folder' => $this->request->getPost('folder_name'),
+              'visibility' => $this->request->getPost('visibility'),
+              'slug' => substr(sha1(time()), 32, 40)
             ];
             $this->folder->save($data);
             return redirect()->to(base_url('/g-drive'))->with('success', 'Folder created successfully.');
+          }
+
+
         }
     }
 
@@ -154,6 +176,89 @@ class FileController extends BaseController
             return redirect()->to(base_url('/g-drive'))->with('success', 'File shared successfully.');
         }
     }
+    public function renameFile()
+    {
+        if ($this->request->getMethod() == 'POST') {
+            helper(['form', 'url']);
+          $inputs = $this->validate(
+            [
+              'fileName' =>
+                ['rules'=> 'required', 'label'=>'File name','errors' => [
+                  'required' => 'Enter folder name']
+                ],
+              'file_id' =>
+                ['rules'=> 'required', 'errors'=>
+                  ['required'=>'']
+                ],
+            ]);
+          if (!$inputs) {
+            $data = [
+              'files' => $this->file->getAllMyFiles($this->session->user_id),
+              'my_folders' => $this->folder->getAllMyAndPublicFolders($this->session->user_id),
+              'folders' => $this->folder->getAllMyAndPublicFolders($this->session->user_id),
+              'users' => $this->user->getAllUsers(),
+              'firstTime' => $this->session->firstTime,
+              'username' => $this->session->username,
+              'validation' => $this->validator,
+            ];
+            return view('pages/gdrive/index', $data);
+
+          }else{
+            $fileId = $this->request->getPost('file_id');
+
+            $data = [
+              'file_id' => $this->request->getPost('file_id'),
+              'name' => $this->request->getPost('fileName'),
+
+            ];
+            $this->file->update($fileId,$data);
+            return redirect()->to(base_url('/g-drive'))->with('success', 'File renamed!');
+          }
+
+        }
+    }
+
+  public function renameFolder()
+  {
+    if ($this->request->getMethod() == 'POST') {
+      helper(['form', 'url']);
+      $inputs = $this->validate(
+        [
+          'folderName' =>
+            ['rules'=> 'required', 'label'=>'Folder name','errors' => [
+              'required' => 'Enter folder name']
+            ],
+          'folder_id' =>
+            ['rules'=> 'required', 'errors'=>
+              ['required'=>'']
+            ],
+        ]);
+      if (!$inputs) {
+        $data = [
+          'files' => $this->file->getAllMyFiles($this->session->user_id),
+          'my_folders' => $this->folder->getAllMyAndPublicFolders($this->session->user_id),
+          'folders' => $this->folder->getAllMyAndPublicFolders($this->session->user_id),
+          'users' => $this->user->getAllUsers(),
+          'firstTime' => $this->session->firstTime,
+          'username' => $this->session->username,
+          'validation' => $this->validator,
+        ];
+        return view('pages/gdrive/index', $data);
+
+      }else{
+        $folderId = $this->request->getPost('folder_id');
+
+        $data = [
+          'folder_id' => $this->request->getPost('folder_id'),
+          'folder' => $this->request->getPost('folderName'),
+
+        ];
+        $this->folder->update($folderId,$data);
+        return redirect()->to(base_url('/g-drive'))->with('success', 'Folder renamed!');
+      }
+
+    }
+  }
 
     public function sharedFileWithMe()
     {
