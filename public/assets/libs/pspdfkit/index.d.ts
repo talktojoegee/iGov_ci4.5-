@@ -2,6 +2,7 @@
 /// <reference types="react" />
 import * as React$2 from 'react';
 import React__default, { CSSProperties, SVGProps, AriaAttributes, DOMAttributes as DOMAttributes$1, AriaRole, ClipboardEventHandler, CompositionEventHandler, ReactEventHandler, FormEventHandler, HTMLAttributeAnchorTarget, HTMLAttributeReferrerPolicy, ReactNode, ReactElement, KeyboardEvent as KeyboardEvent$2, FocusEvent as FocusEvent$1, SyntheticEvent, JSX as JSX$1, ElementType, JSXElementConstructor, HTMLAttributes, Key as Key$2, Dispatch, SetStateAction, ReactHTML, ForwardedRef } from 'react';
+import { Block as Block$1 } from '@baseline-ui/blocks/src';
 
 declare const SignatureSaveMode: {
     readonly ALWAYS: "ALWAYS";
@@ -6297,7 +6298,7 @@ type LayersSidebarOptions = {
     iconsAlignment: IAlignment;
 };
 
-type Rotation$1 = 0 | 90 | 180 | 270;
+type Rotation = 0 | 90 | 180 | 270;
 interface IViewState {
     allowPrinting: boolean;
     allowExport: boolean;
@@ -6307,7 +6308,7 @@ interface IViewState {
     keepFirstSpreadAsSinglePage: boolean;
     layoutMode: ILayoutMode;
     pageSpacing: number;
-    pagesRotation: Rotation$1;
+    pagesRotation: Rotation;
     readOnly: boolean;
     scrollMode: IScrollMode;
     showAnnotations: boolean;
@@ -6333,6 +6334,7 @@ interface IViewState {
     enableAlwaysScrollToZoom: boolean;
     forceRenderWidgetsInAnnotationsOrder: boolean;
     prerenderedPageSpreads: number | null;
+    showAIDocumentAssistant: boolean;
 }
 declare const ViewState_base: Record$1.Factory<IViewState>;
 declare class ViewState extends ViewState_base {
@@ -6373,7 +6375,7 @@ declare class Bookmark extends Bookmark_base {
     static fromSerializableObject: (bookmark: BookmarkJSON) => Bookmark;
 }
 
-declare const allowedToolbarTypes: ("link" | "ellipse" | "image" | "line" | "polygon" | "polyline" | "text" | "spacer" | "distance" | "note" | "comment" | "zoom-in" | "zoom-out" | "callout" | "search" | "arrow" | "highlighter" | "undo" | "redo" | "custom" | "measure" | "print" | "rectangle" | "ink" | "stamp" | "cloudy-rectangle" | "dashed-rectangle" | "cloudy-ellipse" | "dashed-ellipse" | "cloudy-polygon" | "dashed-polygon" | "text-highlighter" | "perimeter" | "ellipse-area" | "rectangle-area" | "polygon-area" | "multi-annotations-selection" | "annotate" | "responsive-group" | "layout-config" | "marquee-zoom" | "redact-text-highlighter" | "redact-rectangle" | "document-comparison" | "form-creator" | "content-editor" | "document-assistant" | "sidebar-thumbnails" | "sidebar-document-outline" | "sidebar-annotations" | "sidebar-bookmarks" | "sidebar-signatures" | "sidebar-layers" | "pager" | "pan" | "zoom-mode" | "ink-eraser" | "signature" | "document-editor" | "document-crop" | "export-pdf" | "debug")[];
+declare const allowedToolbarTypes: ("link" | "ellipse" | "image" | "line" | "polygon" | "polyline" | "text" | "note" | "search" | "spacer" | "distance" | "comment" | "zoom-in" | "zoom-out" | "callout" | "arrow" | "highlighter" | "undo" | "redo" | "custom" | "rectangle" | "ink" | "stamp" | "cloudy-rectangle" | "dashed-rectangle" | "cloudy-ellipse" | "dashed-ellipse" | "cloudy-polygon" | "dashed-polygon" | "text-highlighter" | "perimeter" | "ellipse-area" | "rectangle-area" | "polygon-area" | "print" | "redact-text-highlighter" | "ai-document-assistant" | "debug" | "multi-annotations-selection" | "signature" | "ink-eraser" | "form-creator" | "redact-rectangle" | "document-crop" | "document-editor" | "document-comparison" | "export-pdf" | "content-editor" | "pager" | "sidebar-thumbnails" | "sidebar-document-outline" | "sidebar-layers" | "sidebar-annotations" | "sidebar-bookmarks" | "sidebar-signatures" | "annotate" | "measure" | "pan" | "zoom-mode" | "marquee-zoom" | "layout-config" | "responsive-group")[];
 
 type ToolItemType = 'custom';
 type ToolItem = {
@@ -6392,7 +6394,7 @@ type AnnotationPreset$1 = Record<string, any>;
 type AnnotationPresetID$1 = string;
 
 type ToolbarItemType = ToolItemType | (typeof allowedToolbarTypes)[number];
-type ToolbarItem = Omit<ToolItem, 'type'> & {
+type ToolbarItem$1 = Omit<ToolItem, 'type'> & {
     type: ToolbarItemType;
     mediaQueries?: string[];
     responsiveGroup?: string;
@@ -6520,7 +6522,6 @@ interface ISearchState {
 
 type IsEditableAnnotationCallback = (annotation: AnnotationsUnion) => boolean;
 
-type Rotation = 0 | 90 | 180 | 270;
 type AddPageConfiguration = {
     backgroundColor: Color$2;
     pageWidth: number;
@@ -6693,10 +6694,11 @@ type TimestampType = {
 type SigningData = {
     certificates?: ArrayBuffer[] | string[];
     signatureType: SignatureTypeType;
-    privateKey?: string;
     signatureContainer?: SignatureContainerType;
+    privateKey?: string;
     timestamp?: TimestampType;
     ltv?: boolean;
+    padesLevel?: PAdESLevelType;
 };
 type SignaturePreparationData = {
     placeholderSize?: number;
@@ -6711,8 +6713,14 @@ type SignatureCreationData = SignaturePreparationData & {
     signingData?: SigningData;
 };
 
-type SigningServiceData = {
+type SigningServiceData = ServerSigningServiceData | StandaloneSigningServiceData;
+type ServerSigningServiceData = {
     signingToken: string;
+};
+type StandaloneSigningServiceData = {
+    jwt: string;
+    serverUrl?: string;
+    signingToken?: string;
 };
 
 type RedactionAnnotationPreset = {
@@ -7185,7 +7193,7 @@ declare const TextSelection_base: Record$1.Factory<ITextSelection>;
 declare class TextSelection extends TextSelection_base {
 }
 
-declare const builtInItems: readonly ["highlight", "strikeout", "underline", "squiggle", "redact-text-highlighter", "comment", "document-assistant"];
+declare const builtInItems: readonly ["highlight", "strikeout", "underline", "squiggle", "redact-text-highlighter", "comment", "ai-document-assistant"];
 type InlineToolbarType = (typeof builtInItems)[number];
 type InlineTextSelectionToolbarItem = Omit<ToolItem, 'type'> & {
     type: InlineToolbarType | 'custom';
@@ -7232,7 +7240,7 @@ type OCGLayersVisibilityState = {
 };
 
 type ViewStateSetter = (currentState: ViewState) => ViewState;
-type ToolbarItemsSetter = (currentState: ToolbarItem[]) => ToolbarItem[];
+type ToolbarItemsSetter = (currentState: ToolbarItem$1[]) => ToolbarItem$1[];
 type StoredSignaturesSetter = (annotations: List<InkAnnotation | ImageAnnotation>) => List<InkAnnotation | ImageAnnotation>;
 type SearchStateSetter = (currentState: SearchState) => SearchState;
 type AnnotationPresetsSetter = (currentState: Record<string, AnnotationPreset$1>) => Record<string, AnnotationPreset$1>;
@@ -7296,8 +7304,8 @@ declare class Instance {
     contentDocument: Document | ShadowRoot;
     readonly viewState: ViewState;
     setViewState: (stateOrFunction: ViewStateSetter | ViewState) => void;
-    readonly toolbarItems: ToolbarItem[];
-    setToolbarItems: (stateOrFunction: ToolbarItemsSetter | ToolbarItem[]) => void;
+    readonly toolbarItems: ToolbarItem$1[];
+    setToolbarItems: (stateOrFunction: ToolbarItemsSetter | ToolbarItem$1[]) => void;
     setAnnotationToolbarItems: (annotationToolbarItemsCallback: AnnotationToolbarItemsCallback) => void;
     setInlineTextSelectionToolbarItems: (InlineTextSelectionToolbarItemsCallback: InlineTextSelectionToolbarItemsCallback) => void;
     annotationPresets: Record<AnnotationPresetID$1, AnnotationPreset$1>;
@@ -7722,6 +7730,13 @@ declare const Theme$1: {
     readonly AUTO: "AUTO";
 };
 type ITheme = (typeof Theme$1)[keyof typeof Theme$1];
+
+type AIDocumentAssistantConfiguration = {
+    sessionId: string;
+    jwt: string;
+    backendUrl: string;
+    userId?: string;
+};
 
 interface SVGRProps {
     title?: string;
@@ -9832,6 +9847,10 @@ interface PressProps extends PressEvents {
     shouldCancelOnPointerExit?: boolean;
     /** Whether text selection should be enabled on the pressable element. */
     allowTextSelectionOnPress?: boolean;
+}
+interface PressHookProps extends PressProps {
+    /** A ref to the target element. */
+    ref?: RefObject<Element | null>;
 }
 interface KeyboardProps extends KeyboardEvents {
     /** Whether the keyboard events should be disabled. */
@@ -13823,7 +13842,7 @@ declare function isInsideOverlayContent(selector: HTMLElement): Element | null;
 declare function isRect(rect: Rect): rect is Rect;
 
 interface ListBoxHandle {
-    scrollIntoView: (id: string, options: ScrollIntoViewOptions) => void;
+    scrollIntoView: (id: string, options?: ScrollIntoViewOptions) => void;
 }
 interface ListBoxProps extends StylingProps, Omit<AriaListBoxProps<ListItem> & AriaListBoxOptions<ListItem>, "children" | "linkBehavior" | "isVirtualized" | "keyboardDelegate" | "items">, Omit<DragAndDropProps, "preview" | "enableReorder" | "orientation" | "layout">, Partial<Pick<DragAndDropProps, "enableReorder" | "orientation" | "layout">> {
     /**
@@ -13887,13 +13906,13 @@ interface ListBoxProps extends StylingProps, Omit<AriaListBoxProps<ListItem> & A
     /** The style of the drop indicator used in a component. */
     dropIndicatorStyle?: React__default.CSSProperties;
     /** The CSS class name for the option. */
-    optionClassName?: string | ((item: ListOption) => string);
+    optionClassName?: string | ((item: ListOption) => string | undefined);
     /** The CSS class name for the section. */
-    sectionClassName?: string | ((item: ListSection) => string);
+    sectionClassName?: string | ((item: ListSection) => string | undefined);
     /** The style of the option. */
-    optionStyle?: React__default.CSSProperties | ((item: ListOption) => React__default.CSSProperties);
+    optionStyle?: React__default.CSSProperties | ((item: ListOption) => React__default.CSSProperties | undefined);
     /** The style of the section. */
-    sectionStyle?: React__default.CSSProperties | ((item: ListSection) => React__default.CSSProperties);
+    sectionStyle?: React__default.CSSProperties | ((item: ListSection) => React__default.CSSProperties | undefined);
     /**
      * Whether to show each section title when provided.
      *
@@ -13912,7 +13931,22 @@ interface ListBoxProps extends StylingProps, Omit<AriaListBoxProps<ListItem> & A
 
 declare const ListBox: React__default.ForwardRefExoticComponent<ListBoxProps & React__default.RefAttributes<HTMLUListElement>>;
 
-interface ActionButtonSharedProps extends Omit<AriaButtonProps<"button" | "div">, "rel" | "href" | "target" | "children">, StylingProps {
+declare type UIStateOptions<T extends {
+    isSelected?: boolean;
+} = object> = {
+    isHovered?: boolean;
+    isFocused?: boolean;
+    isPressed?: boolean;
+    isDisabled?: boolean;
+    isFocusVisible?: boolean;
+} & T;
+interface StylingWithUIState<T = object> {
+    /** The button's class name. */
+    className?: string | ((props: UIStateOptions<T>) => string);
+    /** The button's style. */
+    style?: React__default.CSSProperties | ((props: UIStateOptions<T>) => React__default.CSSProperties);
+}
+interface ActionButtonSharedProps extends Omit<AriaButtonProps<"button" | "div">, "rel" | "href" | "target" | "children">, Omit<StylingProps, "className" | "style">, StylingWithUIState {
     /**
      * There are some cases where we need to use a button that is not interactive.
      * For example, when we need to use a button inside a TabItem component that
@@ -13948,9 +13982,7 @@ interface ActionButtonProps extends ActionButtonSharedProps {
 
 declare const ActionButton: React__default.ForwardRefExoticComponent<ActionButtonProps & React__default.RefAttributes<HTMLButtonElement>>;
 
-interface DomNodeRendererProps extends StylingProps {
-    /** The class name applied to the wrapper `div` component. */
-    className?: string;
+interface DomNodeRendererProps extends StylingProps, Omit<PressHookProps, "ref"> {
     /**
      * The DOM node to render inside the component. If this is not provided, the
      * component will render nothing. If this is provided, the component will
@@ -14265,6 +14297,12 @@ interface LinkProps extends AriaLinkOptions, StylingProps {
     type?: "body" | "label";
     /** The title of the link, for providing additional information. */
     title?: string;
+    /**
+     * Optional ARIA role, useful for specifying a different role for the link.
+     *
+     * @default "link"
+     */
+    role?: AriaRole;
 }
 
 declare const Link: React__default.ForwardRefExoticComponent<LinkProps & React__default.RefAttributes<HTMLElement>>;
@@ -14422,11 +14460,20 @@ interface ActionIconButtonProps extends ActionButtonSharedProps {
     variant?: "primary" | "secondary" | "tertiary" | "ghost" | "toolbar" | "popover";
     /** Indicates whether focusing should be prevented on press. */
     preventFocusOnPress?: boolean;
+    /**
+     * Whether to show a tooltip. You can pass a boolean or a partial tooltip
+     * object that extends the default tooltip props.
+     *
+     * @default false
+     */
+    tooltip?: boolean | Partial<Omit<TooltipProps, "children">>;
 }
 
 declare const ActionIconButton: React__default.ForwardRefExoticComponent<ActionIconButtonProps & React__default.RefAttributes<HTMLButtonElement>>;
 
-interface ToggleButtonProps extends StylingProps, Omit<AriaToggleButtonProps, "children"> {
+interface ToggleButtonProps extends Omit<StylingProps, "style" | "className">, Omit<AriaToggleButtonProps, "children">, StylingWithUIState<{
+    isSelected?: boolean;
+}> {
     /** The text content of the button. */
     label: React__default.ReactNode;
     /** The icon to display before the label. */
@@ -14485,6 +14532,12 @@ interface I18nProviderProps extends I18nProviderProps$1 {
     messages?: LocalizedStrings;
     /** The children to render. */
     children: React__default.ReactNode;
+    /**
+     * Whether to log missing messages.
+     *
+     * @default true
+     */
+    shouldLogMissingMessages?: boolean;
 }
 
 declare const I18nProvider: React__default.FC<I18nProviderProps>;
@@ -14627,12 +14680,16 @@ interface SelectProps extends Omit<AriaSelectOptions<ListItem> & SelectStateOpti
      * select menu.
      */
     renderTrigger?: (options: {
-        buttonProps: Omit<ActionButtonProps, "variant" | "label" | "elementType" | "iconStart" | "iconEnd">;
+        buttonProps: Omit<ActionButtonProps, "variant" | "label" | "elementType" | "iconStart" | "iconEnd" | "className" | "style">;
         valueProps: DOMAttributes;
         isOpen: boolean;
         selectedValue: ListItem | null;
         ref: React__default.RefObject<HTMLButtonElement>;
     }) => React__default.ReactNode;
+    /** The class name of the trigger element. */
+    triggerClassName?: string;
+    /** The style of the trigger element. */
+    triggerStyle?: React__default.CSSProperties;
 }
 interface IconSelectProps extends Omit<SelectProps, "renderTrigger" | "aria-label">, IconComponentProps {
 }
@@ -14986,7 +15043,7 @@ declare const IconColorInputButton: React__default.ForwardRefExoticComponent<Omi
     icon: React__default.FC<IconProps>;
     color?: string | null | undefined;
 } & React__default.RefAttributes<HTMLButtonElement>>;
-interface ColorInputButtonProps extends Omit<ActionButtonProps, "label">, Pick<ColorInputProps, "colorLabel"> {
+interface ColorInputButtonProps extends Omit<ActionButtonProps, "label" | "className" | "style">, StylingProps, Pick<ColorInputProps, "colorLabel"> {
     isOpen: boolean;
     "aria-label"?: string;
     labelPosition?: "top" | "start";
@@ -15515,7 +15572,7 @@ interface BoxProps extends Pick<StylingProps, "data-block-id">, Omit<React__defa
 
 declare const Box: React__default.ForwardRefExoticComponent<BoxProps & React__default.RefAttributes<HTMLDivElement>>;
 
-interface ToolbarProps extends StylingProps, AriaToolbarProps {
+interface ToolbarProps$1 extends StylingProps, AriaToolbarProps {
     /** The children of the toolbar. */
     children: React__default.ReactNode;
     /**
@@ -15546,9 +15603,11 @@ interface ToolbarProps extends StylingProps, AriaToolbarProps {
     onKeyDown?: KeyboardProps["onKeyDown"];
 }
 
-declare const Toolbar: React__default.ForwardRefExoticComponent<ToolbarProps & React__default.RefAttributes<HTMLDivElement>>;
+declare const Toolbar: React__default.ForwardRefExoticComponent<ToolbarProps$1 & React__default.RefAttributes<HTMLDivElement>>;
 
-interface ToggleIconButtonProps extends StylingProps, Omit<ToggleProps, "children">, Omit<ToggleButtonProps, "size" | "iconStart" | "label"> {
+interface ToggleIconButtonProps extends Omit<StylingProps, "style" | "className">, Omit<ToggleProps, "children">, Omit<ToggleButtonProps, "size" | "iconStart" | "label">, Pick<ActionIconButtonProps, "tooltip">, StylingWithUIState<{
+    isSelected?: boolean;
+}> {
     /**
      * The available sizes for a variable.
      *
@@ -15863,6 +15922,13 @@ interface Item {
     src?: string;
     alt?: string;
 }
+declare type Dimension = {
+    width: number | "sm" | "md";
+    height: number;
+} | {
+    width: number | "sm" | "md";
+    aspectRatio: number;
+};
 interface ImageGalleryProps extends StylingProps, Omit<ListBoxProps, "items" | "layout" | "grid" | "renderOption" | "renderDropIndicator" | "renderDragPreview" | "showSelectedIcon" | "orientation" | "shouldSelectOnPressUp" | "shouldFocusOnHover" | "dropIndicatorClassName" | "dropIndicatorStyle" | "shouldUseVirtualFocus" | "getItems" | "acceptedDragTypes" | "sectionClassName" | "sectionStyle"> {
     /**
      * An array of objects containing the image source, alt text, and label for
@@ -15943,11 +16009,17 @@ interface ImageGalleryProps extends StylingProps, Omit<ListBoxProps, "items" | "
         deleteElement?: React__default.ReactElement;
         onDelete?: (id: string) => void;
     }) => React__default.ReactElement;
+    /** The dimensions of the grid. */
+    imageContainerStyle?: React__default.CSSProperties;
+    /** The dimensions of the image. */
+    imageDimensions?: Dimension | ((item: Item, options: {
+        isSelected: boolean;
+    }) => Dimension);
 }
 
 declare const ImageGallery: React__default.ForwardRefExoticComponent<ImageGalleryProps & React__default.RefAttributes<HTMLDivElement>>;
 
-interface ButtonSelectProps extends StylingProps, Pick<SelectProps, "isDisabled" | "validationState" | "onSelectionChange" | "selectedKey" | "defaultSelectedKey" | "items" | "showSelectedIcon" | "isOpen" | "defaultOpen" | "optionClassName" | "optionStyle">, Pick<ToggleButtonProps, "onPress" | "isSelected" | "defaultSelected" | "excludeFromTabOrder">, AriaLabelingProps {
+interface ButtonSelectProps extends StylingProps, Pick<SelectProps, "isDisabled" | "validationState" | "onSelectionChange" | "selectedKey" | "defaultSelectedKey" | "items" | "showSelectedIcon" | "isOpen" | "defaultOpen" | "triggerClassName" | "triggerStyle">, Pick<ToggleButtonProps, "onPress" | "isSelected" | "defaultSelected" | "excludeFromTabOrder">, AriaLabelingProps {
     /**
      * The size of the button.
      *
@@ -15967,6 +16039,18 @@ interface ButtonSelectProps extends StylingProps, Pick<SelectProps, "isDisabled"
     }) => void;
     /** The aria-label for the select button. */
     moreAriaLabel?: string;
+    /** A function that is called to get the class name for the option. */
+    optionClassName?: string | ((item: ListOption, options: {
+        isButton: boolean;
+        isSelected: boolean;
+    }) => string);
+    /** A function that is called to get the style for the option. */
+    optionStyle?: React__default.CSSProperties | ((item: ListOption, options: {
+        isButton: boolean;
+        isSelected: boolean;
+    }) => React__default.CSSProperties);
+    /** Props for the tooltip. */
+    tooltipProps?: Omit<TooltipProps, "children"> | ((trigger: "button" | "select") => Omit<TooltipProps, "children">);
 }
 
 declare const ButtonSelect: React__default.ForwardRefExoticComponent<ButtonSelectProps & React__default.RefAttributes<HTMLDivElement>>;
@@ -16083,6 +16167,12 @@ interface ColorSwatchProps extends Omit<AriaColorSwatchProps, "colorName">, Styl
 
 declare const ColorSwatch: React__default.ForwardRefExoticComponent<ColorSwatchProps & React__default.RefAttributes<HTMLDivElement>>;
 
+interface GridListHandle {
+    /** Sets the selection manager focus state */
+    setFocused: (value: boolean) => void;
+    /** Imperatively focuses the specified key */
+    setFocusedKey: (key: Key$1) => void;
+}
 declare type GridListProps = Omit<StylingProps & ListProps<ListOption> & AriaGridListOptions<ListOption> & {
     /**
      * The items to render in the grid list. Items have the following shape:
@@ -16144,6 +16234,8 @@ declare type GridListProps = Omit<StylingProps & ListProps<ListOption> & AriaGri
      * @default false
      */
     isEditing?: boolean;
+    /** Handle to access the gridlist imperative methods. */
+    gridListHandle?: React__default.RefObject<GridListHandle>;
 }, "children" | "suppressTextValueWarning" | "allowDuplicateSelectionEvents" | "linkBehavior" | "keyboardDelegate" | "isVirtualized" | "filter">;
 
 declare const GridList: React__default.ForwardRefExoticComponent<GridListProps & React__default.RefAttributes<HTMLUListElement>>;
@@ -16182,7 +16274,7 @@ interface ActionGroupProps extends StylingProps, Omit<AriaActionGroupProps<ListI
 }
 
 declare const ActionGroup: React__default.ForwardRefExoticComponent<ActionGroupProps & React__default.RefAttributes<HTMLDivElement>>;
-declare const ActionGroupItem: React__default.FC<ActionGroupItemProps>;
+declare const ActionGroupItem$1: React__default.FC<ActionGroupItemProps>;
 interface ActionGroupItemProps extends Pick<ActionGroupProps, "tooltipProps" | "renderActionItem" | "onAction" | "isDisabled"> {
     item: Node$1<ListItem>;
     state: ListState<ListItem>;
@@ -16559,7 +16651,6 @@ type Core_AccordionProps = AccordionProps;
 declare const Core_ActionButton: typeof ActionButton;
 type Core_ActionButtonProps = ActionButtonProps;
 declare const Core_ActionGroup: typeof ActionGroup;
-declare const Core_ActionGroupItem: typeof ActionGroupItem;
 type Core_ActionGroupProps = ActionGroupProps;
 declare const Core_ActionIconButton: typeof ActionIconButton;
 type Core_ActionIconButtonProps = ActionIconButtonProps;
@@ -16602,6 +16693,7 @@ type Core_FileUploadProps = FileUploadProps;
 declare const Core_FreehandCanvas: typeof FreehandCanvas;
 type Core_FreehandCanvasProps = FreehandCanvasProps;
 declare const Core_GridList: typeof GridList;
+type Core_GridListHandle = GridListHandle;
 type Core_GridListProps = GridListProps;
 declare const Core_Group: typeof Group;
 type Core_GroupProps = GroupProps;
@@ -16694,7 +16786,6 @@ type Core_ToggleButtonProps = ToggleButtonProps;
 declare const Core_ToggleIconButton: typeof ToggleIconButton;
 type Core_ToggleIconButtonProps = ToggleIconButtonProps;
 declare const Core_Toolbar: typeof Toolbar;
-type Core_ToolbarProps = ToolbarProps;
 declare const Core_Tooltip: typeof Tooltip;
 type Core_TooltipProps = TooltipProps;
 declare const Core_Transform: typeof Transform;
@@ -16720,7 +16811,7 @@ declare const Core_useTextSelection: typeof useTextSelection;
 declare const Core_useUndoRedo: typeof useUndoRedo;
 declare const Core_useUserPreferences: typeof useUserPreferences;
 declare namespace Core {
-  export { Core_Accordion as Accordion, Core_AccordionItem as AccordionItem, type Core_AccordionItemProps as AccordionItemProps, type Core_AccordionProps as AccordionProps, Core_ActionButton as ActionButton, type Core_ActionButtonProps as ActionButtonProps, Core_ActionGroup as ActionGroup, Core_ActionGroupItem as ActionGroupItem, type Core_ActionGroupProps as ActionGroupProps, Core_ActionIconButton as ActionIconButton, type Core_ActionIconButtonProps as ActionIconButtonProps, Core_AlertDialog as AlertDialog, type Core_AlertDialogProps as AlertDialogProps, Core_AudioPlayer as AudioPlayer, type Core_AudioPlayerProps as AudioPlayerProps, Core_Avatar as Avatar, type Core_AvatarProps as AvatarProps, type BlockProps$1 as BlockProps, Core_Box as Box, type Core_BoxProps as BoxProps, Core_ButtonSelect as ButtonSelect, type Core_ButtonSelectProps as ButtonSelectProps, Core_Checkbox as Checkbox, type Core_CheckboxProps as CheckboxProps, Core_ColorInput as ColorInput, type Core_ColorInputProps as ColorInputProps, type ColorPreset$1 as ColorPreset, Core_ColorSwatch as ColorSwatch, Core_ColorSwatchPicker as ColorSwatchPicker, type Core_ColorSwatchPickerProps as ColorSwatchPickerProps, type Core_ColorSwatchProps as ColorSwatchProps, Core_ComboBox as ComboBox, type Core_ComboBoxProps as ComboBoxProps, Core_DateFormat as DateFormat, type Core_DateFormatProps as DateFormatProps, type Core_Device as Device, Core_Dialog as Dialog, type Core_DialogProps as DialogProps, Core_DialogTitle as DialogTitle, type Core_DialogTitleProps as DialogTitleProps, Core_DomNodeRenderer as DomNodeRenderer, type Core_DomNodeRendererProps as DomNodeRendererProps, Core_Drawer as Drawer, type Core_DrawerProps as DrawerProps, Core_Editor as Editor, type Core_EditorHandle as EditorHandle, type Core_EditorProps as EditorProps, Core_FileUpload as FileUpload, type Core_FileUploadProps as FileUploadProps, Core_FreehandCanvas as FreehandCanvas, type Core_FreehandCanvasProps as FreehandCanvasProps, Core_GridList as GridList, type Core_GridListProps as GridListProps, Core_Group as Group, type Core_GroupProps as GroupProps, Core_I18nProvider as I18nProvider, type I18nProviderProps$1 as I18nProviderProps, type Core_I18nResult as I18nResult, Core_IconColorInput as IconColorInput, Core_IconColorInputButton as IconColorInputButton, type Core_IconColorInputProps as IconColorInputProps, Core_IconSelect as IconSelect, type Core_IconSelectProps as IconSelectProps, Core_IconSlider as IconSlider, type Core_IconSliderProps as IconSliderProps, Core_ImageDropZone as ImageDropZone, type Core_ImageDropZoneProps as ImageDropZoneProps, Core_ImageGallery as ImageGallery, type Core_ImageGalleryProps as ImageGalleryProps, Core_InlineAlert as InlineAlert, type Core_InlineAlertProps as InlineAlertProps, Core_Link as Link, type Core_LinkProps as LinkProps, Core_ListBox as ListBox, type Core_ListBoxProps as ListBoxProps, type Core_ListOption as ListOption, Core_Markdown as Markdown, type Core_MarkdownProps as MarkdownProps, Core_Menu as Menu, type Core_MenuItem as MenuItem, type Core_MenuProps as MenuProps, type Core_MessageDescriptor as MessageDescriptor, Core_MessageFormat as MessageFormat, type Core_MessageFormatProps as MessageFormatProps, Core_Modal as Modal, Core_ModalClose as ModalClose, Core_ModalContent as ModalContent, type Core_ModalContentProps as ModalContentProps, type Core_ModalProps as ModalProps, Core_ModalTrigger as ModalTrigger, Core_NumberFormat as NumberFormat, type Core_NumberFormatProps as NumberFormatProps, Core_NumberInput as NumberInput, type Core_NumberInputProps as NumberInputProps, Core_Pagination as Pagination, type Core_PaginationProps as PaginationProps, Core_Popover as Popover, Core_PopoverContent as PopoverContent, type Core_PopoverContentProps as PopoverContentProps, type Core_PopoverProps as PopoverProps, Core_PopoverTrigger as PopoverTrigger, type Core_PopoverTriggerProps as PopoverTriggerProps, Core_Portal as Portal, Core_PortalContainerProvider as PortalContainerProvider, type Core_PortalProps as PortalProps, Core_Preview as Preview, type Core_PreviewProps as PreviewProps, Core_ProgressBar as ProgressBar, type Core_ProgressBarProps as ProgressBarProps, Core_ProgressSpinner as ProgressSpinner, type Core_ProgressSpinnerProps as ProgressSpinnerProps, Core_RadioGroup as RadioGroup, type Core_RadioGroupProps as RadioGroupProps, Core_Reaction as Reaction, type Core_ReactionProps as ReactionProps, type Core_Rect as Rect, Core_ScrollControlButton as ScrollControlButton, type Core_ScrollControlButtonProps as ScrollControlButtonProps, Core_SearchInput as SearchInput, type Core_SearchInputProps as SearchInputProps, Core_Select as Select, type Core_SelectProps as SelectProps, Core_Separator as Separator, type Core_SeparatorProps as SeparatorProps, Core_Slider as Slider, type Core_SliderProps as SliderProps, type Core_StylingProps as StylingProps, Core_Switch as Switch, type Core_SwitchProps as SwitchProps, Core_TabItem as TabItem, type Core_TabItemProps as TabItemProps, Core_Tabs as Tabs, type Core_TabsProps as TabsProps, Core_TagGroup as TagGroup, type Core_TagGroupProps as TagGroupProps, Text$1 as Text, Core_TextInput as TextInput, type Core_TextInputProps as TextInputProps, type Core_TextProps as TextProps, Core_ThemeProvider as ThemeProvider, type Core_ThemeProviderProps as ThemeProviderProps, Core_ToggleButton as ToggleButton, type Core_ToggleButtonProps as ToggleButtonProps, Core_ToggleIconButton as ToggleIconButton, type Core_ToggleIconButtonProps as ToggleIconButtonProps, Core_Toolbar as Toolbar, type Core_ToolbarProps as ToolbarProps, Core_Tooltip as Tooltip, type Core_TooltipProps as TooltipProps, Core_Transform as Transform, type Core_TransformProps as TransformProps, Core_Transition as Transition, type Core_TransitionProps as TransitionProps, Core_defineMessages as defineMessages, Core_isInsideOverlayContent as isInsideOverlayContent, Core_isRect as isRect, Core_useCollator as useCollator, Core_useDateFormatter as useDateFormatter, Core_useDevice as useDevice, Core_useI18n as useI18n, Core_useImage as useImage, Core_useIntersectionObserver as useIntersectionObserver, Core_useIsFirstRender as useIsFirstRender, Core_useLocalStorage as useLocalStorage, Core_useMutationObserver as useMutationObserver, Core_useNumberFormatter as useNumberFormatter, Core_usePortalContainer as usePortalContainer, Core_useResizeObserver as useResizeObserver, Core_useTextSelection as useTextSelection, Core_useUndoRedo as useUndoRedo, Core_useUserPreferences as useUserPreferences };
+  export { Core_Accordion as Accordion, Core_AccordionItem as AccordionItem, type Core_AccordionItemProps as AccordionItemProps, type Core_AccordionProps as AccordionProps, Core_ActionButton as ActionButton, type Core_ActionButtonProps as ActionButtonProps, Core_ActionGroup as ActionGroup, ActionGroupItem$1 as ActionGroupItem, type Core_ActionGroupProps as ActionGroupProps, Core_ActionIconButton as ActionIconButton, type Core_ActionIconButtonProps as ActionIconButtonProps, Core_AlertDialog as AlertDialog, type Core_AlertDialogProps as AlertDialogProps, Core_AudioPlayer as AudioPlayer, type Core_AudioPlayerProps as AudioPlayerProps, Core_Avatar as Avatar, type Core_AvatarProps as AvatarProps, type BlockProps$1 as BlockProps, Core_Box as Box, type Core_BoxProps as BoxProps, Core_ButtonSelect as ButtonSelect, type Core_ButtonSelectProps as ButtonSelectProps, Core_Checkbox as Checkbox, type Core_CheckboxProps as CheckboxProps, Core_ColorInput as ColorInput, type Core_ColorInputProps as ColorInputProps, type ColorPreset$1 as ColorPreset, Core_ColorSwatch as ColorSwatch, Core_ColorSwatchPicker as ColorSwatchPicker, type Core_ColorSwatchPickerProps as ColorSwatchPickerProps, type Core_ColorSwatchProps as ColorSwatchProps, Core_ComboBox as ComboBox, type Core_ComboBoxProps as ComboBoxProps, Core_DateFormat as DateFormat, type Core_DateFormatProps as DateFormatProps, type Core_Device as Device, Core_Dialog as Dialog, type Core_DialogProps as DialogProps, Core_DialogTitle as DialogTitle, type Core_DialogTitleProps as DialogTitleProps, Core_DomNodeRenderer as DomNodeRenderer, type Core_DomNodeRendererProps as DomNodeRendererProps, Core_Drawer as Drawer, type Core_DrawerProps as DrawerProps, Core_Editor as Editor, type Core_EditorHandle as EditorHandle, type Core_EditorProps as EditorProps, Core_FileUpload as FileUpload, type Core_FileUploadProps as FileUploadProps, Core_FreehandCanvas as FreehandCanvas, type Core_FreehandCanvasProps as FreehandCanvasProps, Core_GridList as GridList, type Core_GridListHandle as GridListHandle, type Core_GridListProps as GridListProps, Core_Group as Group, type Core_GroupProps as GroupProps, Core_I18nProvider as I18nProvider, type I18nProviderProps$1 as I18nProviderProps, type Core_I18nResult as I18nResult, Core_IconColorInput as IconColorInput, Core_IconColorInputButton as IconColorInputButton, type Core_IconColorInputProps as IconColorInputProps, Core_IconSelect as IconSelect, type Core_IconSelectProps as IconSelectProps, Core_IconSlider as IconSlider, type Core_IconSliderProps as IconSliderProps, Core_ImageDropZone as ImageDropZone, type Core_ImageDropZoneProps as ImageDropZoneProps, Core_ImageGallery as ImageGallery, type Core_ImageGalleryProps as ImageGalleryProps, Core_InlineAlert as InlineAlert, type Core_InlineAlertProps as InlineAlertProps, Core_Link as Link, type Core_LinkProps as LinkProps, Core_ListBox as ListBox, type Core_ListBoxProps as ListBoxProps, type Core_ListOption as ListOption, Core_Markdown as Markdown, type Core_MarkdownProps as MarkdownProps, Core_Menu as Menu, type Core_MenuItem as MenuItem, type Core_MenuProps as MenuProps, type Core_MessageDescriptor as MessageDescriptor, Core_MessageFormat as MessageFormat, type Core_MessageFormatProps as MessageFormatProps, Core_Modal as Modal, Core_ModalClose as ModalClose, Core_ModalContent as ModalContent, type Core_ModalContentProps as ModalContentProps, type Core_ModalProps as ModalProps, Core_ModalTrigger as ModalTrigger, Core_NumberFormat as NumberFormat, type Core_NumberFormatProps as NumberFormatProps, Core_NumberInput as NumberInput, type Core_NumberInputProps as NumberInputProps, Core_Pagination as Pagination, type Core_PaginationProps as PaginationProps, Core_Popover as Popover, Core_PopoverContent as PopoverContent, type Core_PopoverContentProps as PopoverContentProps, type Core_PopoverProps as PopoverProps, Core_PopoverTrigger as PopoverTrigger, type Core_PopoverTriggerProps as PopoverTriggerProps, Core_Portal as Portal, Core_PortalContainerProvider as PortalContainerProvider, type Core_PortalProps as PortalProps, Core_Preview as Preview, type Core_PreviewProps as PreviewProps, Core_ProgressBar as ProgressBar, type Core_ProgressBarProps as ProgressBarProps, Core_ProgressSpinner as ProgressSpinner, type Core_ProgressSpinnerProps as ProgressSpinnerProps, Core_RadioGroup as RadioGroup, type Core_RadioGroupProps as RadioGroupProps, Core_Reaction as Reaction, type Core_ReactionProps as ReactionProps, type Core_Rect as Rect, Core_ScrollControlButton as ScrollControlButton, type Core_ScrollControlButtonProps as ScrollControlButtonProps, Core_SearchInput as SearchInput, type Core_SearchInputProps as SearchInputProps, Core_Select as Select, type Core_SelectProps as SelectProps, Core_Separator as Separator, type Core_SeparatorProps as SeparatorProps, Core_Slider as Slider, type Core_SliderProps as SliderProps, type Core_StylingProps as StylingProps, Core_Switch as Switch, type Core_SwitchProps as SwitchProps, Core_TabItem as TabItem, type Core_TabItemProps as TabItemProps, Core_Tabs as Tabs, type Core_TabsProps as TabsProps, Core_TagGroup as TagGroup, type Core_TagGroupProps as TagGroupProps, Text$1 as Text, Core_TextInput as TextInput, type Core_TextInputProps as TextInputProps, type Core_TextProps as TextProps, Core_ThemeProvider as ThemeProvider, type Core_ThemeProviderProps as ThemeProviderProps, Core_ToggleButton as ToggleButton, type Core_ToggleButtonProps as ToggleButtonProps, Core_ToggleIconButton as ToggleIconButton, type Core_ToggleIconButtonProps as ToggleIconButtonProps, Core_Toolbar as Toolbar, type ToolbarProps$1 as ToolbarProps, Core_Tooltip as Tooltip, type Core_TooltipProps as TooltipProps, Core_Transform as Transform, type Core_TransformProps as TransformProps, Core_Transition as Transition, type Core_TransitionProps as TransitionProps, Core_defineMessages as defineMessages, Core_isInsideOverlayContent as isInsideOverlayContent, Core_isRect as isRect, Core_useCollator as useCollator, Core_useDateFormatter as useDateFormatter, Core_useDevice as useDevice, Core_useI18n as useI18n, Core_useImage as useImage, Core_useIntersectionObserver as useIntersectionObserver, Core_useIsFirstRender as useIsFirstRender, Core_useLocalStorage as useLocalStorage, Core_useMutationObserver as useMutationObserver, Core_useNumberFormatter as useNumberFormatter, Core_usePortalContainer as usePortalContainer, Core_useResizeObserver as useResizeObserver, Core_useTextSelection as useTextSelection, Core_useUndoRedo as useUndoRedo, Core_useUserPreferences as useUserPreferences };
 }
 
 declare type Any$1 = any;
@@ -17081,6 +17172,8 @@ declare type Messages = {
     addBookmark: string;
     addLink: string;
     addSignature: string;
+    annotations: string;
+    annotationsCount: string;
     anonymous: string;
     backgroundColor: string;
     black: string;
@@ -17088,6 +17181,7 @@ declare type Messages = {
     bold: string;
     bookmarks: string;
     cancel: string;
+    cancelledEditingBookmark: string;
     chat: string;
     chooseColor: string;
     clearSignature: string;
@@ -17107,6 +17201,7 @@ declare type Messages = {
     darkBlue: string;
     date: string;
     delete: string;
+    deleteAnnotationConfirmMessage: string;
     deleteBookmarkConfirmAccessibilityLabel: string;
     deleteBookmarkConfirmMessage: string;
     deleteComment: string;
@@ -17123,6 +17218,7 @@ declare type Messages = {
     editLink: string;
     fontColor: string;
     fonts: string;
+    gotoPageX: string;
     help: string;
     image: string;
     italic: string;
@@ -17130,10 +17226,12 @@ declare type Messages = {
     loading: string;
     mention: string;
     nMoreComments: string;
+    noAnnotations: string;
     noBookmarks: string;
     none: string;
     openHelpDialog: string;
     pagesSelected: string;
+    pageX: string;
     paste: string;
     pause: string;
     play: string;
@@ -17294,7 +17392,7 @@ interface CommentProps extends StylingProps {
 
 declare const Comment: React__default.ForwardRefExoticComponent<CommentProps & React__default.RefAttributes<HTMLDivElement>>;
 
-interface TaggedPaginationProps extends StylingProps, Pick<PaginationProps, "isDisabled" | "decrementAriaLabel" | "incrementAriaLabel">, Omit<AriaTextFieldOptions<"input">, keyof AriaLabelingProps | "defaultValue"> {
+interface TaggedPaginationProps extends StylingProps, Pick<PaginationProps, "isDisabled" | "decrementAriaLabel" | "incrementAriaLabel">, Pick<AriaTextFieldOptions<"input">, "onBlur" | "onKeyDown" | "isDisabled" | "isReadOnly" | "label"> {
     /** Whether the decrement button is disabled. */
     isDecrementButtonDisabled?: boolean;
     /** Whether the increment button is disabled. */
@@ -17307,16 +17405,38 @@ interface TaggedPaginationProps extends StylingProps, Pick<PaginationProps, "isD
     size?: "xs" | "sm" | "md";
     /** The label for the component. */
     label?: React__default.ReactNode;
-    /** The callback that is called when the decrement button is pressed. */
-    onDecrementPress?: () => void;
-    /** The callback that is called when the increment button is pressed. */
-    onIncrementPress?: () => void;
     /** The aria-label for the description. */
     descriptionAriaLabel?: string;
-    /** The ref handle that can be used to set the value of the component. */
-    componentHandleRef?: React__default.RefObject<{
-        setValue: (value: string) => void;
-    }>;
+    /**
+     * The type of the input field.
+     *
+     * @default "number"
+     */
+    type?: "number" | "text";
+    /** The minimum value of the component. */
+    minValue?: number;
+    /** The maximum value of the component. */
+    maxValue?: number;
+    /** The value of the component. */
+    value?: number;
+    /** The default value of the component. */
+    defaultValue?: number;
+    /** The callback that is called when the value is changed. */
+    onChange?: (value: number | string) => void;
+    /** The callback that is called when the value is changed successfully. */
+    onChangeSuccess?: (value: number) => void;
+    /** The callback that is called when the input value is changed. */
+    onInputChange?: (value: string) => void;
+    /** The mapping of value to label. */
+    valueToLabelMap?: Record<number, string | number>;
+    /** The description of the component. */
+    description?: string | ((value: number) => string);
+    /**
+     * The step of the component.
+     *
+     * @default 1
+     */
+    step?: number;
 }
 
 declare const TaggedPagination: React__default.ForwardRefExoticComponent<TaggedPaginationProps & React__default.RefAttributes<HTMLDivElement>>;
@@ -31449,6 +31569,24 @@ declare global {
     }
 }
 
+interface InternalState$b extends IRecord {
+}
+interface SharedProps$d extends StylingProps {
+    /**
+     * The component that needs to be converted to a recipe. This component is
+     * wrapped inside a `div` element.
+     */
+    component: React__default.ComponentType;
+    /**
+     * The props that need to be passed to the original component. We pass the
+     * props separately to avoid conflicts with the recipe props.
+     */
+    componentProps?: Record<string, any>;
+}
+declare type ChildrenArgs$d = SharedProps$d & BaseChildrenArgs<InternalState$b>;
+interface ComponentRecipeProps extends SharedProps$d, BaseRecipeProps<InternalState$b, ChildrenArgs$d> {
+}
+
 interface State<T> {
     get: <K extends keyof T>(key: K) => T[K];
     set: <K extends keyof T>(key: K, value: T[K]) => void;
@@ -31496,7 +31634,7 @@ interface BaseRecipeProps<
   children?: (props: ChildArgs) => React__default.ReactElement;
 }
 
-interface SharedProps$b extends StylingProps {
+interface SharedProps$c extends StylingProps {
     /**
      * The items to display in the list. Each item can be an image, svg, or text.
      * Each item must have a unique id. The signature list will display the items
@@ -31534,21 +31672,21 @@ interface SharedProps$b extends StylingProps {
      */
     variant?: "wide" | "narrow";
 }
-declare type ChildrenArgs$b = SharedProps$b & BaseChildrenArgs<IRecord>;
-interface SignaturesListProps extends SharedProps$b, BaseRecipeProps<IRecord, ChildrenArgs$b> {
+declare type ChildrenArgs$c = SharedProps$c & BaseChildrenArgs<IRecord>;
+interface SignaturesListProps extends SharedProps$c, BaseRecipeProps<IRecord, ChildrenArgs$c> {
 }
 
-interface InternalState$9 extends IRecord {
+interface InternalState$a extends IRecord {
 }
-interface SharedProps$a extends StylingProps {
+interface SharedProps$b extends StylingProps {
     modalProps?: Omit<ModalProps, "children">;
     modalContentProps?: Omit<ModalContentProps, "children">;
     dialogProps?: Omit<DialogProps, "children">;
     content: React__default.ReactNode;
     hasDialog?: boolean;
 }
-declare type ChildrenArgs$a = SharedProps$a & BaseChildrenArgs<InternalState$9>;
-interface DialogModalProps extends SharedProps$a, BaseRecipeProps<InternalState$9, ChildrenArgs$a> {
+declare type ChildrenArgs$b = SharedProps$b & BaseChildrenArgs<InternalState$a>;
+interface DialogModalProps extends SharedProps$b, BaseRecipeProps<InternalState$a, ChildrenArgs$b> {
 }
 
 declare enum CREATE_SIGNATURE_ALLOWED_TABS {
@@ -31556,7 +31694,7 @@ declare enum CREATE_SIGNATURE_ALLOWED_TABS {
     TYPE = "TYPE",
     IMAGE = "IMAGE"
 }
-interface InternalState$8 extends IRecord {
+interface InternalState$9 extends IRecord {
     /**
      * The color of an object. This is a hex value that is applied to the points
      * in `FreehandCanvas` or `SignatureTextInput`
@@ -31572,7 +31710,7 @@ interface InternalState$8 extends IRecord {
      * represented as an array of arrays of points. Each point is represented as
      * an array of two numbers, the x and y coordinates of the point.
      */
-    ink?: [x: number, y: number, pressure?: number][][];
+    ink?: FreehandCanvasProps["value"];
     /**
      * The text variable represents the text that is input in the text input. The
      * text is represented as a string.
@@ -31595,7 +31733,7 @@ interface InternalState$8 extends IRecord {
      */
     shouldStoreSignature: boolean;
 }
-interface SharedProps$9 extends StylingProps {
+interface SharedProps$a extends StylingProps {
     /**
      * Indicates whether it is possible to store the signature or not.
      *
@@ -31634,7 +31772,7 @@ interface SharedProps$9 extends StylingProps {
     /** Callback function that is called when a close event is triggered. */
     onCloseRequest: () => void;
     /** Callback function that is called when a signature is added. */
-    onAdd: (state: Omit<InternalState$8, "image" | "text" | "ink"> & {
+    onAdd: (state: Omit<InternalState$9, "image" | "text" | "ink"> & {
         canvasSize: {
             height: number;
             width: number;
@@ -31644,7 +31782,7 @@ interface SharedProps$9 extends StylingProps {
             value?: string;
         } | {
             type: CREATE_SIGNATURE_ALLOWED_TABS.DRAW;
-            value?: [x: number, y: number, pressure?: number][][];
+            value?: FreehandCanvasProps["value"];
         } | {
             type: CREATE_SIGNATURE_ALLOWED_TABS.IMAGE;
             value?: File;
@@ -31657,18 +31795,18 @@ interface SharedProps$9 extends StylingProps {
      */
     variant?: "narrow" | "wide";
 }
-interface ChildrenArgs$9 extends SharedProps$9, BaseChildrenArgs<InternalState$8> {
+interface ChildrenArgs$a extends SharedProps$a, BaseChildrenArgs<InternalState$9> {
 }
-interface CreateSignatureProps extends SharedProps$9, BaseRecipeProps<InternalState$8, ChildrenArgs$9> {
+interface CreateSignatureProps extends SharedProps$a, BaseRecipeProps<InternalState$9, ChildrenArgs$a> {
 }
 
-interface InternalState$7 extends IRecord {
+interface InternalState$8 extends IRecord {
     text?: string;
     includeDate: boolean;
     includeTime: boolean;
     color: string;
 }
-interface SharedProps$8 extends StylingProps {
+interface SharedProps$9 extends StylingProps {
     /**
      * The `id` of the title of the component. This is useful for accessibility
      * when the component is used in a dialog.
@@ -31705,13 +31843,13 @@ interface SharedProps$8 extends StylingProps {
      */
     onExistingStampPress?: () => void;
 }
-declare type ChildrenArgs$8 = SharedProps$8 & BaseChildrenArgs<InternalState$7>;
-interface CreateStampProps extends SharedProps$8, BaseRecipeProps<InternalState$7, ChildrenArgs$8> {
+declare type ChildrenArgs$9 = SharedProps$9 & BaseChildrenArgs<InternalState$8>;
+interface CreateStampProps extends SharedProps$9, BaseRecipeProps<InternalState$8, ChildrenArgs$9> {
 }
 
-interface InternalState$6 extends IRecord {
+interface InternalState$7 extends IRecord {
 }
-interface SharedProps$7 extends StylingProps, Omit<SignaturesListProps, "children" | "onRemoveFromPreview" | "variant" | "initialState" | "onAddFromPreview" | "disabledActions" | "onAdd"> {
+interface SharedProps$8 extends StylingProps, Omit<SignaturesListProps, "children" | "onRemoveFromPreview" | "variant" | "initialState" | "onAddFromPreview" | "disabledActions" | "onAdd"> {
     /**
      * Callback fired when the user clicks the preview
      *
@@ -31721,8 +31859,8 @@ interface SharedProps$7 extends StylingProps, Omit<SignaturesListProps, "childre
     /** Callback fired when the user clicks the custom stamp button */
     onCustomStampPress?: () => void;
 }
-declare type ChildrenArgs$7 = SharedProps$7 & BaseChildrenArgs<InternalState$6>;
-interface StampsListProps extends SharedProps$7, BaseRecipeProps<InternalState$6, ChildrenArgs$7> {
+declare type ChildrenArgs$8 = SharedProps$8 & BaseChildrenArgs<InternalState$7>;
+interface StampsListProps extends SharedProps$8, BaseRecipeProps<InternalState$7, ChildrenArgs$8> {
 }
 
 declare const MessageType: {
@@ -31764,6 +31902,7 @@ interface PlainMessage extends IBaseMessage {
 interface MessageWithActions extends IBaseMessage {
     type: typeof MessageType.ACTIONS;
     actions: MessageAction[];
+    suggestions?: MessageAction[];
 }
 interface MessageWithError extends IBaseMessage {
     type: typeof MessageType.ERROR;
@@ -31786,7 +31925,7 @@ interface MessageWithQueryResult extends IBaseMessage {
     actions: MessageAction[];
 }
 declare type Message = PlainMessage | MessageWithActions | MessageWithError | MessageWithSuggestions | MessageWithAdditionalContext | MessageWithQueryResult;
-interface SharedProps$6 extends StylingProps {
+interface SharedProps$7 extends StylingProps {
     /** Callback function that is called when a message is submitted. */
     onMessageSubmit: (message: string) => void;
     /** Callback function that is called when input value changes. */
@@ -31812,15 +31951,15 @@ interface SharedProps$6 extends StylingProps {
     /** The imperative handle for manipulating editor. */
     editorHandle?: React__default.RefObject<EditorHandle>;
 }
-declare type ChildrenArgs$6 = SharedProps$6 & BaseChildrenArgs<IRecord>;
-interface ChatDialogProps extends SharedProps$6, BaseRecipeProps<IRecord, ChildrenArgs$6> {
+declare type ChildrenArgs$7 = SharedProps$7 & BaseChildrenArgs<IRecord>;
+interface ChatDialogProps extends SharedProps$7, BaseRecipeProps<IRecord, ChildrenArgs$7> {
 }
 
-interface InternalState$5 extends IRecord {
+interface InternalState$6 extends IRecord {
     isExpanded: boolean;
     toDelete: string | null;
 }
-interface SharedProps$5 extends StylingProps, AriaLabelingProps, Pick<EditorProps, "mentionableUsers" | "maxMentionableUsersSuggestions">, Pick<PopoverContentProps, "portalContainer"> {
+interface SharedProps$6 extends StylingProps, AriaLabelingProps, Pick<EditorProps, "mentionableUsers" | "maxMentionableUsersSuggestions">, Pick<PopoverContentProps, "portalContainer"> {
     /**
      * The comments to display in the thread. Each comment should have a unique
      * `commentId`.
@@ -31874,28 +32013,191 @@ interface SharedProps$5 extends StylingProps, AriaLabelingProps, Pick<EditorProp
     /** The default value for the editor. This is used when creating a new comment. */
     defaultEditorValue?: string;
 }
-declare type ChildrenArgs$5 = SharedProps$5 & BaseChildrenArgs<InternalState$5>;
-interface CommentThreadProps extends SharedProps$5, BaseRecipeProps<InternalState$5, ChildrenArgs$5> {
+declare type ChildrenArgs$6 = SharedProps$6 & BaseChildrenArgs<InternalState$6>;
+interface CommentThreadProps extends SharedProps$6, BaseRecipeProps<InternalState$6, ChildrenArgs$6> {
 }
 
-interface InternalState$2 extends IRecord {
+interface InternalState$5 extends IRecord {
 }
-interface SharedProps$2 extends StylingProps {
+declare type DocumentEditorItem = {
+    name: string;
+} & ({
+    type: "ActionIconButton";
+    props: ActionIconButtonProps;
+} | {
+    type: "ToggleIconButton";
+    props: ToggleIconButtonProps;
+} | {
+    type: "ActionButton";
+    props: ActionButtonProps;
+} | {
+    type: "TagGroup";
+    props: TagGroupProps;
+} | {
+    type: "Popover";
+    props: {
+        popoverTriggerProps: PopoverTriggerProps;
+        popoverContentProps: PopoverContentProps;
+    };
+} | {
+    type: "separator";
+} | {
+    type: "spacer";
+});
+interface SharedProps$5 extends StylingProps, AriaLabelingProps, Pick<PopoverContentProps, "portalContainer">, Pick<ImageGalleryProps, "items" | "imageWidth" | "imageDimensions" | "imageContainerStyle" | "imageContainerClassName" | "onListChange" | "onKeyDown" | "onDelete" | "onReorder" | "onSelectionChange" | "selectedKeys" | "renderImage"> {
+    /** The toolbar component items to be shown at the top of the document editor. */
+    toolbarItems: DocumentEditorItem[];
+    /**
+     * The footer component items to be shown at the bottom of the document
+     * editor.
+     */
+    footerItems: DocumentEditorItem[];
+}
+interface ChildrenArgs$5 extends SharedProps$5, BaseChildrenArgs<InternalState$5> {
+}
+interface DocumentEditorProps extends SharedProps$5, BaseRecipeProps<InternalState$5, ChildrenArgs$5> {
+}
+
+interface ItemBase {
+    name: string;
+}
+interface ActionIconButtonItem extends ItemBase {
+    type: "ActionIconButton";
+    props: ActionIconButtonProps;
+}
+interface ToggleIconButtonItem extends ItemBase {
+    type: "ToggleIconButton";
+    props: ToggleIconButtonProps;
+}
+interface ActionButtonItem extends ItemBase {
+    type: "ActionButton";
+    props: ActionButtonProps;
+}
+interface IconColorInputItem extends ItemBase {
+    type: "IconColorInput";
+    props: Omit<IconColorInputProps, "icon"> & {
+        icon: React__default.FC<IconProps>;
+    };
+}
+interface IconSelectItem extends ItemBase {
+    type: "IconSelect";
+    props: Omit<IconSelectProps, "icon"> & {
+        icon: React__default.FC<IconProps>;
+    };
+}
+interface IconSliderItem extends ItemBase {
+    type: "IconSlider";
+    props: IconSliderProps;
+}
+interface ButtonSelectItem extends ItemBase {
+    type: "ButtonSelect";
+    props: ButtonSelectProps;
+}
+interface ColorSwatchPickerItem extends ItemBase {
+    type: "ColorSwatchPicker";
+    props: ColorSwatchPickerProps;
+}
+interface ComboBoxItem extends ItemBase {
+    type: "ComboBox";
+    props: ComboBoxProps;
+}
+interface ActionGroupItem extends ItemBase {
+    type: "ActionGroup";
+    props: ActionGroupProps;
+}
+interface CheckboxItem extends ItemBase {
+    type: "Checkbox";
+    props: CheckboxProps;
+}
+interface ReactElementItem extends ItemBase {
+    type: "ReactElement";
+    props: React__default.ReactElement;
+}
+interface DOMNodeRendererItem extends ItemBase {
+    type: "DomNodeRenderer";
+    props: DomNodeRendererProps;
+}
+interface PaginationItem extends ItemBase {
+    type: "Pagination";
+    props: PaginationProps;
+}
+interface TaggedPaginationItem extends ItemBase {
+    type: "TaggedPagination";
+    props: TaggedPaginationProps;
+}
+interface BlockItem extends ItemBase {
+    type: "Block";
+    props: Block$1;
+}
+interface SeparatorItem extends Partial<ItemBase> {
+    type: "separator";
+}
+interface SpacerItem extends Partial<ItemBase> {
+    type: "spacer";
+}
+declare type ToolbarItem = ActionIconButtonItem | ToggleIconButtonItem | ActionButtonItem | IconColorInputItem | IconSelectItem | SeparatorItem | SpacerItem | ButtonSelectItem | IconSliderItem | ColorSwatchPickerItem | ComboBoxItem | ActionGroupItem | CheckboxItem | ReactElementItem | DOMNodeRendererItem | TaggedPaginationItem | PaginationItem | BlockItem;
+
+interface InternalState$4 extends IRecord {
+}
+interface SharedProps$4 extends StylingProps, AriaLabelingProps {
+    /**
+     * The items to render in the toolbar. Each item can be a button, a select, a
+     * combobox, etc.
+     *
+     * ```tsx
+     * const items = [
+     *   createActionButtonToolbarItem("bold", {
+     *     icon: BoldIcon,
+     *     "aria-label": "Bold",
+     *   }),
+     *   createActionButtonToolbarItem("italic", {
+     *     icon: ItalicIcon,
+     *     "aria-label": "Italic",
+     *   }),
+     * ];
+     * ```
+     */
+    items: ToolbarItem[];
+    /**
+     * The type of the toolbar. This is used to apply different styles to the
+     * toolbar. The primary toolbar is used for the main toolbar, while the
+     * secondary toolbar is used for the secondary toolbar.
+     *
+     * @default "primary"
+     */
+    type?: "primary" | "secondary";
+    /** The callback to call when the user presses the escape key. */
+    onEscape?: () => void;
+    /** Whether to hide the tooltip for the toolbar items. */
+    hideTooltip?: boolean;
+}
+declare type ChildrenArgs$4 = SharedProps$4 & BaseChildrenArgs<InternalState$4>;
+interface ToolbarProps extends SharedProps$4, BaseRecipeProps<InternalState$4, ChildrenArgs$4> {
+}
+declare type PrimaryToolbarProps = Omit<ToolbarProps, "type">;
+
+interface InternalState$3 extends IRecord {
+}
+interface SharedProps$3 extends StylingProps {
     titleId: string;
     /** The callback to call when the dialog is requested to be closed */
     onCloseRequest: () => void;
     /** The top offset of the dialog */
     topOffset?: number;
+    /** Show or hide dialog header on mobile view */
+    showHeaderOnMobile?: boolean;
+    /** The title of the dialog header on mobile view */
+    mobileHeaderTitle?: string;
     isOpen: boolean;
     content: React.ReactNode;
 }
-declare type ChildrenArgs$2 = SharedProps$2 & BaseChildrenArgs<InternalState$2>;
-interface ChatDialogDecoratorProps extends SharedProps$2, BaseRecipeProps<InternalState$2, ChildrenArgs$2> {
+declare type ChildrenArgs$3 = SharedProps$3 & BaseChildrenArgs<InternalState$3>;
+interface ChatDialogDecoratorProps extends SharedProps$3, BaseRecipeProps<InternalState$3, ChildrenArgs$3> {
 }
 
-interface InternalState$1 extends IRecord {
+interface InternalState$2 extends IRecord {
 }
-interface SharedProps$1 extends StylingProps {
+interface SharedProps$2 extends StylingProps {
     referenceRect?: Rect;
     dialogTitleId?: string;
     /** The callback to call when the dialog is requested to be closed */
@@ -31904,9 +32206,14 @@ interface SharedProps$1 extends StylingProps {
     content: React.ReactNode;
     boundaryElement?: HTMLElement;
 }
-declare type ChildrenArgs$1 = SharedProps$1 & BaseChildrenArgs<InternalState$1>;
-interface CommentThreadDecoratorProps extends SharedProps$1, BaseRecipeProps<InternalState$1, ChildrenArgs$1> {
+declare type ChildrenArgs$2 = SharedProps$2 & BaseChildrenArgs<InternalState$2>;
+interface CommentThreadDecoratorProps extends SharedProps$2, BaseRecipeProps<InternalState$2, ChildrenArgs$2> {
 }
+
+type ThumbnailsDecoratorProps = {
+    content: React__default.ReactNode;
+};
+declare function ThumbnailsDecorator({ content }: ThumbnailsDecoratorProps): JSX.Element;
 
 declare const Recipes: {
     readonly SignaturesList: React__default.ForwardRefExoticComponent<SignaturesListProps & React__default.RefAttributes<HTMLDivElement>>;
@@ -31915,6 +32222,10 @@ declare const Recipes: {
     readonly CreateStamp: React__default.ForwardRefExoticComponent<CreateStampProps & React__default.RefAttributes<HTMLDivElement>>;
     readonly ChatDialog: React__default.ForwardRefExoticComponent<ChatDialogProps & React__default.RefAttributes<HTMLDivElement>>;
     readonly CommentThread: React__default.ForwardRefExoticComponent<CommentThreadProps & React__default.RefAttributes<HTMLDivElement>>;
+    readonly PrimaryToolbar: React__default.ForwardRefExoticComponent<PrimaryToolbarProps & React__default.RefAttributes<HTMLDivElement>>;
+    readonly PasswordDialog: React__default.ForwardRefExoticComponent<Omit<Omit<ComponentRecipeProps, "component" | "componentProps"> & Omit<AlertDialogProps & React__default.RefAttributes<HTMLDivElement>, keyof ComponentRecipeProps>, "ref"> & React__default.RefAttributes<HTMLDivElement>>;
+    readonly DocumentEditor: React__default.ForwardRefExoticComponent<DocumentEditorProps & React__default.RefAttributes<HTMLDivElement>>;
+    readonly Thumbnails: React__default.ForwardRefExoticComponent<Omit<Omit<ComponentRecipeProps, "component" | "componentProps"> & Omit<ImageGalleryProps & React__default.RefAttributes<HTMLDivElement>, keyof ComponentRecipeProps>, "ref"> & React__default.RefAttributes<HTMLDivElement>>;
 };
 declare const Decorators: {
     readonly SignaturesListDecorator: React__default.ForwardRefExoticComponent<DialogModalProps & React__default.RefAttributes<HTMLDivElement>>;
@@ -31923,6 +32234,12 @@ declare const Decorators: {
     readonly CreateSignatureDecorator: React__default.ForwardRefExoticComponent<DialogModalProps & React__default.RefAttributes<HTMLDivElement>>;
     readonly ChatDialogDecorator: React__default.ForwardRefExoticComponent<ChatDialogDecoratorProps & React__default.RefAttributes<HTMLDivElement>>;
     readonly CommentThreadDecorator: React__default.ForwardRefExoticComponent<CommentThreadDecoratorProps & React__default.RefAttributes<HTMLDivElement>>;
+    readonly PrimaryToolbarDecorator: ({ content }: {
+        content: any;
+    }) => any;
+    readonly PasswordDialogDecorator: React__default.FC<Omit<DialogModalProps, "hasDialog" | "dialogProps">>;
+    readonly DocumentEditorDecorator: React__default.ForwardRefExoticComponent<DialogModalProps & React__default.RefAttributes<HTMLDivElement>>;
+    readonly ThumbnailsDecorator: typeof ThumbnailsDecorator;
 };
 type DecoratorTypes<K extends keyof typeof Recipes> = React__default.ComponentProps<(typeof Decorators)[`${K}Decorator`]>;
 type InterfacesType = {
@@ -32120,7 +32437,7 @@ type SharedConfiguration = {
     baseUrl?: string;
     serverUrl?: string;
     styleSheets?: Array<string>;
-    toolbarItems?: Array<ToolbarItem>;
+    toolbarItems?: Array<ToolbarItem$1>;
     annotationPresets?: Record<AnnotationPresetID$1, AnnotationPreset$1>;
     stampAnnotationTemplates?: Array<StampAnnotation | ImageAnnotation>;
     autoSaveMode?: IAutoSaveMode;
@@ -32180,6 +32497,7 @@ type SharedConfiguration = {
     onCommentCreationStart?: OnCommentCreationStartCallback;
     documentEditorConfiguration?: documentEditorUIConfig;
     ui?: Partial<UI>;
+    aiDocumentAssistant?: AIDocumentAssistantConfiguration;
     disableWebAssemblyStreaming?: boolean;
     overrideMemoryLimit?: number;
     baseCoreUrl?: string;
@@ -32583,6 +32901,10 @@ declare const PSPDFKit: {
             readonly CreateStamp: React$2.ForwardRefExoticComponent<CreateStampProps & React$2.RefAttributes<HTMLDivElement>>;
             readonly ChatDialog: React$2.ForwardRefExoticComponent<ChatDialogProps & React$2.RefAttributes<HTMLDivElement>>;
             readonly CommentThread: React$2.ForwardRefExoticComponent<CommentThreadProps & React$2.RefAttributes<HTMLDivElement>>;
+            readonly PrimaryToolbar: React$2.ForwardRefExoticComponent<PrimaryToolbarProps & React$2.RefAttributes<HTMLDivElement>>;
+            readonly PasswordDialog: React$2.ForwardRefExoticComponent<Omit<Omit<ComponentRecipeProps, "component" | "componentProps"> & Omit<AlertDialogProps & React$2.RefAttributes<HTMLDivElement>, keyof ComponentRecipeProps>, "ref"> & React$2.RefAttributes<HTMLDivElement>>;
+            readonly DocumentEditor: React$2.ForwardRefExoticComponent<DocumentEditorProps & React$2.RefAttributes<HTMLDivElement>>;
+            readonly Thumbnails: React$2.ForwardRefExoticComponent<Omit<Omit<ComponentRecipeProps, "component" | "componentProps"> & Omit<ImageGalleryProps & React$2.RefAttributes<HTMLDivElement>, keyof ComponentRecipeProps>, "ref"> & React$2.RefAttributes<HTMLDivElement>>;
         };
         Decorators: {
             readonly SignaturesListDecorator: React$2.ForwardRefExoticComponent<DialogModalProps & React$2.RefAttributes<HTMLDivElement>>;
@@ -32591,6 +32913,12 @@ declare const PSPDFKit: {
             readonly CreateSignatureDecorator: React$2.ForwardRefExoticComponent<DialogModalProps & React$2.RefAttributes<HTMLDivElement>>;
             readonly ChatDialogDecorator: React$2.ForwardRefExoticComponent<ChatDialogDecoratorProps & React$2.RefAttributes<HTMLDivElement>>;
             readonly CommentThreadDecorator: React$2.ForwardRefExoticComponent<CommentThreadDecoratorProps & React$2.RefAttributes<HTMLDivElement>>;
+            readonly PrimaryToolbarDecorator: ({ content }: {
+                content: any;
+            }) => any;
+            readonly PasswordDialogDecorator: React$2.FC<Omit<DialogModalProps, "hasDialog" | "dialogProps">>;
+            readonly DocumentEditorDecorator: React$2.ForwardRefExoticComponent<DialogModalProps & React$2.RefAttributes<HTMLDivElement>>;
+            readonly ThumbnailsDecorator: typeof ThumbnailsDecorator;
         };
         Interfaces: InterfacesType;
         App: typeof App;
@@ -32644,7 +32972,7 @@ declare const PSPDFKit: {
         WidgetAnnotation: typeof WidgetAnnotation;
         MediaAnnotation: typeof MediaAnnotation;
         toSerializableObject: typeof serializeAnnotation;
-        fromSerializableObject: <K extends AnnotationJSONUnion>(annotation: K) => AnnotationJSONToAnnotation<K>;
+        fromSerializableObject: <K extends AnnotationJSONUnion | AnnotationsBackendJSONUnion>(annotation: K) => AnnotationJSONToAnnotation<K>;
         rotate: (annotation: RotatableAnnotation, rotation: number, contentSize?: Size$1) => RotatableAnnotation;
     };
     AnnotationPresets: {
@@ -33150,4 +33478,4 @@ declare const PSPDFKit: {
     Font: typeof Font;
 };
 
-export { Action, Annotation, type AnnotationToolbarItem, type AnnotationsUnion, AnnotationsWillChangeReason, Bookmark, ButtonFormField, CheckBoxFormField, ChoiceFormField, Color$2 as Color, ComboBoxFormField, Comment$1 as Comment, CommentMarkerAnnotation, type Configuration, Conformance, CustomOverlayItem, type DocumentEditorFooterItem, type DocumentEditorToolbarItem, DrawingPoint, EllipseAnnotation, type EllipseAnnotationJSON, Font, FormField, FormFieldValue, FormOption, GoToAction, GoToEmbeddedAction, GoToRemoteAction, HideAction, HighlightAnnotation, ImageAnnotation, type ImageAnnotationJSON, InkAnnotation, type InkAnnotationJSON, Inset, Instance, InstantClient, Interfaces, JavaScriptAction, LaunchAction, LineAnnotation, type LineAnnotationJSON, LinkAnnotation, List, ListBoxFormField, type MentionableUser$1 as MentionableUser, NamedAction, NoteAnnotation, type NoteAnnotationJSON, OutlineElement, PageInfo, Point, PolygonAnnotation, type PolygonAnnotationJSON, PolylineAnnotation, type PolylineAnnotationJSON, RadioButtonFormField, Rect$2 as Rect, RectangleAnnotation, type RectangleAnnotationJSON, RedactionAnnotation, type RedactionAnnotationJSON, ResetFormAction, SearchResult, SearchState, type ServerConfiguration, ShapeAnnotation, type ShapeAnnotationsUnion, SignatureFormField, Size$1 as Size, SquiggleAnnotation, StampAnnotation, type StampAnnotationJSON, type StandaloneConfiguration, StrikeOutAnnotation, SubmitFormAction, type TemplateDataToPopulateDocument, TextAnnotation, type TextAnnotationJSON, TextFormField, TextLine, TextMarkupAnnotation, type TextMarkupAnnotationJSON, type TextMarkupAnnotationsUnion, PublicTextSelection as TextSelection, type ToolbarItem, URIAction, UnderlineAnnotation, UnknownAnnotation, type UnknownAnnotationJSON, ViewState, WidgetAnnotation, type WidgetAnnotationJSON, PSPDFKit as default };
+export { Action, Annotation, type AnnotationToolbarItem, type AnnotationsUnion, AnnotationsWillChangeReason, Bookmark, ButtonFormField, CheckBoxFormField, ChoiceFormField, Color$2 as Color, ComboBoxFormField, Comment$1 as Comment, CommentMarkerAnnotation, type Configuration, Conformance, CustomOverlayItem, type DocumentEditorFooterItem, type DocumentEditorToolbarItem, DrawingPoint, EllipseAnnotation, type EllipseAnnotationJSON, Font, FormField, FormFieldValue, FormOption, GoToAction, GoToEmbeddedAction, GoToRemoteAction, HideAction, HighlightAnnotation, ImageAnnotation, type ImageAnnotationJSON, InkAnnotation, type InkAnnotationJSON, Inset, Instance, InstantClient, Interfaces, JavaScriptAction, LaunchAction, LineAnnotation, type LineAnnotationJSON, LinkAnnotation, List, ListBoxFormField, type MentionableUser$1 as MentionableUser, NamedAction, NoteAnnotation, type NoteAnnotationJSON, OutlineElement, PageInfo, Point, PolygonAnnotation, type PolygonAnnotationJSON, PolylineAnnotation, type PolylineAnnotationJSON, RadioButtonFormField, Rect$2 as Rect, RectangleAnnotation, type RectangleAnnotationJSON, RedactionAnnotation, type RedactionAnnotationJSON, ResetFormAction, SearchResult, SearchState, type ServerConfiguration, ShapeAnnotation, type ShapeAnnotationsUnion, SignatureFormField, Size$1 as Size, SquiggleAnnotation, StampAnnotation, type StampAnnotationJSON, type StandaloneConfiguration, StrikeOutAnnotation, SubmitFormAction, type TemplateDataToPopulateDocument, TextAnnotation, type TextAnnotationJSON, TextFormField, TextLine, TextMarkupAnnotation, type TextMarkupAnnotationJSON, type TextMarkupAnnotationsUnion, PublicTextSelection as TextSelection, type ToolbarItem$1 as ToolbarItem, URIAction, UnderlineAnnotation, UnknownAnnotation, type UnknownAnnotationJSON, ViewState, WidgetAnnotation, type WidgetAnnotationJSON, PSPDFKit as default };
