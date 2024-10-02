@@ -65,9 +65,9 @@ $g_can_send_to_dg_permission = \App\Enums\Permissions::CAN_SEND_TO_DG->value;
                                                 <optgroup label="<?= $department ?>">
                                                     <?php foreach ($employees as $employee): ?>
                                                       <?php if(($employee['employee_position_id'] == 11 ) && (in_array($g_can_send_to_dg_permission, $permissions ?? [])) ): ?>
-                                                        <option value="<?= $employee['user_id'] ?>">
-                                                          <?= $employee['pos_name'] . ' (' . $employee['user_name'] . ')' ?>
-                                                        </option>
+                                                            <option value="<?= $employee['user']['user_id'] ?>">
+                                                                <?= $employee['position']['pos_name'] . ' (' . $employee['user']['user_name'] . ')' ?>
+                                                            </option>
                                                       <?php endif; ?>
                                                     <?php endforeach; ?>
                                                 </optgroup>

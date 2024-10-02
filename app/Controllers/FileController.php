@@ -279,6 +279,7 @@ class FileController extends BaseController
             $search_params = $this->request->getPost('keyword');
             $folders = $this->folder->searchFolders($search_params, $this->session->user_id);
             $files = $this->file->searchFiles($search_params, $this->session->user_id);
+            //return dd($files);
             $data = [
                 'files' => $files,
                 'users' => $this->user->getAllUsers(),
