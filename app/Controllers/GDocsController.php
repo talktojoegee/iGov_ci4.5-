@@ -86,15 +86,15 @@ class GDocsController extends BaseController
                     'g_doc_auth_status_at' => date('Y-m-d H:i:s'),
                 ];
                 $this->g_doc_authorizers->insert($gDocAuthorizerData);
-              $notification_data = [
-                'subject' => $title ?? 'Unknown title',
-                'body' => $comment ?? 'Unknown',
-                'recipient' => $userId,
-                'link' => site_url('manage-doc/'). $g_doc_id,
-                'cta' => 'View',
-                'notification_status' => 0,
-              ];
-              $this->notification->save($notification_data);
+                $notification_data = [
+                    'subject' => $title ?? 'Unknown title',
+                    'body' => $comment ?? 'Unknown',
+                    'recipient' => $userId,
+                    'link' => site_url('manage-doc/') . $g_doc_id,
+                    'cta' => 'View',
+                    'notification_status' => 0,
+                ];
+                $this->notification->save($notification_data);
             }
 
             $db->transComplete();
@@ -214,7 +214,12 @@ class GDocsController extends BaseController
             if (!isset($grouped_hods[$department_name])) {
                 $grouped_hods[$department_name] = [];
             }
-            $grouped_hods[$department_name][] = $employee;
+
+            if ($employee['pos_name'] !== 'Director General/CEO') {
+                $grouped_hods[$department_name][] = $employee;
+            } elseif ($this->_validate_permission(Permissions::CAN_SEND_TO_DG->value)) {
+                $grouped_hods[$department_name][] = $employee;
+            }
         }
         return $grouped_hods;
     }

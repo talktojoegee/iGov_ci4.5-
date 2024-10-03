@@ -47,7 +47,10 @@ $g_can_send_to_dg_permission = \App\Enums\Permissions::CAN_SEND_TO_DG->value;
                             <div class="col-12">
                                 <div class="form-group">
                                     <label for="ref-no">Reference No</label><span style="color: red"> *</span>
-                                    <input readonly value="<?= $authDirectorate['dpt_ref_no'] ?? null ?>/<?= date('Y') ?>/<?= $counter ?? rand(9,9999) ?>" placeholder="Reference No." type="text" class="form-control" id="ref-no" name="p_ref_no" required>
+                                    <input readonly
+                                           value="<?= $authDirectorate['dpt_ref_no'] ?? null ?>/<?= date('Y') ?>/<?= $counter ?? rand(9, 9999) ?>"
+                                           placeholder="Reference No." type="text" class="form-control" id="ref-no"
+                                           name="p_ref_no" required>
                                     <div class="invalid-feedback">
                                         Please enter a reference number.
                                     </div>
@@ -64,11 +67,9 @@ $g_can_send_to_dg_permission = \App\Enums\Permissions::CAN_SEND_TO_DG->value;
                                             <?php if (!empty($employees)): ?>
                                                 <optgroup label="<?= $department ?>">
                                                     <?php foreach ($employees as $employee): ?>
-                                                      <?php if(($employee['employee_position_id'] == 11 ) && (in_array($g_can_send_to_dg_permission, $permissions ?? [])) ): ?>
-                                                            <option value="<?= $employee['user']['user_id'] ?>">
-                                                                <?= $employee['position']['pos_name'] . ' (' . $employee['user']['user_name'] . ')' ?>
-                                                            </option>
-                                                      <?php endif; ?>
+                                                        <option value="<?= $employee['user']['user_id'] ?>">
+                                                            <?= $employee['position']['pos_name'] . ' (' . $employee['user']['user_name'] . ')' ?>
+                                                        </option>
                                                     <?php endforeach; ?>
                                                 </optgroup>
                                             <?php endif; ?>
@@ -84,7 +85,8 @@ $g_can_send_to_dg_permission = \App\Enums\Permissions::CAN_SEND_TO_DG->value;
                             <div class="col-12">
                                 <div class="form-group">
                                     <label for="subject">Subject</label><span style="color: red"> *</span>
-                                    <input placeholder="Subject" type="text" id="subject" class="form-control" name="p_subject" required>
+                                    <input placeholder="Subject" type="text" id="subject" class="form-control"
+                                           name="p_subject" required>
                                     <div class="invalid-feedback">
                                         Please enter a subject.
                                     </div>
