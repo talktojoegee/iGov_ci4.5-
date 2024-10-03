@@ -53,15 +53,15 @@ class MemoController extends PostController
             $data['hods'] = $this->_group_all_department_hods();
             $data['department_hods'] = $this->_group_one_department_hods();
             $data['authUser'] = $this->employee->getEmployeeByUserEmployeeId($this->session->user_employee_id);
-            if(empty($data['authUser'])){
-              return redirect()->back()->with("error", "<strong>Whoops!</strong> User record not found");
+            if (empty($data['authUser'])) {
+                return redirect()->back()->with("error", "<strong>Whoops!</strong> User record not found");
             }
             $data['authDirectorate'] = $this->department->find($data['authUser']['employee_department_id']);
-          if(empty($data['authDirectorate'])){
-            return redirect()->back()->with("error", "<strong>Whoops!</strong> We had issues identifying your directorate.");
-          }
+            if (empty($data['authDirectorate'])) {
+                return redirect()->back()->with("error", "<strong>Whoops!</strong> We had issues identifying your directorate.");
+            }
             $data['counter'] = count($this->post->findAll()) + 1;
-          //return dd($data);
+            //return dd($data);
             return view('/pages/posts/memos/new-internal-memo', $data);
         endif;
         $post_data = $this->request->getPost();
@@ -408,7 +408,10 @@ class MemoController extends PostController
                 if ($user['user_status'] == 1 && ($user['user_type'] == 3 || $user['user_type'] == 2) && in_array($this->memo_permission, $user_permissions)) {
                     $employee['user'] = $user;
                     $employee['position'] = $this->position->find($employee['employee_position_id']);
-                    array_push($department_employees[$department['dpt_name']], $employee);
+                    if ($employee['position']['pos_name'] !== 'Director General/CEO')
+                        array_push($department_employees[$department['dpt_name']], $employee);
+                    elseif ($this->_validate_permission(Permissions::CAN_SEND_TO_DG->value))
+                        array_push($department_employees[$department['dpt_name']], $employee);
                 }
             }
         }
