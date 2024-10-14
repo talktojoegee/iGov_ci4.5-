@@ -129,7 +129,11 @@ class GDocsController extends BaseController
         $data['doc'] = $doc;
         $data['hods'] = $this->_group_remaining__department_hods($doc['authorizers']);
         $data['licenseKey'] = getenv('PSPDFKIT_LICENSE_KEY');
-        //return dd($data);
+        //update read status
+        $authorizer = $this->g_doc_authorizers->updateReadFlag($g_doc_id, session()->user_id);
+        if(!empty($authorizer)){
+          $this->g_doc_authorizers->update($authorizer['g_doc_auth_id'],['g_doc_read'=>1]);
+        }
         return view('/pages/g-doc/manage_document', $data);
     }
 

@@ -29,6 +29,9 @@
                                 Below are all the incoming documents that require your attention as an authorizer in the
                                 document process created.
                             </p>
+                          <p class="text-muted font-13">
+                                <strong class="text-danger">Note:</strong> The items highlighted in dark grey indicate the ones you've not opened.
+                            </p>
                         </div>
                         <div class="col-lg-4">
                             <div class="text-lg-right mt-lg-0">
@@ -41,13 +44,13 @@
                     </div>
                     <table id="datatable-buttons" class="table table-striped table-bordered dt-responsive nowrap w-100">
                         <thead>
-                        <tr>
+                        <tr style="text-transform: uppercase">
                             <th class="text-center" style="width: 5%">S/n</th>
                             <th style="width: 10%">Ref</th>
                             <th>Title</th>
                             <th style="width: 12%">Uploaded By</th>
-                            <th style="width: 10%">Document Status</th>
-                            <th style="width: 10%">Authorization Status</th>
+                            <th style="width: 10%">Doc. Status</th>
+                            <th style="width: 10%">Auth. Status</th>
                             <th style="width: 10%">Added</th>
                             <th class="text-center" style="width: 10%">Actions</th>
                         </tr>
@@ -55,13 +58,13 @@
                         <tbody>
                         <?php $i = 1;
                         foreach ($my_docs as $doc): ?>
-                            <tr>
+                            <tr style="background: <?= $doc['g_doc_read'] == 0 ? '#373637' : '' ?>">
                                 <td>
                                     <?= $i;
                                     $i++; ?>
                                 </td>
                                 <td><?= $doc['g_doc_ref'] ?></td>
-                                <td><?php strlen($doc['g_doc_title']) > 20 ? substr($doc['g_doc_title'], 0,20).'...' : $doc['g_doc_title'] ?></td>
+                                <td><?= strlen($doc['g_doc_title']) > 20 ? substr($doc['g_doc_title'], 0,20).'...' : $doc['g_doc_title'] ?></td>
                                 <td><?= $doc['user_name'] ?></td>
                                 <td>
                                     <?php
