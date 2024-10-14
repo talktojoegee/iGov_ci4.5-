@@ -18,6 +18,7 @@ class GDocAuthorizers extends Model
         'g_doc_auth_status',
         'g_doc_auth_comment',
         'g_doc_auth_status_at',
+        'g_doc_read'
     ];
 
     protected bool $allowEmptyInserts = false;
@@ -58,5 +59,13 @@ class GDocAuthorizers extends Model
             ->where('g_docs_authorizers.g_doc_auth_user_id', $userId)
             ->orderBy('g_docs_authorizers.created_at', 'DESC')
             ->findAll();
+    }
+
+
+    public function updateReadFlag($docId, $userId){
+      $builder = $this->db->table('g_docs_authorizers');
+      $builder->where('g_doc_auth_doc_id', $docId);
+      $builder->where('g_doc_auth_user_id', $userId);
+      return $builder->get()->getRowArray();
     }
 }
