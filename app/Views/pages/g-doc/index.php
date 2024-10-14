@@ -61,7 +61,7 @@
                                     $i++; ?>
                                 </td>
                                 <td><?= $doc['g_doc_ref'] ?></td>
-                                <td><?= $doc['g_doc_title'] ?></td>
+                                <td><?php strlen($doc['g_doc_title']) > 20 ? substr($doc['g_doc_title'], 0,20).'...' : $doc['g_doc_title'] ?></td>
                                 <td><?= $doc['user_name'] ?></td>
                                 <td>
                                     <?php
