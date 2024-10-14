@@ -155,7 +155,7 @@ class Home extends BaseController
     $l_user = $this->user->where('user_username', $this->session->user_username)
       ->join('employees', 'users.user_employee_id = employees.employee_id')
       ->first();
-    $department_id = $l_user['employee_department_id'];
+    $department_id = $l_user['employee_department_id'] ?? null ;
     $circulars = array();
     $posts = $this->post
       ->where('p_type', 2)
