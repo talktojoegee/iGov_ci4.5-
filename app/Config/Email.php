@@ -30,26 +30,26 @@ class Email extends BaseConfig
     /**
      * SMTP Server Hostname
      */
-    public string $SMTPHost = 'sandbox.smtp.mailtrap.io';
-    //public string $SMTPHost = 'mail.cnxigov.com';
+    //public string $SMTPHost = 'sandbox.smtp.mailtrap.io';
+    public string $SMTPHost = 'mail.cnxigov.com';
 
     /**
      * SMTP Username
      */
-    public string $SMTPUser = '90d95c7dda4a44';
-    //public string $SMTPUser = 'info@cnxigov.com';
+    //public string $SMTPUser = '90d95c7dda4a44';
+    public string $SMTPUser = 'no-reply@cnxigov.com';
 
     /**
      * SMTP Password
      */
-    public string $SMTPPass = '9554a813c869e7';
-    //public string $SMTPPass = 'P@ssword#123';
+    //public string $SMTPPass = '9554a813c869e7';
+    public string $SMTPPass = '^gpP]JptH27P';
 
     /**
      * SMTP Port
      */
-    public int $SMTPPort = 2525;
-    //public int $SMTPPort = 587;// 465;
+    //public int $SMTPPort = 2525;
+    public int $SMTPPort = 587;// 465;
 
     /**
      * SMTP Timeout (in seconds)
