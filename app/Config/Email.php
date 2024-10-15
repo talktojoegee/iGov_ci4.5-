@@ -50,6 +50,7 @@ class Email extends BaseConfig
      */
     //public int $SMTPPort = 2525;
     public int $SMTPPort = 587;// 465;
+  //prophetpius@gmail.com
 
     /**
      * SMTP Timeout (in seconds)

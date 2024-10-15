@@ -58,7 +58,7 @@
                         <tbody>
                         <?php $i = 1;
                         foreach ($my_docs as $doc): ?>
-                            <tr style="background: <?= $doc['g_doc_read'] == 0 ? '#373637' : '' ?>">
+                            <tr style="background: <?= $doc['g_doc_read'] == 0 ? '#A9A9A9' : '' ?>; color: <?= $doc['g_doc_read'] == 0 ? '#000' : '' ?>">
                                 <td>
                                     <?= $i;
                                     $i++; ?>
@@ -90,11 +90,11 @@
                                 </td>
                                 <td>
                                     <a href="<?= site_url('/manage-doc/' . $doc['g_doc_id']) ?>"
-                                       class="btn btn-sm btn-outline-info" title="Edit">
+                                       class="btn btn-sm btn-info" title="Edit">
                                         Manage
                                     </a>
                                     <a href="<?= base_url('uploads/g-docs/' . $doc['g_doc_upload']) ?>"
-                                       class="btn btn-sm btn-outline-success"
+                                       class="btn btn-sm btn-success"
                                        title="<?= $doc['g_doc_title'] ?>" download>
                                         Download
                                     </a>
