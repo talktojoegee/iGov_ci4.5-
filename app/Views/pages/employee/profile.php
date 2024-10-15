@@ -157,9 +157,16 @@
                   <form action="#" method="post" enctype="multipart/form-data" class="mt-4">
 
                     <div class="form-group mt-3">
+                      <div class="form-group d-flex justify-content-start" style="margin-left: 100px;">
+                        <label for="">Choose Pen Color</label>
+                        <input type="color"  id="penColor">
+                      </div>
                       <div class="d-flex justify-content-center ">
-                        <canvas style="border: 1px dotted #000000; padding: 5px;"></canvas>
-                        <input type="hidden" name="image" id="image">
+                       <p></p>
+                        <div class="form-group">
+                          <canvas style="border: 1px dotted #000000; padding: 5px;"></canvas>
+                          <input type="hidden" name="image" id="image">
+                        </div>
                       </div>
 
                     </div>
@@ -508,6 +515,7 @@ Enter Transaction Password" class="form-control">
 <?=view('pages/employee/_employee-scripts.php')?>
 <script>
   let canvas = document.querySelector("canvas");
+  let penColor = document.getElementById('penColor').value;
   let signaturePad = new SignaturePad(canvas);
   let url = "<?= route_to('digital-signature') ?>";
   let base64String = signaturePad.toDataURL();//.split(',')[1];
@@ -520,6 +528,11 @@ Enter Transaction Password" class="form-control">
         Swal.fire('Invalid Submission!', 'You have not signed. Use your mouse to sign within the dotted box.', 'error')
         //$('#transactionPasswordModal').modal('hide');
       }else{
+       // signaturePad.addEventListener("beginStroke", () => {
+          penColor = document.getElementById('penColor').value;
+          signaturePad.penColor = penColor;
+       // }, { once: true });
+
         Swal.fire({
           title: 'Token',
           text: "Our system thinks someone else is trying to change your e-signature. Kindly enter your token to confirm that you're the one.",
