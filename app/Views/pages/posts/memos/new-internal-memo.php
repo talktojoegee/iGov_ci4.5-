@@ -9,6 +9,10 @@ $g_can_send_to_dg_permission = \App\Enums\Permissions::CAN_SEND_TO_DG->value;
 <?= $this->section('extra-styles'); ?>
 <link href="/assets/libs/dropzone/min/dropzone.min.css" rel="stylesheet" type="text/css"/>
 <link href="/assets/libs/dropify/css/dropify.min.css" rel="stylesheet" type="text/css"/>
+
+<link rel="stylesheet" href="/assets/js/richtexteditor/res/style.css" />
+<link rel="stylesheet" href="/assets/js/richtexteditor/rte_theme_default.css" />
+<link href="/assets/js/richtexteditor/rte_theme_default.css" rel="stylesheet" type="text/css"/>
 <?= $this->endSection() ?>
 <?= $this->section('content'); ?>
 <div class="container-fluid">
@@ -97,7 +101,7 @@ $g_can_send_to_dg_permission = \App\Enums\Permissions::CAN_SEND_TO_DG->value;
                             <div class="col-12">
                                 <div class="form-group">
                                     <label for="snow-editor">Body</label><span style="color: red"> *</span>
-                                    <div id="snow-editor" class="form-control body" style="height: 300px;"></div>
+                                    <div id="rich-editor" class="form-control body" style="height: 300px;"></div>
                                     <!-- end Snow-editor-->
                                     <div class="invalid-feedback">
                                         Please enter a body.
@@ -164,6 +168,7 @@ $g_can_send_to_dg_permission = \App\Enums\Permissions::CAN_SEND_TO_DG->value;
                                 </div>
                             </div>
                         </div>
+                      <textarea name="" id="contentWrapper" style="display: none;"  cols="30" rows="10"></textarea>
                         <div class="row g-3">
                             <div class="col-lg-12 offset-lg-12">
                                 <div class="form-group mt-2">
@@ -183,4 +188,29 @@ $g_can_send_to_dg_permission = \App\Enums\Permissions::CAN_SEND_TO_DG->value;
 <?= view('pages/posts/memos/_memo-scripts.php') ?>
 <script src="/assets/libs/dropzone/min/dropzone.min.js"></script>
 <script src="/assets/libs/dropify/js/dropify.min.js"></script>
+<script type="text/javascript" src="/assets/js/richtexteditor/rte.js"></script>
+<script src="/assets/js/richtexteditor/plugins/all_plugins.js"></script>
+<script>
+
+  var editor1 = new RichTextEditor("#rich-editor");
+  //editor1.setHTMLCode("Type your memo here...");
+
+  editor1.attachEvent("change", function () {
+    document.getElementById("contentWrapper").value = editor1.getHTMLCode()
+  });
+
+ /* $(document).ready(function(){
+    editor1.attachEvent("change", function () {
+      var textCount = editor1.getPlainText().trim().length;
+      document.title = "textCount:" + textCount;
+    });
+    $('#rich-editor').on('blur', function(e){
+      e.preventDefault();
+      let text = editor1.getText();
+      console.log(text);
+      //$('#contentWrapper').val($(this).val())
+      //alert('Leaving...')
+    });
+  });*/
+</script>
 <?= $this->endSection(); ?>

@@ -51,6 +51,7 @@ class GDocsController extends BaseController
         $comment = $this->request->getPost('g_doc_comment');
         $authorizers = $this->request->getPost('authorizers');
         $file = $this->request->getFile('file');
+
         if (empty($file) || !$file->isValid()) {
             $response['success'] = false;
             $response['message'] = 'An error occurred while setting up your E-Signature.';

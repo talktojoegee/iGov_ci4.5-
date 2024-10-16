@@ -1,4 +1,14 @@
 <?= $this->extend('layouts/master'); ?>
+
+<?= $this->section('extra-styles'); ?>
+
+<style>
+  table, th, tr, td {
+    border: 1px solid #A3A3A3;
+  }
+</style>
+<?= $this->endSection() ?>
+
 <?= $this->section('content'); ?>
 <?php
 $permissions = session()->get('permissions');
@@ -25,24 +35,25 @@ $memo_approval_permission = \App\Enums\Permissions::MEMO_APPROVAL->value;
     <!-- end page title -->
     <div class="row">
         <div class="col-12">
-            <div class="card-box">
+            <div class="card-bo mb-3">
                 <div class="row d-print-none">
                     <div class="col-lg-1">
                     </div>
                     <div class="col-lg-11">
                         <div class="text-lg-right">
+                          <!--<a href="/*= site_url('/generate-pdf/') . $memo['p_id'] */?>" class="btn btn-primary">Generate PDF</a>-->
                             <a href="javascript:window.print()" type="button"
-                               class="btn btn-success waves-effect waves-light mr-2"><i class="mdi mdi-printer"></i></a>
+                               class="btn btn-success waves-effect waves-light mr-2">Print <i class="mdi mdi-printer"></i></a>
                             <?php if ($memo['p_by'] == session()->user_id && $memo['p_status'] == 0 && in_array($memo_permission, $permissions)): ?>
                                 <a href="<?= site_url('/edit-memo/') . $memo['p_id'] ?>" type="button"
-                                   class="btn btn-success">Edit</a>
+                                   class="btn btn-warning">Edit <i class="mdi mdi-lead-pencil"></i> </a>
                             <?php endif; ?>
                             <?php if ($memo['p_signed_by'] == session()->user_id && $memo['p_status'] == 0): ?>
                                 <button onclick="signDocument(<?= $memo['p_id'] ?>)" type="button"
-                                        class="btn btn-success mr-1">Sign
+                                        class="btn btn-primary mr-1">Sign <i class="mdi mdi-signature-freehand"></i>
                                 </button>
                                 <button onclick="declineDocument(<?= $memo['p_id'] ?>)" type="button"
-                                        class="btn btn-danger mr-1">Decline
+                                        class="btn btn-danger mr-1">Decline  <i class="mdi mdi-format-color-marker-cancel"></i>
                                 </button>
                             <?php endif; ?>
                             <?php if ($memo['p_requires_approval'] && $memo['p_approval_status'] == 0): ?>
@@ -51,8 +62,8 @@ $memo_approval_permission = \App\Enums\Permissions::MEMO_APPROVAL->value;
                                     Requires Approval
                                 </button>
                             <?php endif; ?>
+                            <a href="<?= site_url('/memos') ?>" type="button" class="btn btn-secondary">Go Back <i class="mdi mdi-backup-restore"></i> </a>
 
-                            <a href="<?= site_url('/memos') ?>" type="button" class="btn btn-success">Go Back</a>
                         </div>
                     </div>
                 </div>
@@ -60,7 +71,7 @@ $memo_approval_permission = \App\Enums\Permissions::MEMO_APPROVAL->value;
         </div><!-- end col-->
     </div>
     <div class="row">
-        <div class="col-12">
+        <div class="col-12" id="internalMemoWrapper">
             <div class="card d-block">
                 <div class="card-body">
                     <div class="row mb-3">
@@ -81,7 +92,7 @@ $memo_approval_permission = \App\Enums\Permissions::MEMO_APPROVAL->value;
                     <div class="row">
                         <div class="text-center" style="margin: 0 auto;">
                             <h3 class="text-uppercase">
-                                <u>Memo</u>
+                                <u>Internal Memo</u>
                             </h3>
                         </div>
                     </div>
@@ -154,27 +165,29 @@ $memo_approval_permission = \App\Enums\Permissions::MEMO_APPROVAL->value;
                         </div>
                     </div>
                     <div class="row">
+                      <div class="col-lg-4 text-left">
+                        <p class="mt-2 mb-1 text-muted">Signed By</p>
+                        <?php if ($memo['p_status'] == 2 && $memo['p_signature']): ?>
+                          <img src="/uploads/signatures/<?= $memo['p_signature'] ?>" height="80">
+                          <h5 class="font-size-14">
+                            <?= $memo['signed_by']['user_name'] ?? '' ?> <br>
+                            (<?= $memo['signed_by']['position']['pos_name'] ?? '' ?>
+                            , <?= $memo['signed_by']['department']['dpt_name'] ?? '' ?>)
+                          </h5>
+                        <?php elseif ($memo['p_status'] == 4): ?>
+                          <p class="mt-2 mb-1 text-muted">This memo is rejected</p>
+                        <?php else: ?>
+                          <p class="mt-2 mb-1 text-muted">This memo is unsigned</p>
+                        <?php endif; ?>
+                      </div>
                         <div class="col-lg-4"></div>
-                        <div class="col-lg-4 text-center">
-                            <p class="mt-2 mb-1 text-muted">Signed By</p>
-                            <?php if ($memo['p_status'] == 2 && $memo['p_signature']): ?>
-                                <img src="/uploads/signatures/<?= $memo['p_signature'] ?>" height="80">
-                                <h5 class="font-size-14">
-                                    <?= $memo['signed_by']['user_name'] ?? '' ?> <br>
-                                    (<?= $memo['signed_by']['position']['pos_name'] ?? '' ?>
-                                    , <?= $memo['signed_by']['department']['dpt_name'] ?? '' ?>)
-                                </h5>
-                            <?php elseif ($memo['p_status'] == 4): ?>
-                                <p class="mt-2 mb-1 text-muted">This memo is rejected</p>
-                            <?php else: ?>
-                                <p class="mt-2 mb-1 text-muted">This memo is unsigned</p>
-                            <?php endif; ?>
-                        </div>
+
                         <div class="col-lg-4"></div>
                     </div>
                 </div>
             </div>
         </div>
+
         <div class="col-12 d-print-none">
             <div class="card">
                 <div class="card-body">

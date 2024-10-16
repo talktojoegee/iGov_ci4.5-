@@ -26,7 +26,11 @@
 <script src="/assets/js/pages/form-advanced.init.js"></script>
 
 <!-- Plugins js -->
-<script src="/assets/libs/quill/quill.min.js"></script>
+
+
+<!-- Quill version 2 -->
+<script src="/assets/libs/quill2/quill.js"></script>
+<script src="/assets/libs/quill2/quill-better-table.js"></script>
 
 <!-- Init js-->
 <script src="/assets/js/pages/form-quilljs.init.js"></script>

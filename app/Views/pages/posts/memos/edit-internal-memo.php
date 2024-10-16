@@ -51,7 +51,7 @@
 									<label for="positions">Offices</label><span style="color: red"> *</span>
 									<select class="form-control select2-multiple" id="positions" name="positions[]" data-toggle="select2" multiple="multiple" data-placeholder="Please select..." required>
 										<?php foreach ($positions as $position): ?>
-											<option <?php foreach($memo['recipients'] as $recipient): if ($recipient['pos_id'] == $position['pos_id']) echo 'selected'; endforeach; ?> value="<?=$position['pos_id']; ?>"> <?=$position['pos_name']; ?></option>
+											<option <?php foreach($memo['recipients'] as $recipient): if ($recipient['employee_position_id'] == $position['pos_id']) echo 'selected'; endforeach; ?> value="<?=$position['pos_id']; ?>"> <?=$position['pos_name']; ?></option>
 										<?php endforeach; ?>
 									</select>
 									<div class="invalid-feedback">

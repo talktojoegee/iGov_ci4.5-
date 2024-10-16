@@ -36,6 +36,8 @@
     })
 
     function verifyDocumentSigning() {
+        let approval = false;
+        let htmlContent = null;
         let verCode = $('#ver-code').val()
         if (!verCode) {
             Swal.fire('Invalid Submission!', 'Please enter the verification code', 'error')
@@ -56,18 +58,43 @@
                 data: formData,
                 success: response => {
                     if (response.success) {
-                        Swal.fire('Confirmed!', response.message, 'success').then(() => location.reload())
+                     // if(approval){
+                        htmlContent = $('#internalMemoWrapper').html();
+                        let formData = new FormData()
+                        formData.append('htmlContent', htmlContent)
+                        $.ajax({
+                          url: '<?=site_url('/generate-pdf')?>',
+                          type: 'post',
+                          data: formData,
+                          success: response => {
+                            if (response.success) {
+                              console.log(response)
+                             // Swal.fire('Confirmed!', "PDF generated", 'success').then(() => location.reload())
+                            } else {
+                              console.log(response)
+                              //Swal.fire('Sorry!', "Whoops! Something went wrong.", 'error')
+                            }
+                          },
+                          cache: false,
+                          contentType: false,
+                          processData: false
+                        })
+                      //}
+                        //Swal.fire('Confirmed!', response.message, 'success').then(() => location.reload())
                     } else {
                         Swal.fire('Sorry!', response.message, 'error')
                     }
                     $('#save-btn').text('Submit');
                     $('#save-btn').attr('disabled', 'false');
                     $('#standard-modal-3').modal('hide');
+                    //approval = true;
+
                 },
                 cache: false,
                 contentType: false,
                 processData: false
             })
+
         }
     }
 
@@ -172,13 +199,14 @@
                     url: '<?=site_url('/check-signature-exists')?>',
                     type: 'get',
                     success: response => {
-                        console.log(response)
+                        //console.log(response)
                         if (response.success) {
                             $('#post-id').val(postID)
                             $('#e-signature').val(response.message)
                             let formData = new FormData()
                             formData.append('p_id', postID)
                             $('#standard-modal-3').modal('toggle');
+
 
                             /*
                                           $.ajax({
@@ -204,7 +232,7 @@
                                             processData: false
                                           })*/
                         } else {
-                            Swal.fire('Sorry!', response.message, 'error').then(() => location.href = '<?=site_url('/my-account')?>')
+                            Swal.fire('Sorry!', response.message, 'error').then(() => location.href = '<?=site_url('/profile/'.session()->user_id)?>')
                         }
                     },
                     cache: false,
