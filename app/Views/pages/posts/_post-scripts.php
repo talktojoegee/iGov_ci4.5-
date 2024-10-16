@@ -58,10 +58,13 @@
                 data: formData,
                 success: response => {
                     if (response.success) {
-                     // if(approval){
+                      //location.reload()
+                      Swal.fire('Confirmed!', "Document signed successfully.", 'success').then(() => location.reload())
+                     // setTimeout(function() {
                         htmlContent = $('#internalMemoWrapper').html();
                         let formData = new FormData()
                         formData.append('htmlContent', htmlContent)
+                        formData.append('postId', postID)
                         $.ajax({
                           url: '<?=site_url('/generate-pdf')?>',
                           type: 'post',
@@ -69,7 +72,7 @@
                           success: response => {
                             if (response.success) {
                               console.log(response)
-                             // Swal.fire('Confirmed!', "PDF generated", 'success').then(() => location.reload())
+                              // Swal.fire('Confirmed!', "PDF generated", 'success').then(() => location.reload())
                             } else {
                               console.log(response)
                               //Swal.fire('Sorry!', "Whoops! Something went wrong.", 'error')
@@ -79,7 +82,7 @@
                           contentType: false,
                           processData: false
                         })
-                      //}
+                      //}, 5000);
                         //Swal.fire('Confirmed!', response.message, 'success').then(() => location.reload())
                     } else {
                         Swal.fire('Sorry!', response.message, 'error')

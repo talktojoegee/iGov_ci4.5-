@@ -16,6 +16,10 @@ use App\Models\Token;
 use App\Models\UserModel;
 use App\Models\UserPermissions;
 use App\Models\Verification;
+use App\Models\GDoc;
+use App\Models\GDocAuthorizers;
+use App\Models\GDocAuthorizersLogs;
+use App\Models\Notification;
 
 class PostController extends BaseController
 {
@@ -37,6 +41,11 @@ class PostController extends BaseController
         $this->token = new Token();
         $this->stamp = new Stamp();
         $this->user_permissions = new UserPermissions();
+
+        $this->g_doc = new GDoc();
+        $this->g_doc_authorizers = new GdocAuthorizers();
+        $this->g_doc_authorizers_logs = new GdocAuthorizersLogs();
+        $this->notification = new Notification();
 
         $this->memo_permission = Permissions::MEMO->value;
     }

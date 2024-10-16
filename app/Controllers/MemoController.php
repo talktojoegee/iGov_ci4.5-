@@ -7,6 +7,8 @@ use App\Enums\Permissions;
 use Dompdf\Dompdf;
 class MemoController extends PostController
 {
+
+
     public function memos($type = null)
     {
 
@@ -179,18 +181,58 @@ class MemoController extends PostController
       $method = $this->request->getMethod();
       if($method == 'POST'){
         $htmlContent = $_POST['htmlContent'];
-        $domPdf = new Dompdf();
-        $domPdf->loadHtml($htmlContent);
-        $domPdf->setPaper('A4', 'portrait');
-        $domPdf->render();
-        $outputPdf = $domPdf->output();
-        $filename = substr(sha1(time()),29,40).'.pdf';
-        $outputPath = FCPATH . 'uploads/g-docs/'.$filename;
-        file_put_contents($outputPath, $outputPdf);
-        //update G-Docs record
-        $response['success'] = true;
-        $response['message'] = 'Action successful.';
-        return $this->response->setJSON($response);
+        $postId = $_POST['postId'];
+        $memo = $this->_get_memo($postId);
+
+        if(!empty($memo)){
+          $data['firstTime'] = $this->session->firstTime;
+          $data['username'] = $this->session->user_username;
+          $data['memo'] = $this->_get_memo($postId);
+          $data['stamps'] = $this->_get_official_stamps();
+          $view = view('/pages/posts/memos/_memo-details', $data);
+
+          $domPdf = new Dompdf();
+          $domPdf->loadHtml($view);
+          $domPdf->setPaper('A4', 'portrait');
+          $domPdf->render();
+          $outputPdf = $domPdf->output();
+          $filename = substr(sha1(time()),29,40).'.pdf';
+          $outputPath = FCPATH . 'uploads/g-docs/'.$filename;
+          file_put_contents($outputPath, $outputPdf);
+          //update G-Docs record
+          $g_doc_data = [
+            'g_doc_ref' => $memo['p_ref_no'],
+            'g_doc_title' => $memo['p_subject'],
+            'g_doc_comment' => $memo['p_body'],
+            'g_doc_uploaded_by' => session()->user_id,
+            'g_doc_last_status_update_by' => session()->user_id,
+            'g_doc_upload' => $filename,
+          ];
+          $g_doc_id = $this->g_doc->insert($g_doc_data);
+
+          //foreach ($authorizers as $userId) {
+            $gDocAuthorizerData = [
+              'g_doc_auth_doc_id' => $g_doc_id,
+              'g_doc_auth_user_id' => session()->user_id,
+              'g_doc_auth_status' => 0,
+              'g_doc_auth_status_at' => date('Y-m-d H:i:s'),
+            ];
+            $this->g_doc_authorizers->insert($gDocAuthorizerData);
+            $notification_data = [
+              'subject' => $memo['p_subject'] ?? 'Unknown title',
+              'body' => $memo['p_body'] ?? 'Unknown',
+              'recipient' => session()->user_id,
+              'link' => site_url('manage-doc/') . $g_doc_id,
+              'cta' => 'View',
+              'notification_status' => 0,
+            ];
+            $this->notification->save($notification_data);
+         // }
+          $response['success'] = true;
+          $response['message'] = 'Action successful.';
+          return $this->response->setJSON($response);
+        }
+
       }else{
         $response['error'] = true;
         $response['message'] = 'Whoops! Something went wrong.';
