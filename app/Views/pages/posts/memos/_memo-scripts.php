@@ -8,10 +8,11 @@
             let reviewedBy = $('#reviewed-by').val()
             let refNo = $('#ref-no').val()
             let positions = $('#positions').val()
-            if (!subject || !reviewedBy || !signedBy || !refNo || !positions || quillEditor.root.innerText.length < 2) {
+            let content = $('#contentWrapper').val();
+            if (!subject || !reviewedBy || !signedBy || !refNo || !positions || content < 2 /*quillEditor.root.innerText.length < 2*/) {
                 Swal.fire('Invalid Submission!', 'Please fill in all required fields', 'error')
             } else {
-                let body = quillEditor.root.innerHTML
+                let body = content //quillEditor.root.innerHTML
                 let formData = new FormData(this)
                 formData.set('p_body', body)
                 Swal.fire({

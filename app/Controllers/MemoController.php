@@ -4,7 +4,7 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use App\Enums\Permissions;
-
+use Dompdf\Dompdf;
 class MemoController extends PostController
 {
     public function memos($type = null)
@@ -174,6 +174,29 @@ class MemoController extends PostController
         //return dd($data);
         return view('/pages/posts/memos/view-memo', $data);
     }
+    public function generatePDF()
+    {
+      $method = $this->request->getMethod();
+      if($method == 'POST'){
+        $htmlContent = $_POST['htmlContent'];
+        $domPdf = new Dompdf();
+        $domPdf->loadHtml($htmlContent);
+        $domPdf->setPaper('A4', 'portrait');
+        $domPdf->render();
+        $outputPdf = $domPdf->output();
+        $filename = substr(sha1(time()),29,40).'.pdf';
+        $outputPath = FCPATH . 'uploads/g-docs/'.$filename;
+        file_put_contents($outputPath, $outputPdf);
+        //update G-Docs record
+        $response['success'] = true;
+        $response['message'] = 'Action successful.';
+        return $this->response->setJSON($response);
+      }else{
+        $response['error'] = true;
+        $response['message'] = 'Whoops! Something went wrong.';
+        return $this->response->setJSON($response);
+      }
+    }
 
     public function edit_memo($memo_id = null)
     {
@@ -188,8 +211,10 @@ class MemoController extends PostController
             $data['firstTime'] = $this->session->firstTime;
             $data['username'] = $this->session->user_username;
             $data['memo'] = $this->_get_memo($memo_id);
+            //return dd($data);
             return view('/pages/posts/memos/edit-internal-memo', $data);
         }
+
         $post_data = $this->request->getPost();
         $memo_data = [
             'p_id' => $post_data['memo_id'],

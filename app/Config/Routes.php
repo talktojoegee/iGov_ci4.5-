@@ -118,10 +118,13 @@ $routes->match(['GET', 'POST'], 'new-notice', 'NoticeController::new_notice', ['
 // memo routes
 $routes->match(['GET'], 'memos', 'MemoController::memos', ['filter' => 'auth']);
 $routes->match(['GET'], 'memos/(:alpha)', 'MemoController::memos/$1', ['filter' => 'auth']);
+
 $routes->match(['GET', 'POST'], 'internal-memo', 'MemoController::internal_memo', ['filter' => 'auth']);
 $routes->match(['GET', 'POST'], 'external-memo', 'MemoController::external_memo', ['filter' => 'auth']);
 $routes->match(['GET'], 'my-memos', 'MemoController::my_memos', ['filter' => 'auth']);
 $routes->match(['GET'], 'view-memo/(:num)', 'MemoController::view_memo/$1', ['filter' => 'auth']);
+$routes->match(['POST'], 'generate-pdf', 'MemoController::generatePDF', ['filter' => 'auth']);
+
 $routes->match(['GET'], 'edit-memo/(:num)', 'MemoController::edit_memo/$1', ['filter' => 'auth']);
 $routes->match(['POST'], 'edit-memo', 'MemoController::edit_memo', ['filter' => 'auth']);
 $routes->match(['POST'], 'upload-memo-attachments', 'MemoController::upload_mail_attachments', ['filter' => 'auth']);
