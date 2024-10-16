@@ -235,7 +235,7 @@
                                             processData: false
                                           })*/
                         } else {
-                            Swal.fire('Sorry!', response.message, 'error').then(() => location.href = '<?=site_url('/profile/'.session()->user_id)?>')
+                            Swal.fire('Sorry!', response.message, 'error').then(() => location.href = '<?=site_url('/my-account')?>')
                         }
                     },
                     cache: false,

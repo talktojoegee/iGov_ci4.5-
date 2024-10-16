@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Controllers\BaseController;
 use App\Enums\Permissions;
 use Dompdf\Dompdf;
+use Dompdf\Options;
 class MemoController extends PostController
 {
 
@@ -190,7 +191,6 @@ class MemoController extends PostController
           $data['memo'] = $this->_get_memo($postId);
           $data['stamps'] = $this->_get_official_stamps();
           $view = view('/pages/posts/memos/_memo-details', $data);
-
           $domPdf = new Dompdf();
           $domPdf->loadHtml($view);
           $domPdf->setPaper('A4', 'portrait');
