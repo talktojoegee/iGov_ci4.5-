@@ -78,7 +78,15 @@ $memo_approval_permission = \App\Enums\Permissions::MEMO_APPROVAL->value;
                         <div class="auth-logo" style="margin: 0 auto">
                             <div class="logo logo-dark">
                 <span class="logo-lg">
-                  <img src="/uploads/organization/<?= $memo['organization']['org_logo'] ?>" height="100">
+                  <?php
+                  // Get the image path
+                  $imagePath = FCPATH . 'uploads/organization/'.$memo['organization']['org_logo'];
+                  $imageData = base64_encode(file_get_contents($imagePath));
+                  $imageInfo = getimagesize($imagePath);
+                  $mimeType = $imageInfo['mime'];
+
+                  ?>
+                  <img src="data:<?= $mimeType ?>;base64,<?= $imageData ?>" alt="Image" height="100">
                 </span>
                             </div>
                         </div>
