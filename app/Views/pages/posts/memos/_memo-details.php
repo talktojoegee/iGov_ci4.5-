@@ -5755,11 +5755,6 @@ File: Main Css File
               echo date_format($date, "d F Y");
               ?>
             </h5>
-            <h5 class="font-size-14 mb-0">From: <small>&nbsp; <?= esc($memo['written_by']['user_name']) ?>
-                (<?= esc($memo['written_by']['position']['pos_name']) ?>,
-                <?= esc($memo['written_by']['department']['dpt_name'] ?? 'N/A') ?>)</small> </h5>
-
-
             <h5 class="font-size-14 mb-0">To: &nbsp; <small><?php if (!empty($memo['recipients'])): ?>
                   <?php foreach ($memo['recipients'] as $recipient): ?>
                     <?= $recipient['user_name'] ?> - <?= $recipient['pos_name'] ?> (<?= $recipient['dpt_name'] ?>)
@@ -5770,7 +5765,6 @@ File: Main Css File
                     <?= $external_recipient ?> <br>
                   <?php endforeach; endif; ?></small>
             </h5>
-
             <h5 class="font-size-14 mb-0">Through: <small><?php if (!empty($memo['reviewers'])): ?>
                   <?php foreach ($memo['reviewers'] as $reviewer): ?>
                     <?= $reviewer['user_name'] ?> - <?= $reviewer['pos_name'] ?> (<?= $reviewer['dpt_name'] ?>)
@@ -5780,7 +5774,9 @@ File: Main Css File
                   <p>N/A</p>
                 <?php endif; ?></small>
             </h5>
-            &nbsp;
+            <h5 class="font-size-14 mb-0">From: <small>&nbsp; <?= esc($memo['written_by']['user_name']) ?>
+                (<?= esc($memo['written_by']['position']['pos_name']) ?>,
+                <?= esc($memo['written_by']['department']['dpt_name'] ?? 'N/A') ?>)</small> </h5>
 
           </div>
         </div>
@@ -5813,6 +5809,7 @@ File: Main Css File
               (<?= $memo['signed_by']['position']['pos_name'] ?? '' ?>
               , <?= $memo['signed_by']['department']['dpt_name'] ?? '' ?>)
             </h5>
+
           <?php elseif ($memo['p_status'] == 4): ?>
             <p class="mt-2 mb-1 text-muted">This memo is rejected</p>
           <?php else: ?>

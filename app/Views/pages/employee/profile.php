@@ -164,7 +164,7 @@
                       <div class="d-flex justify-content-center ">
                        <p></p>
                         <div class="form-group">
-                          <canvas style="border: 1px dotted #000000; padding: 5px;"></canvas>
+                          <canvas id="signaturePad" style="border: 1px dotted #000000; padding: 5px;"></canvas>
                           <input type="hidden" name="image" id="image">
                         </div>
                       </div>
@@ -515,11 +515,37 @@ Enter Transaction Password" class="form-control">
 <?=view('pages/employee/_employee-scripts.php')?>
 <script>
   let canvas = document.querySelector("canvas");
-  let penColor = document.getElementById('penColor').value;
+  let canvasHandler = document.getElementById('signaturePad');
+  let colorPicker = document.getElementById('penColor');
   let signaturePad = new SignaturePad(canvas);
   let url = "<?= route_to('digital-signature') ?>";
   let base64String = signaturePad.toDataURL();//.split(',')[1];
   let signature = null;
+  let currentColor = colorPicker.value;
+  signaturePad.penColor = currentColor;
+
+  signaturePad.addEventListener('beginStroke', ()=>{
+    colorPicker = document.getElementById('penColor');
+     currentColor = colorPicker.value;
+    signaturePad.penColor = currentColor;
+    //console.log("Signature started");
+  }, { once: true });
+/*
+  colorPicker.addEventListener('input', (event) => {
+    currentColor = event.target.value;
+  });
+  canvasHandler.addEventListener('mousedown', (event) => {
+    alert('Hello');
+    signaturePad.penColor = currentColor; // Set the pen color before starting to draw
+
+  });
+
+  // Override the default pen color when drawing
+  signaturePad.onBegin = () => {
+    console.log('Begin')
+    signaturePad.penColor = currentColor;
+  };
+  //colorPicker.addEventListener();*/
 
   $(document).ready(function(){
 
