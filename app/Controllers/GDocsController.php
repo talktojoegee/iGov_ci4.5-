@@ -36,6 +36,14 @@ class GDocsController extends BaseController
         return view('/pages/g-doc/index', $data);
     }
 
+    public function archiveDocs()
+    {
+        $data['firstTime'] = $this->session->firstTime;
+        $data['username'] = $this->session->user_username;
+        $data['my_docs'] = $this->g_doc_authorizers->getArchivedGDocAuthorizationsByUserId($this->session->user_id);
+        return view('/pages/g-doc/archive', $data);
+    }
+
     public function get_new_document_upload()
     {
         $data['firstTime'] = $this->session->firstTime;
@@ -96,6 +104,8 @@ class GDocsController extends BaseController
                     'notification_status' => 0,
                 ];
                 $this->notification->save($notification_data);
+                $message = "There is a new document needing your attention. Kindly login to act on it.";
+              $this->send_notification('New Document Authorization Request', $message, $userId, site_url('manage-doc/') . $g_doc_id, 'click to view');
             }
 
             $db->transComplete();

@@ -174,6 +174,7 @@ $routes->post('/workflow/update-workflow-processor', 'WorkflowController::update
 
 #g-docs
 $routes->get('/g-docs', 'GDocsController::index', ['filter' => 'auth']);
+$routes->get('/archived-docs', 'GDocsController::archiveDocs', ['filter' => 'auth']);
 $routes->get('/g-docs/new-doc-upload', 'GDocsController::get_new_document_upload', ['filter' => 'auth']);
 $routes->post('/g-docs/new-doc-upload', 'GDocsController::post_new_document_upload', ['filter' => 'auth']);
 $routes->get('/manage-doc/(:num)', 'GDocsController::get_manage_document/$1', ['filter' => 'auth']);

@@ -166,13 +166,14 @@ class FileController extends BaseController
     {
         if ($this->request->getMethod() == 'POST') {
             helper(['form', 'url']);
-
             $data = [
                 'file_id' => $this->request->getPost('file_id'),
                 'shared_by' => $this->session->user_id,
                 'shared_with' => $this->request->getPost('user'),
             ];
             $this->sharedfile->save($data);
+          $message = "A document was shared with you. Kindly login to access it.";
+          $this->send_notification('Document sharing', $message, $this->request->getPost('user'), site_url('g-drive/'), 'click to view');
             return redirect()->to(base_url('/g-drive'))->with('success', 'File shared successfully.');
         }
     }
