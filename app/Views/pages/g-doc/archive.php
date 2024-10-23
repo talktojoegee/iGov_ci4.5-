@@ -28,13 +28,9 @@
                             <a href="<?= site_url('g-docs') ?>" class="btn btn-primary">New Documents</a>
                             <a href="<?= site_url('archived-docs') ?>" class="btn btn-secondary">Archives</a>
                           </div>
-                            <h4 class="header-title">My Documents</h4>
+                            <h4 class="header-title">Archived Documents</h4>
                             <p class="text-muted font-13">
-                                Below are all the incoming documents that require your attention as an authorizer in the
-                                document process created.
-                            </p>
-                          <p class="text-muted font-13">
-                                <strong class="text-danger">Note:</strong> The items highlighted in dark grey indicate the ones you've not opened.
+                                Below you'll find archived documents.
                             </p>
                         </div>
                         <div class="col-lg-4">
