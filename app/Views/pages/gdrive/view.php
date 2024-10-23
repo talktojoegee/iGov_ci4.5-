@@ -53,7 +53,7 @@
                                                     <div class="col-auto">
                                                         <div class="avatar-sm">
                                                     <span class="avatar-title bg-light text-secondary rounded">
-                                                        <img height="32" width="32" src="/assets/formats/folder.png" alt="<?= $fold1['folder'] ?>">
+                                                        <img height="32" width="32" src=<?= $fold1['visibility'] == 1 ? '/assets/formats/private-folder.png' : '/assets/formats/folder.png' ?> alt="<?= $fold1['folder'] ?>">
                                                     </span>
                                                         </div>
                                                     </div>
