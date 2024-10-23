@@ -40,6 +40,7 @@ class FileController extends BaseController
             'firstTime' => $this->session->firstTime,
             'username' => $this->session->username
         ];
+
         return view('pages/gdrive/index', $data);
     }
 
